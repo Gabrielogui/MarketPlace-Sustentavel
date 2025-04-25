@@ -1,0 +1,43 @@
+|=======| IDEIAS |=======|
+
+=> CARRINHO <=
+- Produtos:Lista
+- 
+- Calcular Frete:float
+- 
+
+1. Login com autenticação (Mandar email autorizando | fazer google)
+2. 
+3. 
+
+
+
+Total{
+    Menu{ }
+    MenuLateral { }
+    pagina{ 
+
+    }
+    Footer { }
+}
+
+pagina {
+    dashoboard { }
+    produto { }
+    login { }
+}
+
+(pagina){
+    cliente{
+
+    }
+    vendedor{
+
+    }
+}
+
+(vendedor){
+    meusprodutos{
+        
+    }
+}
