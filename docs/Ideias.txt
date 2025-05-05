@@ -19,6 +19,12 @@ pagamento ; meus_pedidos ; favoritos ; minhas_avaliacoes ;
 fornecedor_home ; meus_produtos ; fornecedor_produto ; 
 administrador_home ; 
 
+CORES DO LOGO:
+#234a34
+#668954
+#849178
+#744b2f
+
 
 Total{
     Menu{ }
