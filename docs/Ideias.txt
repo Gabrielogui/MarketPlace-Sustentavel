@@ -11,6 +11,14 @@
 3. 
 
 
+|=======| FRONTEND |=======|
+
+PÁGINAS: 
+login ; conta ; cliente_home ; busca ; cliente_produto ; carrinho ;
+pagamento ; meus_pedidos ; favoritos ; minhas_avaliacoes ; 
+fornecedor_home ; meus_produtos ; fornecedor_produto ; 
+administrador_home ; 
+
 
 Total{
     Menu{ }
