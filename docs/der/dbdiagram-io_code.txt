@@ -18,13 +18,14 @@ Table Endereco {
 }
 
 Table Cliente {
-  cpf int [pk]
+  id int [pk]
+  cpf varchar
   data_nascimento date
   usuario_id int [ref: - Usuario.id, unique] // Herança (Cliente é Usuário)
 }
 
 Table Administrador {
-  cpf int [pk]
+  id int [pk]
   usuario_id int [ref: - Usuario.id, unique] // Herança (Administrador é Usuário)
 }
 
@@ -32,14 +33,14 @@ Table Carrinho { // "Carimino" corrigido
   id int [pk]
   cliente_id int [ref: > Cliente.cpf]
   data_modificacao date
-  sub_total double
+  sub_total decimal(19,4)
 }
 
 Table Produto {
   id int [pk]
   nome varchar
-  descricao varchar // "descriaco" corrigido
-  preco double // "erro" corrigido para preço
+  descricao text // "descriaco" corrigido
+  preco decimal(19,4) // "erro" corrigido para preço
   estoque int // "estagu" corrigido
   categoria_id int [ref: > Categoria.id]
   fornecedor_id int [ref: > Fornecedor.id] // "formecador" corrigido
@@ -48,7 +49,7 @@ Table Produto {
 Table Categoria {
   id int [pk]
   nome varchar
-  descricao varchar
+  descricao text
   categoria_pai_id int [ref: > Categoria.id] // Hierarquia (auto-relacionamento)
 }
 
@@ -74,7 +75,7 @@ Table Avaliacao { // "Avalaceo" corrigido
   cliente_id int [ref: > Cliente.cpf]
   produto_id int [ref: > Produto.id]
   nota int
-  comentario varchar
+  comentario text
   data date
 }
 
@@ -90,7 +91,7 @@ Table ItemPedido { // "liens" no Pedido
   pedido_id int [ref: > Pedido.id]
   produto_id int [ref: > Produto.id]
   quantidade int
-  preco_unitario double
+  preco_unitario decimal(19,4)
   primary key (pedido_id, produto_id)
 }
 
