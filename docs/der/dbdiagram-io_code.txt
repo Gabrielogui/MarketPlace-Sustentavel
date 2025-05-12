@@ -1,0 +1,108 @@
+// Entidades principais
+Table Usuario {
+  id int [pk]
+  email varchar
+  senha varchar // "serba" corrigido para senha
+  tipo_conta varchar // "tipCortia" corrigido
+  nome varchar
+  telefone int
+  status varchar
+}
+
+Table Endereco {
+  id int [pk]
+  cep varchar // "ceo" corrigido para CEP
+  complemento varchar
+  numero int
+  usuario_id int [ref: > Usuario.id] // Relação Usuario-Endereço
+}
+
+Table Cliente {
+  cpf int [pk]
+  data_nascimento date
+  usuario_id int [ref: - Usuario.id, unique] // Herança (Cliente é Usuário)
+}
+
+Table Administrador {
+  cpf int [pk]
+  usuario_id int [ref: - Usuario.id, unique] // Herança (Administrador é Usuário)
+}
+
+Table Carrinho { // "Carimino" corrigido
+  id int [pk]
+  cliente_id int [ref: > Cliente.cpf]
+  data_modificacao date
+  sub_total double
+}
+
+Table Produto {
+  id int [pk]
+  nome varchar
+  descricao varchar // "descriaco" corrigido
+  preco double // "erro" corrigido para preço
+  estoque int // "estagu" corrigido
+  categoria_id int [ref: > Categoria.id]
+  fornecedor_id int [ref: > Fornecedor.id] // "formecador" corrigido
+}
+
+Table Categoria {
+  id int [pk]
+  nome varchar
+  descricao varchar
+  categoria_pai_id int [ref: > Categoria.id] // Hierarquia (auto-relacionamento)
+}
+
+Table Pedido {
+  id int [pk]
+  cliente_id int [ref: > Cliente.cpf]
+  data_pedido date
+  status int
+  valor_total double
+  frete double
+}
+
+Table Pagamento {
+  id int [pk]
+  pedido_id int [ref: > Pedido.id, unique] // 1:1
+  valor_pago double // "vddPagamento" corrigido
+  motivo int
+  data_pagamento date
+}
+
+Table Avaliacao { // "Avalaceo" corrigido
+  id int [pk]
+  cliente_id int [ref: > Cliente.cpf]
+  produto_id int [ref: > Produto.id]
+  nota int
+  comentario varchar
+  data date
+}
+
+// Tabelas de relacionamento N:N
+Table ItemCarrinho { // "liens" no Carrinho
+  carrinho_id int [ref: > Carrinho.id]
+  produto_id int [ref: > Produto.id]
+  quantidade int
+  primary key (carrinho_id, produto_id)
+}
+
+Table ItemPedido { // "liens" no Pedido
+  pedido_id int [ref: > Pedido.id]
+  produto_id int [ref: > Produto.id]
+  quantidade int
+  preco_unitario double
+  primary key (pedido_id, produto_id)
+}
+
+Table Fornecedor { // Entidade ausente no diagrama (implícita em "formecador")
+  id int [pk]
+  nome varchar
+  cnpj varchar
+}
+
+Table Favoritos {
+  cliente_id int [ref: > Cliente.cpf]
+  produto_id int [ref: > Produto.id]
+  
+  primary key (cliente_id, produto_id)  // Um cliente não pode favoritar o mesmo produto mais de uma vez
+}
