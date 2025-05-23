@@ -8,18 +8,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@DiscriminatorValue("CLIENTE")
+@DiscriminatorValue("FORNECEDOR")
 @Getter
 @Setter
-public class Cliente extends Usuario {
-     // Relação bidirecional cliente ↔ endereço
-   /*  @OneToOne(mappedBy = "cliente",
+public class Fornecedor extends Usuario {
+    // Relação bidirecional cliente ↔ endereço
+   /*  @OneToOne(mappedBy = "fornecedor",
               cascade = CascadeType.ALL,
               orphanRemoval = true,
               fetch = FetchType.LAZY,
               optional = true)
     private Endereco endereco; */
-    private String cpf;
-    private String dataNascimento;
-
+    private String cpnj;
 }
