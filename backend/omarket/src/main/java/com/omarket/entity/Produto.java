@@ -1,8 +1,10 @@
 package com.omarket.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,6 +47,10 @@ public class Produto {
 
     @OneToMany(mappedBy = "id.produto")
     private List<ItemPedido> itens;
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImagemProduto> imagens = new ArrayList<>();
+
 
 
 
