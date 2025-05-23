@@ -25,7 +25,75 @@ CORES DO LOGO:
 #849178
 #744b2f
 
+Métodos:
+	- Usuário: (CRUD)
+		Cadastrar - @post
+		EditarConta - @patch
+		ExcluirConta - @delete
+		VisualizarConta - @get
+		Login - @post
+		Logout - @post
 
+	- Fornecedor:
+		
+	- Cliente:
+	
+	- Administrador:
+		AceitarFornecedor - @put
+		Alterar - @put
+		AlterarStatus - @patch
+		Listar - @get
+		Visualizar - @get
+		Buscar - @get
+		
+	- Endereco:
+		Adicionar/Cadastrar - @post
+		Visualizar - @get
+		Excluir - @delete
+		Editar - @put
+
+	- Categoria: (CRUD)
+		Cadastrar - @post
+		Editar - @put
+		Excluir - @delete
+		Listar - @get
+
+	- Produto: (CRUD)
+		Cadastrar - @post
+		Editar - @patch
+		Visualizar - @get
+		MudarStatus - @patch
+		Listar - @get
+		Buscar - @get
+		Filtrar - @get
+
+	- Carrinho: (CRUD)
+		Criar - @post
+		AdicionarItemCarrinho - @post
+		RemoverItemCarrinho - @delete
+		EditarItemCarrinho - @put
+		ListarItemCarrinho - @get
+		CalcularSubTotal - SEM METODO HTTP
+
+	- Pedido:
+		CriarPedido - @post
+		CancelarPedido - @delete
+		MudarStatus - @put
+		VisualizarPedido - @get
+		CalcularTotal
+		CalcularFrete
+		
+	- Pagamento:
+		CalcularFrete - SEM METODO HTTP
+		Pagar - @post
+
+	- Avaliação: (CRUD)
+		Adicionar - @post
+		Excluir - @delete
+		Listar - @get
+		Editar - @put
+		
+		
 Total{
     Menu{ }
     MenuLateral { }
