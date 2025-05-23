@@ -28,6 +28,7 @@ public class Produto {
     private String nome;
     private String descricao;
     private Integer estoque;
+    private String status; // ATIVO || INATIVO
 
     @Column(name="preco", precision = 19, scale = 4, nullable = false)
     private BigDecimal preco;
