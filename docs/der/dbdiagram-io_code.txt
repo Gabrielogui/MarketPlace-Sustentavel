@@ -107,3 +107,9 @@ Table Favoritos {
   
   primary key (cliente_id, produto_id)  // Um cliente não pode favoritar o mesmo produto mais de uma vez
 }
+
+Table ImagemProduto {
+  id int [pk]
+  path varchar [not null]
+  produto_id int [ref: > Produto.id]
+}
