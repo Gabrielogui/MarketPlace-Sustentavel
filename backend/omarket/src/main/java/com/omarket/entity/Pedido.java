@@ -45,6 +45,10 @@ public class Pedido {
     @OneToMany(mappedBy = "id.pedido")
     private List<ItemPedido> itens;
 
+    @OneToOne(cascade = CascadeType.PERSIST)    // só persiste um clone novo
+    @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
+
     // CRIAR RELACIONAMENTO COM CLIENTE
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
