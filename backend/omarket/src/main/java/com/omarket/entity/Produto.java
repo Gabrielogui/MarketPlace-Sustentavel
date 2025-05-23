@@ -37,10 +37,15 @@ public class Produto {
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
+    
+    // FAZER RELACIONAMENTO COM FORNECEDOR
+    @ManyToOne
+    @JoinColumn(name = "fornecedor_id", nullable = false)
+    private Fornecedor fornecedor;
 
     @OneToMany(mappedBy = "id.produto")
     private List<ItemPedido> itens;
 
-    // FAZER RELACIONAMENTO COM FORNECEDOR
+
 
 }

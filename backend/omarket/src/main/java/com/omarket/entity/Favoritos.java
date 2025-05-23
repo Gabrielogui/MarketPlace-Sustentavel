@@ -11,10 +11,9 @@ public class Favoritos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ADICIONAR RELAÇÃO COM CLIENTE
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
-    private Cliente cliente;*/
+    private Cliente cliente;
 
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false)
