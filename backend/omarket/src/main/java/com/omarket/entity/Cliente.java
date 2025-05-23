@@ -1,8 +1,10 @@
 package com.omarket.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,13 +14,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Cliente extends Usuario {
-     // Relação bidirecional cliente ↔ endereço
-   /*  @OneToOne(mappedBy = "cliente",
-              cascade = CascadeType.ALL,
-              orphanRemoval = true,
-              fetch = FetchType.LAZY,
-              optional = true)
-    private Endereco endereco; */
+     
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
+    @JoinColumn(name = "endereco_id", nullable = true, unique = true)
+    private Endereco endereco;
+    
     private String cpf;
     private String dataNascimento;
 
