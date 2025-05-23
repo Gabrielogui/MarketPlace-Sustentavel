@@ -1,6 +1,5 @@
 package com.omarket.entity;
 
-import java.math.BigDecimal;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

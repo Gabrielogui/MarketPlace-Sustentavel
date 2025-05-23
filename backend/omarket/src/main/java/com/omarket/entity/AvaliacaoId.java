@@ -3,8 +3,6 @@ package com.omarket.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties.Web.Client;
-
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
