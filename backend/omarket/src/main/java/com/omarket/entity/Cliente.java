@@ -29,4 +29,7 @@ public class Cliente extends Usuario {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedido> pedidos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cliente")
+    private List<Favorito> favoritos;
+
 }

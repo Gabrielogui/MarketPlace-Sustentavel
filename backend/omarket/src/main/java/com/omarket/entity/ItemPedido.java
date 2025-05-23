@@ -4,7 +4,15 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Entity
+@Table(name = "item_pedido")
+@Getter
+@Setter
 public class ItemPedido {
     // |=======| ATRIBUTOS |=======|
     @EmbeddedId
