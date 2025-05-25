@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.omarket.entity.Carrinho;
 import com.omarket.entity.ItemCarrinho;
-import com.omarket.entity.ItemCarrinhoId;
 import com.omarket.entity.Produto;
+import com.omarket.entity.id.ItemCarrinhoId;
 
 public interface ItemCarrinhoRepository extends JpaRepository<ItemCarrinho, ItemCarrinhoId> {
     // ENCONTRA PELO PRODUTO

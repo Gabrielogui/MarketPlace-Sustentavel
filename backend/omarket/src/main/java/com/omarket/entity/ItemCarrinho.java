@@ -1,5 +1,7 @@
 package com.omarket.entity;
 
+import com.omarket.entity.id.ItemCarrinhoId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

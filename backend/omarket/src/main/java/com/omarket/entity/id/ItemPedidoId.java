@@ -1,7 +1,10 @@
-package com.omarket.entity;
+package com.omarket.entity.id;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import com.omarket.entity.Pedido;
+import com.omarket.entity.Produto;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;

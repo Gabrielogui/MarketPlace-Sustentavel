@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.omarket.entity.Avaliacao;
-import com.omarket.entity.AvaliacaoId;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Produto;
+import com.omarket.entity.id.AvaliacaoId;
 
 @Repository
 public interface AvaliacaoRepository extends JpaRepository<Avaliacao, AvaliacaoId> {

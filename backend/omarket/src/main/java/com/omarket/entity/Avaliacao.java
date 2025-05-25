@@ -2,6 +2,8 @@ package com.omarket.entity;
 
 import java.time.LocalDateTime;
 
+import com.omarket.entity.id.AvaliacaoId;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

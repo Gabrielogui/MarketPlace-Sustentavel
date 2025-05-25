@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.omarket.entity.ItemPedido;
-import com.omarket.entity.ItemPedidoId;
 import com.omarket.entity.Pedido;
 import com.omarket.entity.Produto;
+import com.omarket.entity.id.ItemPedidoId;
 
 public interface ItemPedidoRepository extends JpaRepository<ItemPedido, ItemPedidoId> {
     // ENCONTRAR PELO PEDIDO
