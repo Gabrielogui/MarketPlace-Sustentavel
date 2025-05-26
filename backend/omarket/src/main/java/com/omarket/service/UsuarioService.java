@@ -1,6 +1,7 @@
 package com.omarket.service;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioService {
     // |=======| ATRIBUTOS |=======|
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // |=======| MÉTODOS |=======|
 
@@ -61,8 +63,12 @@ public class UsuarioService {
         // ATRIBUINDO OS ATRIBUTOS EM COMUM
         usuario.setNome(usuarioDTO.getNome());
         usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setSenha(usuarioDTO.getSenha());
         usuario.setTelefone(usuarioDTO.getTelefone());
+
+        String senhaString = usuarioDTO.getSenha();
+        String senhaHash = passwordEncoder.encode(senhaString);
+        usuario.setSenha(senhaHash);
+        
 
         // SALVANDO USUÁRIO NO BANCO DE DADOS
         usuarioRepository.save(usuario);

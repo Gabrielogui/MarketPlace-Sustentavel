@@ -35,10 +35,12 @@ public class UsuarioDTO {
     private TipoConta tipoConta;
 
     // ======= CAMPOS ESPECÍFICOS PARA CLIENTE    =======
+    @org.hibernate.validator.constraints.br.CPF(message = "CPF inválido!")
     private String cpf;
     private LocalDate dataNascimento;
 
     // ======= CAMPOS ESPECÍFICOS PARA FORNECEDOR =======
+    @org.hibernate.validator.constraints.br.CNPJ(message = "CNPJ inválido!")
     private String cnpj;
 
     // ======= CAMPOS ESPECÍFICOS PARA ADM        =======
