@@ -1,0 +1,48 @@
+package com.omarket.dto;
+
+import java.time.LocalDate;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class UsuarioDTO {
+    private Long id;
+    
+    @NotBlank(message = "Nome é obrigatório!")
+    @Size(min = 3, max = 70, message = "O nome deve ter entre 3 e 70 caracteres")
+    private String nome;
+
+    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "O email deve ser válido")
+    private String email;
+
+    @NotBlank(message = "Senha é obrigatória")
+    @Size(min = 6, message = "Senha deve ter no mínimo 6 caracteres")
+    private String senha;
+
+    @NotBlank(message = "Telefone é obrigatório!")
+    private String telefone;
+
+    private String status;
+
+    @NotNull(message = "É necessário selecionar o tipo da conta!")
+    private TipoConta tipoConta;
+
+    // ======= CAMPOS ESPECÍFICOS PARA CLIENTE    =======
+    private String cpf;
+    private LocalDate dataNascimento;
+
+    // ======= CAMPOS ESPECÍFICOS PARA FORNECEDOR =======
+    private String cnpj;
+
+    // ======= CAMPOS ESPECÍFICOS PARA ADM        =======
+
+    // |=======| ENUM DO TIPO CONTA |=======|
+    public enum TipoConta { CLIENTE, FORNECEDOR, ADMINISTRADOR }
+}

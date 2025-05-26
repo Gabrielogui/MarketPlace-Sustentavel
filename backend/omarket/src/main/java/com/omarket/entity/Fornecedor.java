@@ -22,7 +22,7 @@ public class Fornecedor extends Usuario {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "endereco_id", nullable = true, unique = true)
     private Endereco endereco;
-    private String cpnj;
+    private String cnpj;
 
     @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Produto> produtos = new ArrayList<>();

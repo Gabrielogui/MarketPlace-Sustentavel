@@ -5,7 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import com.omarket.entity.Usuario;
 
+
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    
+    public String findByEmail(String email);
 }

@@ -1,9 +1,11 @@
 package com.omarket.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,7 +26,9 @@ public class Cliente extends Usuario {
     private Endereco endereco;
     
     private String cpf;
-    private String dataNascimento;
+
+    @Column(name="data_nascimento", nullable = false)
+    private LocalDate dataNascimento;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedido> pedidos = new ArrayList<>();
