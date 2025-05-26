@@ -26,7 +26,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioDTO cadastrar(UsuarioDTO usuarioDTO){
         // CONFERIR SE JÁ EXISTE EMAIL CADASTRADO
-        if(usuarioRepository.findByEmail(usuarioDTO.getEmail()).equals(usuarioDTO.getEmail())){
+        if(usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
         }
 
