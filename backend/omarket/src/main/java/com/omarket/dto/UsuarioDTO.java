@@ -2,6 +2,7 @@ package com.omarket.dto;
 
 import java.time.LocalDate;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,6 +34,9 @@ public class UsuarioDTO {
 
     @NotNull(message = "É necessário selecionar o tipo da conta!")
     private TipoConta tipoConta;
+
+    @Valid
+    private EnderecoDTO enderecoDTO;
 
     // ======= CAMPOS ESPECÍFICOS PARA CLIENTE    =======
     @org.hibernate.validator.constraints.br.CPF(message = "CPF inválido!")

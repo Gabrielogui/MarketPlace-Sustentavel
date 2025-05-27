@@ -35,4 +35,6 @@ public class UsuarioController {
 
         return ResponseEntity.created(location).body(usuarioNovo);
     }
+
+    // ======= DELETE PARA USUÁRIO =======
 }
