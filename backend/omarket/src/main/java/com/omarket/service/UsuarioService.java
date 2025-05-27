@@ -118,54 +118,8 @@ public class UsuarioService {
     public UsuarioDTO buscar(Long id){
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
-
-        UsuarioDTO usuarioDTORetorno = new UsuarioDTO();
-
-        // PASSANDO ATRIBUTOS EM COMUM:
-        usuarioDTORetorno.setId(usuario.getId());
-        usuarioDTORetorno.setNome(usuario.getNome());
-        usuarioDTORetorno.setEmail(usuario.getEmail());
-        usuarioDTORetorno.setTelefone(usuario.getTelefone());
-        usuarioDTORetorno.setStatus(usuario.getStatus());
-        
-        // PASSANDO ATRIBUTOS ESPECÍFICOS
-        if(usuario instanceof Cliente){
-            usuarioDTORetorno.setTipoConta(UsuarioDTO.TipoConta.CLIENTE);
-            Cliente cliente = (Cliente) usuario;
-            usuarioDTORetorno.setCpf(cliente.getCpf());
-            usuarioDTORetorno.setDataNascimento(cliente.getDataNascimento());
-
-            if(cliente.getEndereco() != null){
-                EnderecoDTO enderecoDTO = new EnderecoDTO();
-                Endereco endereco = cliente.getEndereco();
-                enderecoDTO.setCep(endereco.getCep());
-                enderecoDTO.setComplemento(endereco.getComplemento());
-                enderecoDTO.setId(endereco.getId());
-                enderecoDTO.setNumero(endereco.getNumero());
-                usuarioDTORetorno.setEnderecoDTO(enderecoDTO);
-            } 
-
-
-        } else if(usuario instanceof Fornecedor){
-            usuarioDTORetorno.setTipoConta(UsuarioDTO.TipoConta.FORNECEDOR);
-            Fornecedor fornecedor = (Fornecedor) usuario;
-            usuarioDTORetorno.setCnpj(fornecedor.getCnpj());
-
-            if(fornecedor.getEndereco() != null){
-                EnderecoDTO enderecoDTO = new EnderecoDTO();
-                Endereco endereco = fornecedor.getEndereco();
-                enderecoDTO.setCep(endereco.getCep());
-                enderecoDTO.setComplemento(endereco.getComplemento());
-                enderecoDTO.setId(endereco.getId());
-                enderecoDTO.setNumero(endereco.getNumero());
-                usuarioDTORetorno.setEnderecoDTO(enderecoDTO);
-            }
-
-        } else if(usuario instanceof Administrador){
-            usuarioDTORetorno.setTipoConta(UsuarioDTO.TipoConta.ADMINISTRADOR);
-        }
     
-        return usuarioDTORetorno;
+        return converterParaDTO(usuario);
     }
 
     @Transactional
