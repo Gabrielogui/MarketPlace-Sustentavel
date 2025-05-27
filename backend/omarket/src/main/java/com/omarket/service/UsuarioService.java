@@ -160,8 +160,6 @@ public class UsuarioService {
             usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
         }
 
-        // SALVANDO AS ALTERAÇÕES NO BANCO DE DADOS
-        usuarioRepository.save(usuario);
         return converterParaDTO(usuario);
     }
     private UsuarioDTO converterParaDTO(Usuario usuario) {
