@@ -2,6 +2,7 @@ package com.omarket.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -43,7 +44,7 @@ public class Pedido {
     private Pagamento pagamento;
 
     @OneToMany(mappedBy = "id.pedido")
-    private List<ItemPedido> itens;
+    private List<ItemPedido> itens = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.PERSIST)    // só persiste um clone novo
     @JoinColumn(name = "endereco_id")

@@ -33,7 +33,9 @@ public class Carrinho {
     private Cliente cliente;
 
     private LocalDateTime dataModificacao;
-    private BigDecimal subtotal;
+
+    @Column(name="subtotal", precision = 19, scale = 4, nullable = false)
+    private BigDecimal subtotal = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "id.carrinho",
                cascade = CascadeType.ALL,

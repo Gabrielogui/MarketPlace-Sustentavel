@@ -45,13 +45,7 @@ public class Produto {
     @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
-    @OneToMany(mappedBy = "id.produto")
-    private List<ItemPedido> itens;
-
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagemProduto> imagens = new ArrayList<>();
-
-
-
 
 }

@@ -27,12 +27,12 @@ CORES DO LOGO:
 
 Métodos:
 	- Usuário: (CRUD)
-		Cadastrar - @post
-		EditarConta - @patch
-		ExcluirConta - @delete
-		VisualizarConta - @get
-		Login - @post
-		Logout - @post
+		Cadastrar - @post --CHECK--
+		EditarConta - @patch --META 27/05
+		ExcluirConta - @delete --META 27/05
+		VisualizarConta - @get --META 27/05
+		Login - @post --META 27/05 **
+		Logout - @post --META 27/05 **
 
 	- Fornecedor:
 		
