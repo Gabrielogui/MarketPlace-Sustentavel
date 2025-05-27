@@ -37,6 +37,6 @@ public class Cliente extends Usuario {
     private List<Favorito> favoritos = new ArrayList<>();
 
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Carrinho carrinho = new Carrinho();
+    private Carrinho carrinho;
 
 }

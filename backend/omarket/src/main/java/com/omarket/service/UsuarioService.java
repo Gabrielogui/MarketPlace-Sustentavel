@@ -3,16 +3,18 @@ package com.omarket.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.omarket.dto.EnderecoDTO;
 import com.omarket.dto.UsuarioDTO;
 import com.omarket.entity.Administrador;
 import com.omarket.entity.Cliente;
+import com.omarket.entity.Endereco;
 import com.omarket.entity.Fornecedor;
 import com.omarket.entity.Usuario;
 import com.omarket.repository.UsuarioRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -108,6 +110,61 @@ public class UsuarioService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de conta inválido!");
         }
 
+        return usuarioDTORetorno;
+    }
+
+    // BUSCAR:
+    @Transactional(readOnly = true)
+    public UsuarioDTO buscar(Long id){
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+
+        UsuarioDTO usuarioDTORetorno = new UsuarioDTO();
+
+        // PASSANDO ATRIBUTOS EM COMUM:
+        usuarioDTORetorno.setId(usuario.getId());
+        usuarioDTORetorno.setNome(usuario.getNome());
+        usuarioDTORetorno.setEmail(usuario.getEmail());
+        usuarioDTORetorno.setTelefone(usuario.getTelefone());
+        usuarioDTORetorno.setStatus(usuario.getStatus());
+        
+        // PASSANDO ATRIBUTOS ESPECÍFICOS
+        if(usuario instanceof Cliente){
+            usuarioDTORetorno.setTipoConta(UsuarioDTO.TipoConta.CLIENTE);
+            Cliente cliente = (Cliente) usuario;
+            usuarioDTORetorno.setCpf(cliente.getCpf());
+            usuarioDTORetorno.setDataNascimento(cliente.getDataNascimento());
+
+            if(cliente.getEndereco() != null){
+                EnderecoDTO enderecoDTO = new EnderecoDTO();
+                Endereco endereco = cliente.getEndereco();
+                enderecoDTO.setCep(endereco.getCep());
+                enderecoDTO.setComplemento(endereco.getComplemento());
+                enderecoDTO.setId(endereco.getId());
+                enderecoDTO.setNumero(endereco.getNumero());
+                usuarioDTORetorno.setEnderecoDTO(enderecoDTO);
+            } 
+
+
+        } else if(usuario instanceof Fornecedor){
+            usuarioDTORetorno.setTipoConta(UsuarioDTO.TipoConta.FORNECEDOR);
+            Fornecedor fornecedor = (Fornecedor) usuario;
+            usuarioDTORetorno.setCnpj(fornecedor.getCnpj());
+
+            if(fornecedor.getEndereco() != null){
+                EnderecoDTO enderecoDTO = new EnderecoDTO();
+                Endereco endereco = fornecedor.getEndereco();
+                enderecoDTO.setCep(endereco.getCep());
+                enderecoDTO.setComplemento(endereco.getComplemento());
+                enderecoDTO.setId(endereco.getId());
+                enderecoDTO.setNumero(endereco.getNumero());
+                usuarioDTORetorno.setEnderecoDTO(enderecoDTO);
+            }
+
+        } else if(usuario instanceof Administrador){
+            usuarioDTORetorno.setTipoConta(UsuarioDTO.TipoConta.ADMINISTRADOR);
+        }
+    
         return usuarioDTORetorno;
     }
 }
