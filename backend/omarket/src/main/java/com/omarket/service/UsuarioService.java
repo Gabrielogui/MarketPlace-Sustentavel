@@ -167,4 +167,65 @@ public class UsuarioService {
     
         return usuarioDTORetorno;
     }
+
+    @Transactional
+    public UsuarioDTO inativar(Long id){
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+
+        // VERIFICAR SE O USUÁRIO JÁ ESTÁ INATIVO
+        if(usuario.getStatus().equals("INATIVO")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está inativo!");
+        }
+
+        // SETANDO O STATUS COMO INATIVO
+        usuario.setStatus("INATIVO");
+
+        return converterParaDTO(usuario);
+    }
+
+    private UsuarioDTO converterParaDTO(Usuario usuario) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setId(usuario.getId());
+        usuarioDTO.setNome(usuario.getNome());
+        usuarioDTO.setEmail(usuario.getEmail());
+        usuarioDTO.setTelefone(usuario.getTelefone());
+        usuarioDTO.setStatus(usuario.getStatus());
+        
+        if (usuario instanceof Cliente) {
+            Cliente cliente = (Cliente) usuario;
+            usuarioDTO.setCpf(cliente.getCpf());
+            usuarioDTO.setDataNascimento(cliente.getDataNascimento());
+            usuarioDTO.setTipoConta(UsuarioDTO.TipoConta.CLIENTE);
+
+            if(cliente.getEndereco() != null){
+                EnderecoDTO enderecoDTO = new EnderecoDTO();
+                Endereco endereco = cliente.getEndereco();
+                enderecoDTO.setCep(endereco.getCep());
+                enderecoDTO.setComplemento(endereco.getComplemento());
+                enderecoDTO.setId(endereco.getId());
+                enderecoDTO.setNumero(endereco.getNumero());
+                usuarioDTO.setEnderecoDTO(enderecoDTO);
+            } 
+        } else if (usuario instanceof Fornecedor) {
+            Fornecedor fornecedor = (Fornecedor) usuario;
+            usuarioDTO.setCnpj(fornecedor.getCnpj());
+            usuarioDTO.setTipoConta(UsuarioDTO.TipoConta.FORNECEDOR);
+
+            if(fornecedor.getEndereco() != null){
+                EnderecoDTO enderecoDTO = new EnderecoDTO();
+                Endereco endereco = fornecedor.getEndereco();
+                enderecoDTO.setCep(endereco.getCep());
+                enderecoDTO.setComplemento(endereco.getComplemento());
+                enderecoDTO.setId(endereco.getId());
+                enderecoDTO.setNumero(endereco.getNumero());
+                usuarioDTO.setEnderecoDTO(enderecoDTO);
+            }
+            
+        } else if(usuario instanceof Administrador){
+            usuarioDTO.setTipoConta(UsuarioDTO.TipoConta.ADMINISTRADOR);
+        }
+        
+        return usuarioDTO;
+    }
 }

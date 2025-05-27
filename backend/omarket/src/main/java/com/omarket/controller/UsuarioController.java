@@ -5,6 +5,7 @@ import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,12 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> buscar(@PathVariable Long id){
         UsuarioDTO usuarioDTO = usuarioService.buscar(id);
         return ResponseEntity.ok(usuarioDTO);
+    }
+
+    @PatchMapping("/{id}/inativar")
+    public ResponseEntity<UsuarioDTO> inativar(@PathVariable Long id){
+        UsuarioDTO usuarioInativado = usuarioService.inativar(id);
+        return ResponseEntity.ok(usuarioInativado);
     }
 
     // ======= DELETE PARA USUÁRIO =======
