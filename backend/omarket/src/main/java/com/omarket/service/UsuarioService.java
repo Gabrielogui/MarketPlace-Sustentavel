@@ -31,7 +31,8 @@ public class UsuarioService {
     public UsuarioDTO cadastrar(UsuarioDTO usuarioDTO){
         // CONFERIR SE JÁ EXISTE EMAIL CADASTRADO
 
-        if(usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){ // VERIFICAR O STATUS DO USUÁRIO
+        // VERIFICAR O STATUS DO USUÁRIO
+        if(usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){ 
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
         }
 
@@ -39,7 +40,7 @@ public class UsuarioService {
 
         // ATRIBUINDO OS ATRIBUTOS ESPECÍFICOS
         switch (usuarioDTO.getTipoConta()) {
-            case CLIENTE: // REVER A QUESTÃO DO ENDEREÇO
+            case CLIENTE:
                 Cliente cliente = new Cliente();
 
                 // VERIFICAR SE O CPF JÁ ESTÁ CADASTRADO
@@ -61,7 +62,8 @@ public class UsuarioService {
                 break;
 
             case ADMINISTRADOR:
-                Administrador administrador = new Administrador(); // COLOCAR ERRO
+                // COLOCAR ERRO
+                Administrador administrador = new Administrador();
                 usuario = administrador;
                 break;
 
@@ -113,6 +115,55 @@ public class UsuarioService {
         return converterParaDTO(usuario);
     }
 
+    @Transactional
+    public UsuarioDTO editar(Long id, UsuarioDTO usuarioDTO){
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+
+        // VERIFICAR SE O EMAIL JÁ ESTÁ CADASTRADO
+        if(!usuario.getEmail().equals(usuarioDTO.getEmail()) && 
+            usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
+        }
+
+        if(usuario instanceof Cliente){
+            Cliente cliente = (Cliente) usuario;
+            // ATUALIZANDO O ENDEREÇO SE EXISTIR
+            if (usuarioDTO.getEnderecoDTO() != null) {
+                Endereco endereco = new Endereco();
+                endereco.setCep(usuarioDTO.getEnderecoDTO().getCep());
+                endereco.setComplemento(usuarioDTO.getEnderecoDTO().getComplemento());
+                endereco.setNumero(usuarioDTO.getEnderecoDTO().getNumero());
+                cliente.setEndereco(endereco);
+                usuario = cliente;
+            }         
+        }
+        else if(usuario instanceof Fornecedor){
+            Fornecedor fornecedor = (Fornecedor) usuario;
+            // ATUALIZANDO O ENDEREÇO SE EXISTIR
+            if (usuarioDTO.getEnderecoDTO() != null) {
+                Endereco endereco = new Endereco();
+                endereco.setCep(usuarioDTO.getEnderecoDTO().getCep());
+                endereco.setComplemento(usuarioDTO.getEnderecoDTO().getComplemento());
+                endereco.setNumero(usuarioDTO.getEnderecoDTO().getNumero());
+                fornecedor.setEndereco(endereco);
+                usuario = fornecedor;
+            }
+        }
+        // ATUALIZANDO OS DADOS DO USUÁRIO
+        usuario.setNome(usuarioDTO.getNome());
+        usuario.setEmail(usuarioDTO.getEmail());
+        usuario.setTelefone(usuarioDTO.getTelefone());
+
+        // ATUALIZANDO A SENHA SE FOR DIFERENTE
+        if (!passwordEncoder.matches(usuarioDTO.getSenha(), usuario.getSenha())) {
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        }
+
+        // SALVANDO AS ALTERAÇÕES NO BANCO DE DADOS
+        usuarioRepository.save(usuario);
+        return converterParaDTO(usuario);
+    }
     private UsuarioDTO converterParaDTO(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setId(usuario.getId());
