@@ -2,6 +2,7 @@ package com.omarket.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class EnderecoDTO {
     
+    @Pattern(regexp="^\\d{5}-?\\d{3}$", message="CEP inválido")
     @NotBlank(message = "CEP é obrigatório!")
     private String cep;
 
