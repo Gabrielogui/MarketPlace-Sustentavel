@@ -28,7 +28,8 @@ public class UsuarioService {
     @Transactional
     public UsuarioDTO cadastrar(UsuarioDTO usuarioDTO){
         // CONFERIR SE JÁ EXISTE EMAIL CADASTRADO
-        if(usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){
+
+        if(usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){ // VERIFICAR O STATUS DO USUÁRIO
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
         }
 
@@ -38,7 +39,10 @@ public class UsuarioService {
         switch (usuarioDTO.getTipoConta()) {
             case CLIENTE: // REVER A QUESTÃO DO ENDEREÇO
                 Cliente cliente = new Cliente();
+
+                // VERIFICAR SE O CPF JÁ ESTÁ CADASTRADO
                 cliente.setCpf(usuarioDTO.getCpf());
+
                 cliente.setDataNascimento(usuarioDTO.getDataNascimento());
                 cliente.setStatus("ATIVO");
                 usuario = cliente;
@@ -46,7 +50,10 @@ public class UsuarioService {
         
             case FORNECEDOR:
                 Fornecedor fornecedor = new Fornecedor();
+
+                // VERIFICAR SE O CNPJ JÁ ESTÁ CADASTRADO
                 fornecedor.setCnpj(usuarioDTO.getCnpj());
+                
                 fornecedor.setStatus("INATIVO");
                 usuario = fornecedor;
                 break;
