@@ -28,11 +28,11 @@ CORES DO LOGO:
 Métodos:
 	- Usuário: (CRUD)
 		Cadastrar - @post --CHECK--
-		EditarConta - @patch --META 27/05
-		ExcluirConta - @delete --META 27/05
-		VisualizarConta - @get --META 27/05
-		Login - @post --META 27/05 **
-		Logout - @post --META 27/05 **
+		EditarConta - @put --CHECK--
+		Inativar - @patch --CHECK--
+		busca - @get --CHECK--
+		Login - @post --META 27/05 ** FICOU PRA DEPOIS
+		Logout - @post --META 27/05 ** FICOU PRA DEPOIS
 
 	- Fornecedor:
 		
@@ -52,13 +52,18 @@ Métodos:
 		Excluir - @delete
 		Editar - @put
 
-	- Categoria: (CRUD)
+	- Categoria: --META 28/05--
 		Cadastrar - @post
 		Editar - @put
 		Excluir - @delete
 		Listar - @get
 
-	- Produto: (CRUD)
+	- ImagemProduto: --META 28/05--
+		add - post
+		remov - delete
+		listar - get
+		
+	- Produto: (CRUD) --META INICIAR 28/05-- 
 		Cadastrar - @post
 		Editar - @patch
 		Visualizar - @get

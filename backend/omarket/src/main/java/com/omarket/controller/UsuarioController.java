@@ -58,5 +58,4 @@ public class UsuarioController {
         UsuarioDTO usuarioEditado = usuarioService.editar(id, usuarioDTO);
         return ResponseEntity.ok(usuarioEditado);
     }
-    // ======= DELETE PARA USUÁRIO =======
 }
