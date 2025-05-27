@@ -74,6 +74,7 @@ public class UsuarioService {
         usuario.setEmail(usuarioDTO.getEmail());
         usuario.setTelefone(usuarioDTO.getTelefone());
 
+        // CRIPTOGRAFANDO SENHA
         String senhaString = usuarioDTO.getSenha();
         String senhaHash = passwordEncoder.encode(senhaString);
         usuario.setSenha(senhaHash);
@@ -83,34 +84,8 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
 
         // PREPARAR RESPOSTA DTO PARA O CONTROLLER
-        UsuarioDTO usuarioDTORetorno = new UsuarioDTO();
-
-        usuarioDTORetorno.setId(usuario.getId());
-        usuarioDTORetorno.setNome(usuario.getNome());
-        usuarioDTORetorno.setEmail(usuario.getEmail());
-        usuarioDTORetorno.setTelefone(usuario.getTelefone());
-        usuarioDTORetorno.setStatus(usuario.getStatus());
-        usuarioDTORetorno.setTipoConta(usuarioDTO.getTipoConta());
-
-        switch (usuarioDTO.getTipoConta()) {
-            case CLIENTE: // REVER A QUESTÃO DO ENDEREÇO
-                usuarioDTORetorno.setCpf(((Cliente)usuario).getCpf());
-                usuarioDTORetorno.setDataNascimento(((Cliente)usuario).getDataNascimento());
-                break;
         
-            case FORNECEDOR:
-                usuarioDTORetorno.setCnpj(((Fornecedor)usuario).getCnpj());
-                break;
-
-            case ADMINISTRADOR:
-                // COLOCAR ERRO
-                break;
-
-            default:
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tipo de conta inválido!");
-        }
-
-        return usuarioDTORetorno;
+        return converterParaDTO(usuario);
     }
 
     // BUSCAR:
