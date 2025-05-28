@@ -2,8 +2,6 @@ package com.omarket.dto;
 
 import java.time.LocalDateTime;
 
-import com.omarket.entity.Produto;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
