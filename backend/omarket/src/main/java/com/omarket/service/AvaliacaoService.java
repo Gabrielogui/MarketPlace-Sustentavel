@@ -14,22 +14,16 @@ import com.omarket.entity.id.AvaliacaoId;
 import com.omarket.repository.AvaliacaoRepository;
 import com.omarket.repository.ClienteRepository;
 import com.omarket.repository.ProdutoRepository;
-import com.omarket.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AvaliacaoService {
 
-    private final UsuarioRepository usuarioRepository;
     // |=======| ATRIBUTOS |=======|
     private final AvaliacaoRepository avaliacaoRepository;
     private final ClienteRepository clienteRepository;
     private final ProdutoRepository produtoRepository;
-
-    AvaliacaoService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
 
     // |=======| MÉTODOS |=======|
     public AvaliacaoDTO adicionar(AvaliacaoDTO avaliacaoDTO){
