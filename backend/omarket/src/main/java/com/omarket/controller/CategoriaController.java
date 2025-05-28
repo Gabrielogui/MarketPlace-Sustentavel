@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,5 +55,11 @@ public class CategoriaController {
     public ResponseEntity<CategoriaDTO> buscar(@PathVariable Long id){
         CategoriaDTO categoriaDTO = categoriaService.buscar(id);
         return ResponseEntity.ok(categoriaDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoriaDTO> editar(@PathVariable Long id, @RequestBody @Validated CategoriaDTO categoriaDTO){
+        CategoriaDTO categoriaEditada = categoriaService.editar(id, categoriaDTO);
+        return ResponseEntity.ok(categoriaEditada);
     }
 }

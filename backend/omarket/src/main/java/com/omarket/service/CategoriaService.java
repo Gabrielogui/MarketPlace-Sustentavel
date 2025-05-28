@@ -58,6 +58,17 @@ public class CategoriaService {
         return converterParaDTO(categoria);
     }
 
+    @Transactional
+    public CategoriaDTO editar(Long id, CategoriaDTO categoriaDTO){
+        Categoria categoria = categoriaRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada!"));
+
+        categoria.setNome(categoriaDTO.getNome());
+        categoria.setDescricao(categoriaDTO.getDescricao());
+
+        return converterParaDTO(categoria);
+    }
+
     // CONVERTER PARA DTO:
     public CategoriaDTO converterParaDTO(Categoria categoria){
         CategoriaDTO categoriaDTO = new CategoriaDTO();
