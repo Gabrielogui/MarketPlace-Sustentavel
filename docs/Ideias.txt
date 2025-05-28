@@ -52,12 +52,12 @@ Métodos:
 		Excluir - @delete
 		Editar - @put
 
-	- Categoria: --META 28/05--
-		Cadastrar - @post
-		Editar - @put
-		Excluir - @delete
-		Listar - @get
-		Buscar - @get
+	- Categoria: --META 28/05-- --CHECK--
+		Cadastrar - @post --CHECK--
+		Editar - @put --CHECK--
+		Excluir - @delete --CHECK--
+		Listar - @get --CHECK--
+		Buscar - @get --CHECK--
 
 	- ImagemProduto: --META 28/05--
 		add - post
