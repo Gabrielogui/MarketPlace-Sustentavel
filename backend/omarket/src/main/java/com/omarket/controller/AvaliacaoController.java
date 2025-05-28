@@ -57,12 +57,17 @@ public class AvaliacaoController {
     }
 
     // ======= MÉTODO PARA LISTAR POR CLIENTE =======
-    @GetMapping("/listar/{clienteId}")
+    @GetMapping("/listar/clietne/{clienteId}")
     public ResponseEntity<List<AvaliacaoDTO>> listarPorCliente(@PathVariable Long clienteId){
         List<AvaliacaoDTO> avaliacoes = avaliacaoService.listarPorCliente(clienteId);
         return ResponseEntity.ok(avaliacoes);
     }
  
     // ======= MÉTPDP PARA LISTAR POR PRODUTO =======
+    @GetMapping("/listar/produto/{produtoId}")
+    public ResponseEntity<List<AvaliacaoDTO>> listarPorProduto(@PathVariable Long produtoId){
+        List<AvaliacaoDTO> avaliacoes = avaliacaoService.listarPorProduto(produtoId);
+        return ResponseEntity.ok(avaliacoes);
+    }
 
 }

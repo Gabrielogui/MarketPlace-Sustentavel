@@ -93,7 +93,7 @@ public class AvaliacaoService {
         return converterParaDTO(avaliacao);
     }
 
-    // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR PRODUTOS
+    // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR CLIENTE
     @Transactional(readOnly = true)
     public List<AvaliacaoDTO> listarPorCliente(Long clienteId){
         
@@ -101,6 +101,16 @@ public class AvaliacaoService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
 
         List<Avaliacao> avaliacoes = avaliacaoRepository.findByIdCliente(cliente);
+        List<AvaliacaoDTO> avaliacoesDTO = avaliacoes.stream().map((avaliacao) -> new AvaliacaoDTO(avaliacao)).toList();
+        return avaliacoesDTO;
+    }
+
+    // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR PRODUTO
+    public List<AvaliacaoDTO> listarPorProduto(Long produtoId){
+        Produto produto = produtoRepository.findById(produtoId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+
+        List<Avaliacao> avaliacoes = avaliacaoRepository.findByIdProduto(produto);
         List<AvaliacaoDTO> avaliacoesDTO = avaliacoes.stream().map((avaliacao) -> new AvaliacaoDTO(avaliacao)).toList();
         return avaliacoesDTO;
     }
