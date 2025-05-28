@@ -59,13 +59,6 @@ public class ImagemProdutoService {
         // depois adiciona o simpleName como última pasta
         uploadDir = uploadDir.resolve(ImagemProduto.class.getSimpleName());
 
-        try {
-            // cria a pasta uploads, se não existir
-            Files.createDirectories(UPLOAD_DIR);
-        } catch (IOException e) {
-            throw new RuntimeException("Falha ao criar diretório de upload", e);
-        }
-
         // 4) salva o arquivo no disco
         Path target = uploadDir.resolve(filename);
         try {
