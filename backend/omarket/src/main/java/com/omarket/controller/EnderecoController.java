@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,12 @@ public class EnderecoController {
     public ResponseEntity<EnderecoDTO> editar(@PathVariable Long id, @RequestBody @Validated EnderecoDTO enderecoDTO) {
         EnderecoDTO enderecoEditado = enderecoService.editar(id, enderecoDTO);
         return ResponseEntity.ok(enderecoEditado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        enderecoService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

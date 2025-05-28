@@ -47,6 +47,14 @@ public class EnderecoService {
         return conventerParaDTO(endereco);
     }
 
+    @Transactional
+    public void deletar(Long id) {
+        Endereco endereco = enderecoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Endereço não encontrado com o ID: " + id));
+        // Deleta o endereço
+        enderecoRepository.delete(endereco);
+    }
+
     private EnderecoDTO conventerParaDTO(Endereco endereco) {
         EnderecoDTO enderecoDTO = new EnderecoDTO();
         enderecoDTO.setId(endereco.getId());
