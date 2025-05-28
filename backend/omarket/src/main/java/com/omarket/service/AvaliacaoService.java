@@ -106,6 +106,7 @@ public class AvaliacaoService {
     }
 
     // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR PRODUTO
+    @Transactional(readOnly = true)
     public List<AvaliacaoDTO> listarPorProduto(Long produtoId){
         Produto produto = produtoRepository.findById(produtoId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
