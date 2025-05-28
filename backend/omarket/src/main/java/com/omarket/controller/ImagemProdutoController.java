@@ -39,8 +39,8 @@ public class ImagemProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        imagemProdutoService.delete(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        imagemProdutoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
