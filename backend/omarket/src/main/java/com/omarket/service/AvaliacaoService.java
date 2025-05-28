@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.AvaliacaoDTO;
@@ -26,6 +27,7 @@ public class AvaliacaoService {
     private final ProdutoRepository produtoRepository;
 
     // |=======| MÉTODOS |=======|
+    @Transactional
     public AvaliacaoDTO adicionar(AvaliacaoDTO avaliacaoDTO){
 
         Cliente cliente = clienteRepository.findById(avaliacaoDTO.getClienteId())
@@ -48,6 +50,7 @@ public class AvaliacaoService {
     }
 
     // MÉTODO DE DELETAR AVALIAÇÃO
+    @Transactional
     public void deletar(Long clienteId, Long produtoId){
         AvaliacaoId id = new AvaliacaoId();
         
@@ -60,6 +63,33 @@ public class AvaliacaoService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Avaliação não encontrada!"));
     
         avaliacaoRepository.delete(avaliacao);
+    }
+
+    // MÉTODO DE EDITAR UMA AVALIAÇÃO
+    @Transactional
+    public AvaliacaoDTO editar(Long clienteId, Long produtoId, AvaliacaoDTO avaliacaoDTO){
+        
+        AvaliacaoId id = new AvaliacaoId();
+
+        Cliente cliente = clienteRepository.findById(clienteId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
+
+        Produto produto = produtoRepository.findById(produtoId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+     
+        id.setCliente(cliente);
+        id.setProduto(produto);
+
+        Avaliacao avaliacao = avaliacaoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Avaliação não encontrada!"));
+
+        avaliacao.setComentario(avaliacaoDTO.getComentario());
+        avaliacao.setNota(avaliacaoDTO.getNota());
+
+        LocalDateTime dataHoraCriacao = LocalDateTime.now(); 
+        avaliacao.setDataModificacao(dataHoraCriacao); 
+
+        return converterParaDTO(avaliacao);
     }
 
     // MÉTODO DE CONVERTER PARA DTO

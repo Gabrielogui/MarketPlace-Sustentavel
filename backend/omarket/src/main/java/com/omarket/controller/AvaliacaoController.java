@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +45,13 @@ public class AvaliacaoController {
     public ResponseEntity<String> deletar(@PathVariable Long clienteId, @PathVariable Long produtoId){
         avaliacaoService.deletar(clienteId, produtoId);
         return ResponseEntity.ok("Avaliação deletada com sucesso!");
+    }
+
+    // ======= MÉTODO PARA EDITAR AVALIAÇÃO =======
+    @PutMapping("/{clienteId}/{produtoId}")
+    public ResponseEntity<AvaliacaoDTO> editar(@PathVariable Long clienteId, @PathVariable Long produtoId ,@RequestBody AvaliacaoDTO avaliacaoDTO){
+        AvaliacaoDTO avaliacaoEditada = avaliacaoService.editar(clienteId, produtoId, avaliacaoDTO);
+        return ResponseEntity.ok(avaliacaoEditada);
     }
 
 }
