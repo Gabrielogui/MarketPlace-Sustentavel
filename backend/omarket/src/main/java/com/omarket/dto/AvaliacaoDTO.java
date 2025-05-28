@@ -23,6 +23,8 @@ public class AvaliacaoDTO {
 
     private LocalDateTime dataModificacao;
 
+    public AvaliacaoDTO(){ }
+
     public AvaliacaoDTO(Avaliacao avaliacao){
         this.clienteId       = avaliacao.getCliente().getId();
         this.produtoId       = avaliacao.getProduto().getId();
