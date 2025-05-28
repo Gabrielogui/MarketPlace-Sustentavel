@@ -10,19 +10,26 @@ import com.omarket.dto.AvaliacaoDTO;
 import com.omarket.entity.Avaliacao;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Produto;
+import com.omarket.entity.id.AvaliacaoId;
 import com.omarket.repository.AvaliacaoRepository;
 import com.omarket.repository.ClienteRepository;
 import com.omarket.repository.ProdutoRepository;
-
+import com.omarket.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class AvaliacaoService {
+
+    private final UsuarioRepository usuarioRepository;
     // |=======| ATRIBUTOS |=======|
     private final AvaliacaoRepository avaliacaoRepository;
     private final ClienteRepository clienteRepository;
     private final ProdutoRepository produtoRepository;
+
+    AvaliacaoService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     // |=======| MÉTODOS |=======|
     public AvaliacaoDTO adicionar(AvaliacaoDTO avaliacaoDTO){
@@ -44,6 +51,21 @@ public class AvaliacaoService {
         avaliacao.setDataModificacao(dataHoraCriacao);
 
         return converterParaDTO(avaliacao);
+    }
+
+    // MÉTODO DE DELETAR AVALIAÇÃO
+    public void deletar(Long clienteId, Long produtoId){
+        AvaliacaoId id = new AvaliacaoId();
+        
+        id.setCliente(clienteRepository.findById(clienteId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!")));
+        id.setProduto(produtoRepository.findById(produtoId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!")));
+
+        Avaliacao avaliacao = avaliacaoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Avaliação não encontrada!"));
+    
+        avaliacaoRepository.delete(avaliacao);
     }
 
     // MÉTODO DE CONVERTER PARA DTO

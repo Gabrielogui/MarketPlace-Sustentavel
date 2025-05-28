@@ -4,6 +4,8 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,13 @@ public class AvaliacaoController {
             .toUri();
 
         return ResponseEntity.created(location).body(avaliacaoNova);
+    }
+
+    // ======= MÉTODO PARA EXCLUIR AVALIACAO =======
+    @DeleteMapping("/{clienteId}/{produtoId}")
+    public ResponseEntity<String> deletar(@PathVariable Long clienteId, @PathVariable Long produtoId){
+        avaliacaoService.deletar(clienteId, produtoId);
+        return ResponseEntity.ok("Avaliação deletada com sucesso!");
     }
 
 }
