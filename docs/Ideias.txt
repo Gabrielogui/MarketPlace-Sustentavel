@@ -93,12 +93,12 @@ Métodos:
 		CalcularFrete - SEM METODO HTTP
 		Pagar - @post
 
-	- Avaliação: (CRUD)
-		Adicionar - @post
-		Excluir - @delete
-		ListarPorProduto - @get
-		ListarPorCliente - @get
-		Editar - @put
+	- Avaliação: (CRUD) --CHECK--
+		Adicionar - @post --CHECK--
+		Excluir - @delete --CHECK--
+		ListarPorProduto - @get --CHECK--
+		ListarPorCliente - @get --CHECK--
+		Editar - @put --CHECK--
 		
 		
 Total{
