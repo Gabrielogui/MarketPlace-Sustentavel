@@ -45,12 +45,12 @@ Métodos:
 		Listar - @get
 		Visualizar - @get
 		Buscar - @get
-		
-	- Endereco:
-		Adicionar/Cadastrar - @post
-		Visualizar - @get
-		Excluir - @delete
-		Editar - @put
+		 
+	- Endereco: --CHECK--
+		Adicionar/Cadastrar - @post --CHECK--
+		Visualizar - @get --CHECK--
+		Excluir - @delete --CHECK--
+		Editar - @put --CHECK--
 
 	- Categoria: --META 28/05-- --CHECK--
 		Cadastrar - @post --CHECK--
@@ -59,10 +59,10 @@ Métodos:
 		Listar - @get --CHECK--
 		Buscar - @get --CHECK--
 
-	- ImagemProduto: --META 28/05--
-		add - post
-		remov - delete
-		listar - get
+	- ImagemProduto: --META 28/05-- --CHECK--
+		add - post --CHECK--
+		remov - delete --CHECK--
+		listar - get --CHECK--
 		
 	- Produto: (CRUD) --META INICIAR 28/05-- 
 		Cadastrar - @post
