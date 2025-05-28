@@ -27,6 +27,13 @@ public class EnderecoService {
         return conventerParaDTO(endereco);
     }
 
+    @Transactional(readOnly = true)
+    public EnderecoDTO buscarPorId(Long id) {
+        Endereco endereco = enderecoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Endereço não encontrado com o ID: " + id));
+        return conventerParaDTO(endereco);
+    }
+
     private EnderecoDTO conventerParaDTO(Endereco endereco) {
         EnderecoDTO enderecoDTO = new EnderecoDTO();
         enderecoDTO.setId(endereco.getId());
