@@ -162,6 +162,7 @@ public class UsuarioService {
 
         return converterParaDTO(usuario);
     }
+    
     private UsuarioDTO converterParaDTO(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setId(usuario.getId());

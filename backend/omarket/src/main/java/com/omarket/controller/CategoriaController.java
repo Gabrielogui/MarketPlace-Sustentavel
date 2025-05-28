@@ -49,4 +49,10 @@ public class CategoriaController {
         categoriaService.deletar(id);
         return ResponseEntity.ok("Categoria deletada com sucesso!");
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoriaDTO> buscar(@PathVariable Long id){
+        CategoriaDTO categoriaDTO = categoriaService.buscar(id);
+        return ResponseEntity.ok(categoriaDTO);
+    }
 }

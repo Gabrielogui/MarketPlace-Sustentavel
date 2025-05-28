@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.CategoriaDTO;
@@ -19,6 +20,7 @@ public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
 
     // |=======| MÉTODOS |=======|
+    @Transactional
     public CategoriaDTO cadastrar(CategoriaDTO categoriaDTO){
         Categoria categoria = new Categoria();
 
@@ -32,6 +34,7 @@ public class CategoriaService {
     }
 
     // LISTAR TODAS AS CATEGORIAS:
+    @Transactional(readOnly = true)
     public List<CategoriaDTO> listar(){
         List<Categoria> categorias = categoriaRepository.findAll();
         List<CategoriaDTO> categoriasDTO = categorias.stream().map((categoria) -> new CategoriaDTO(categoria)).toList();
@@ -39,10 +42,20 @@ public class CategoriaService {
     }
 
     // DELETAR UMA CATEGORIA:
+    @Transactional
     public void deletar(Long id){
         Categoria categoria = categoriaRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada!"));
         categoriaRepository.delete(categoria);
+    }
+
+    // BUSCAR UMA CATEGORIA:
+    @Transactional
+    public CategoriaDTO buscar(Long id){
+        Categoria categoria = categoriaRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada!"));
+    
+        return converterParaDTO(categoria);
     }
 
     // CONVERTER PARA DTO:
