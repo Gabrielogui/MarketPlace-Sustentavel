@@ -7,8 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CategoriaDTO {
+    private Long id;
+
     @NotBlank(message = "O nome da categoria deve ser preenchido!")
     private String nome;
+
     @NotBlank(message = "A descrição deve ser preenchida!")
     private String descricao;
 }
