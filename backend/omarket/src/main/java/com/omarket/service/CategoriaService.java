@@ -2,7 +2,9 @@ package com.omarket.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.CategoriaDTO;
 import com.omarket.entity.Categoria;
@@ -34,6 +36,13 @@ public class CategoriaService {
         List<Categoria> categorias = categoriaRepository.findAll();
         List<CategoriaDTO> categoriasDTO = categorias.stream().map((categoria) -> new CategoriaDTO(categoria)).toList();
         return categoriasDTO;
+    }
+
+    // DELETAR UMA CATEGORIA:
+    public void deletar(Long id){
+        Categoria categoria = categoriaRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada!"));
+        categoriaRepository.delete(categoria);
     }
 
     // CONVERTER PARA DTO:
