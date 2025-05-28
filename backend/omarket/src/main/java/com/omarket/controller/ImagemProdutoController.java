@@ -5,6 +5,7 @@ import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,12 @@ public class ImagemProdutoController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         imagemProdutoService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ImagemProdutoDTO> buscar(@PathVariable Long id) {
+        ImagemProdutoDTO imagemProdutoDTO = imagemProdutoService.buscarPorId(id);
+        return ResponseEntity.ok(imagemProdutoDTO);
     }
     
 }

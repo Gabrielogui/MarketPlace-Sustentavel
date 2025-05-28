@@ -99,6 +99,13 @@ public class ImagemProdutoService {
         imagemProdutoRepository.delete(imagemProduto);
     }
 
+    @Transactional(readOnly = true)
+    public ImagemProdutoDTO buscarPorId(Long id) {
+        ImagemProduto imagemProduto = imagemProdutoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Imagem não encontrada com ID: " + id));
+        return converterParaDTO(imagemProduto);
+    }
+
     private ImagemProdutoDTO converterParaDTO(ImagemProduto img) {
         ImagemProdutoDTO dto = new ImagemProdutoDTO();
         dto.setId(img.getId());
