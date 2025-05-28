@@ -27,6 +27,7 @@ public class CategoriaController {
     // |=======| ATRIBUTOS |=======|
     private final CategoriaService categoriaService;
 
+    // ======= MÉTODO POST DE CADASTRAR =======
     @PostMapping("/cadastrar")
     public ResponseEntity<CategoriaDTO> cadastrar(@RequestBody @Validated CategoriaDTO categoriaDTO){
         CategoriaDTO categoriaNova = categoriaService.cadastrar(categoriaDTO);
@@ -39,24 +40,28 @@ public class CategoriaController {
         return ResponseEntity.created(location).body(categoriaNova);
     }
 
+    // ======= MÉTODO GET PARA LISTAR AS CATEGORIAS =======
     @GetMapping("/listar")
     public ResponseEntity<List<CategoriaDTO>> listat(){
         List<CategoriaDTO> categorias = categoriaService.listar();
         return ResponseEntity.ok(categorias);
     }
 
+    // ======= MÉTODO DELETE PARA DELETAR UMA CATEGORIA =======
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletar(@PathVariable Long id){
         categoriaService.deletar(id);
         return ResponseEntity.ok("Categoria deletada com sucesso!");
     }
 
+    // ======= MÉTODO GET PARA BUSCAR UMA CATEGORIA =======
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaDTO> buscar(@PathVariable Long id){
         CategoriaDTO categoriaDTO = categoriaService.buscar(id);
         return ResponseEntity.ok(categoriaDTO);
     }
 
+    // ======= MÉTODO PUT PARA EDITAR UMA CATEGORIA =======
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaDTO> editar(@PathVariable Long id, @RequestBody @Validated CategoriaDTO categoriaDTO){
         CategoriaDTO categoriaEditada = categoriaService.editar(id, categoriaDTO);

@@ -58,6 +58,7 @@ public class CategoriaService {
         return converterParaDTO(categoria);
     }
 
+    // MÉTODO EDITAR
     @Transactional
     public CategoriaDTO editar(Long id, CategoriaDTO categoriaDTO){
         Categoria categoria = categoriaRepository.findById(id)
