@@ -96,7 +96,8 @@ Métodos:
 	- Avaliação: (CRUD)
 		Adicionar - @post
 		Excluir - @delete
-		Listar - @get
+		ListarPorProduto - @get
+		ListarPorCliente - @get
 		Editar - @put
 		
 		
