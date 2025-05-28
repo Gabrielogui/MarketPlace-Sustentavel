@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +41,12 @@ public class EnderecoController {
     public ResponseEntity<EnderecoDTO> buscar(@PathVariable Long id) {
         EnderecoDTO enderecoDTO = enderecoService.buscarPorId(id);
         return ResponseEntity.ok(enderecoDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EnderecoDTO> editar(@PathVariable Long id, @RequestBody @Validated EnderecoDTO enderecoDTO) {
+        EnderecoDTO enderecoEditado = enderecoService.editar(id, enderecoDTO);
+        return ResponseEntity.ok(enderecoEditado);
     }
 
 }
