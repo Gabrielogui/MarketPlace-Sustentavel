@@ -57,6 +57,7 @@ Métodos:
 		Editar - @put
 		Excluir - @delete
 		Listar - @get
+		Buscar - @get
 
 	- ImagemProduto: --META 28/05--
 		add - post
