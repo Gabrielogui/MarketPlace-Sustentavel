@@ -81,6 +81,24 @@ public class ImagemProdutoService {
 
     }
 
+    @Transactional
+    public void delete(Long id) {
+        ImagemProduto imagemProduto = imagemProdutoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Imagem não encontrada com ID: " + id));
+
+        // Deletar o arquivo do disco
+        try {
+            Files.deleteIfExists(Paths.get(imagemProduto.getFilePath()));
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, 
+                "Falha ao deletar arquivo do disco", e);
+        }
+
+        // Deletar a entrada no banco de dados
+        imagemProdutoRepository.delete(imagemProduto);
+    }
+
     private ImagemProdutoDTO converterParaDTO(ImagemProduto img) {
         ImagemProdutoDTO dto = new ImagemProdutoDTO();
         dto.setId(img.getId());
