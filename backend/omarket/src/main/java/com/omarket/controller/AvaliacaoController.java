@@ -1,10 +1,12 @@
 package com.omarket.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,5 +55,14 @@ public class AvaliacaoController {
         AvaliacaoDTO avaliacaoEditada = avaliacaoService.editar(clienteId, produtoId, avaliacaoDTO);
         return ResponseEntity.ok(avaliacaoEditada);
     }
+
+    // ======= MÉTODO PARA LISTAR POR CLIENTE =======
+    @GetMapping("/listar/{clienteId}")
+    public ResponseEntity<List<AvaliacaoDTO>> listarPorCliente(@PathVariable Long clienteId){
+        List<AvaliacaoDTO> avaliacoes = avaliacaoService.listarPorCliente(clienteId);
+        return ResponseEntity.ok(avaliacoes);
+    }
+ 
+    // ======= MÉTPDP PARA LISTAR POR PRODUTO =======
 
 }

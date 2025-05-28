@@ -2,6 +2,8 @@ package com.omarket.dto;
 
 import java.time.LocalDateTime;
 
+import com.omarket.entity.Avaliacao;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -20,4 +22,12 @@ public class AvaliacaoDTO {
     private Integer nota;
 
     private LocalDateTime dataModificacao;
+
+    public AvaliacaoDTO(Avaliacao avaliacao){
+        this.clienteId       = avaliacao.getCliente().getId();
+        this.produtoId       = avaliacao.getProduto().getId();
+        this.comentario      = avaliacao.getComentario();
+        this.nota            = avaliacao.getNota();
+        this.dataModificacao = avaliacao.getDataModificacao();
+    }
 }

@@ -1,6 +1,7 @@
 package com.omarket.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -90,6 +91,18 @@ public class AvaliacaoService {
         avaliacao.setDataModificacao(dataHoraCriacao); 
 
         return converterParaDTO(avaliacao);
+    }
+
+    // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR PRODUTOS
+    @Transactional(readOnly = true)
+    public List<AvaliacaoDTO> listarPorCliente(Long clienteId){
+        
+         Cliente cliente = clienteRepository.findById(clienteId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
+
+        List<Avaliacao> avaliacoes = avaliacaoRepository.findByIdCliente(cliente);
+        List<AvaliacaoDTO> avaliacoesDTO = avaliacoes.stream().map((avaliacao) -> new AvaliacaoDTO(avaliacao)).toList();
+        return avaliacoesDTO;
     }
 
     // MÉTODO DE CONVERTER PARA DTO
