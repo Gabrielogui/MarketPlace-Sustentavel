@@ -1,5 +1,7 @@
 package com.omarket.dto;
 
+import com.omarket.entity.Categoria;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +16,14 @@ public class CategoriaDTO {
 
     @NotBlank(message = "A descrição deve ser preenchida!")
     private String descricao;
+
+    // CONSTRUTOR VAZIO
+    public CategoriaDTO(){ }
+
+    // CONSTRUTOR COM AS INFORMAÇÕES DE CATEGORIA
+    public CategoriaDTO(Categoria categoria){
+        this.id        = categoria.getId();
+        this.nome      = categoria.getNome();
+        this.descricao = categoria.getDescricao();
+    }
 }

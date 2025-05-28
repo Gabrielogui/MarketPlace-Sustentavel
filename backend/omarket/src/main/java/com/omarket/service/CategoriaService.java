@@ -1,5 +1,7 @@
 package com.omarket.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.omarket.dto.CategoriaDTO;
@@ -25,6 +27,13 @@ public class CategoriaService {
 
         return converterParaDTO(categoria);
 
+    }
+
+    // LISTAR TODAS AS CATEGORIAS:
+    public List<CategoriaDTO> listar(){
+        List<Categoria> categorias = categoriaRepository.findAll();
+        List<CategoriaDTO> categoriasDTO = categorias.stream().map((categoria) -> new CategoriaDTO(categoria)).toList();
+        return categoriasDTO;
     }
 
     // CONVERTER PARA DTO:
