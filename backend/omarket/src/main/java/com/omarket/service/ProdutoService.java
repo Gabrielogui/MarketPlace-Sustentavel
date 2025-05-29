@@ -48,6 +48,14 @@ public class ProdutoService {
         return converterParaDTO(produto);
     }
 
+    @Transactional
+    public ProdutoDTO visualizar(Long id){
+        Produto produto = produtoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+
+        return converterParaDTO(produto);
+    }
+
     private ProdutoDTO converterParaDTO(Produto produto) {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setId(produto.getId());

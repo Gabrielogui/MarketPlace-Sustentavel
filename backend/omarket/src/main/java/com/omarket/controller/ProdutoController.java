@@ -4,6 +4,8 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,13 @@ public class ProdutoController {
 
         return ResponseEntity.created(location).body(produtoNovo);
         
+    }
+
+    // ======= MÉTODO GET PARA VISUALIZAR UM PRODUTO =======
+    @GetMapping("/{id}")
+    public ResponseEntity<ProdutoDTO> visualizar(@PathVariable Long id){
+        ProdutoDTO produtoDTO = produtoService.visualizar(id);
+        return ResponseEntity.ok(produtoDTO);
     }
 
 }
