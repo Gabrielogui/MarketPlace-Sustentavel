@@ -1,6 +1,7 @@
 package com.omarket.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,12 +49,19 @@ public class ProdutoService {
         return converterParaDTO(produto);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ProdutoDTO visualizar(Long id){
         Produto produto = produtoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
 
         return converterParaDTO(produto);
+    }
+
+    @Transactional
+    public List<ProdutoDTO> listar(){
+        List<Produto> produtos = produtoRepository.findAll(); 
+        List<ProdutoDTO> produtosDTO = produtos.stream().map(this::converterParaDTO).toList();
+        return produtosDTO;
     }
 
     private ProdutoDTO converterParaDTO(Produto produto) {

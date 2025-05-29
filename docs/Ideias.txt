@@ -70,6 +70,7 @@ Métodos:
 		Visualizar - @get
 		MudarStatus - @patch
 		Listar - @get
+		ListarPorFornecedor - @get
 		Buscar - @get
 		Filtrar - @get
 

@@ -1,6 +1,7 @@
 package com.omarket.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +44,13 @@ public class ProdutoController {
     public ResponseEntity<ProdutoDTO> visualizar(@PathVariable Long id){
         ProdutoDTO produtoDTO = produtoService.visualizar(id);
         return ResponseEntity.ok(produtoDTO);
+    }
+
+    // ======= MÉTODO =======
+    @GetMapping("/listar")
+    public ResponseEntity<List<ProdutoDTO>> listar(){
+        List<ProdutoDTO> produtosDTO = produtoService.listar();
+        return ResponseEntity.ok(produtosDTO);
     }
 
 }
