@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.omarket.dto.ImagemProdutoDTO;
 import com.omarket.dto.ProdutoDTO;
 import com.omarket.entity.Categoria;
 import com.omarket.entity.Fornecedor;
@@ -44,6 +43,8 @@ public class ProdutoService {
         // Salva o novo produto
         produtoRepository.save(produto);
 
+    
+
         return converterParaDTO(produto);
     }
 
@@ -61,7 +62,7 @@ public class ProdutoService {
         // Converte as imagens, se necessário
         if (produto.getImagens() != null && !produto.getImagens().isEmpty()) {
             produtoDTO.setImagens(produto.getImagens().stream()
-                .map(this::converterImagemParaDTO) // Usa o método de conversão aqui
+                .map(ImagemProdutoService::converterParaDTO) // Usa o método de conversão aqui
                 // .map(imagem -> converterImagemParaDTO(imagem)) // Alternativa se não usar method reference
                 .toList());
         } else {
@@ -69,17 +70,5 @@ public class ProdutoService {
         }
 
         return produtoDTO;
-    }
-
-    private ImagemProdutoDTO converterImagemParaDTO(ImagemProduto imagem) {
-        if (imagem == null) {
-            return null;
-        }
-        ImagemProdutoDTO dto = new ImagemProdutoDTO();
-        dto.setId(imagem.getId());
-        dto.setFileName(imagem.getFileName());
-        dto.setFilePath(imagem.getFilePath());
-        dto.setUploadedAt(imagem.getUploadedAt());
-        return dto;
     }
 }

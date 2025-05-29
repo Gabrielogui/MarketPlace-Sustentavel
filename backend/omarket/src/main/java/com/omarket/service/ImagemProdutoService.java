@@ -108,7 +108,10 @@ public class ImagemProdutoService {
         return converterParaDTO(imagemProduto);
     }
 
-    private ImagemProdutoDTO converterParaDTO(ImagemProduto img) {
+    public static ImagemProdutoDTO converterParaDTO(ImagemProduto img) {
+        if (img == null) {
+            return null;
+        }
         ImagemProdutoDTO dto = new ImagemProdutoDTO();
         dto.setId(img.getId());
         dto.setProdutoId(img.getProduto().getId()); // só o ID, não o objeto
