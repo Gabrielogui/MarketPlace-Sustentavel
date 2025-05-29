@@ -3,8 +3,10 @@ package com.omarket.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.ProdutoDTO;
 import com.omarket.entity.Categoria;
@@ -52,16 +54,27 @@ public class ProdutoService {
     @Transactional(readOnly = true)
     public ProdutoDTO visualizar(Long id){
         Produto produto = produtoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Produto não encontrado!"));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
 
         return converterParaDTO(produto);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ProdutoDTO> listar(){
         List<Produto> produtos = produtoRepository.findAll(); 
         List<ProdutoDTO> produtosDTO = produtos.stream().map(this::converterParaDTO).toList();
         return produtosDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProdutoDTO> listarPorFornecedor(Long fornecedorId){
+        Fornecedor fornecedor = fornecedorRepository.findById(fornecedorId)
+            .orElseThrow(() -> (new ResponseStatusException(HttpStatus.NOT_FOUND, "Fornecedor não encontrado!")));
+
+        List<Produto> produtos = produtoRepository.findByIdFornecedor(fornecedor);
+        List<ProdutoDTO> produtosDTO = produtos.stream().map(this::converterParaDTO).toList();
+        return produtosDTO;
+        
     }
 
     private ProdutoDTO converterParaDTO(Produto produto) {

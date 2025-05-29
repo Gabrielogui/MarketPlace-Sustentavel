@@ -46,11 +46,16 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoDTO);
     }
 
-    // ======= MÉTODO =======
+    // ======= MÉTODO GET PARA LISTAR UM PRODUTO =======
     @GetMapping("/listar")
     public ResponseEntity<List<ProdutoDTO>> listar(){
         List<ProdutoDTO> produtosDTO = produtoService.listar();
         return ResponseEntity.ok(produtosDTO);
     }
 
+    @GetMapping("/listar/{fornecedorId}")
+    public ResponseEntity<List<ProdutoDTO>> listarPorFornecedor(@PathVariable Long fornecedorId){
+        List<ProdutoDTO> produtosDTO = produtoService.listarPorFornecedor(fornecedorId);
+        return ResponseEntity.ok(produtosDTO);
+    }
 }
