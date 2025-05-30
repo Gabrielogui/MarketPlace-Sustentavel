@@ -11,4 +11,6 @@ import com.omarket.entity.Produto;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     List<Produto> findByFornecedor(Fornecedor fornecedor);
+
+    List<Produto> findByNomeContainingIgnoreCase(String nome);
 }

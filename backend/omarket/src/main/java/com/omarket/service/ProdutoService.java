@@ -110,6 +110,15 @@ public class ProdutoService {
         return converterParaDTO(produto);
     }
 
+    @Transactional(readOnly = true)
+    public List<ProdutoDTO> buscarPorNome(String nome) {
+        List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCase(nome);
+        if (produtos.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum produto encontrado com o nome: " + nome);
+        }
+        return produtos.stream().map(this::converterParaDTO).toList();
+    }
+
     private ProdutoDTO converterParaDTO(Produto produto) {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setId(produto.getId());

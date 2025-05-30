@@ -72,4 +72,11 @@ public class ProdutoController {
         ProdutoDTO produtoEditado = produtoService.editar(id, produtoDTO);
         return ResponseEntity.ok(produtoEditado);
     }
+
+    @GetMapping("/buscar/{nome}")
+    public ResponseEntity<List<ProdutoDTO>> buscarPorNome(@PathVariable String nome) {
+        List<ProdutoDTO> produtosDTO = produtoService.buscarPorNome(nome);
+        return ResponseEntity.ok(produtosDTO);
+    }
+
 }
