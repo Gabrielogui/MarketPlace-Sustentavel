@@ -55,9 +55,15 @@ public class ProdutoController {
         return ResponseEntity.ok(produtosDTO);
     }
 
-    @GetMapping("/listar/{fornecedorId}")
+    @GetMapping("/listar/fornecedor/{fornecedorId}")
     public ResponseEntity<List<ProdutoDTO>> listarPorFornecedor(@PathVariable Long fornecedorId){
         List<ProdutoDTO> produtosDTO = produtoService.listarPorFornecedor(fornecedorId);
+        return ResponseEntity.ok(produtosDTO);
+    }
+
+    @GetMapping("/listar/categoria/{categoriaId}")
+    public ResponseEntity<List<ProdutoDTO>> listarPorCategoria(@PathVariable Long categoriaId){
+        List<ProdutoDTO> produtosDTO = produtoService.listarPorCategoria(categoriaId);
         return ResponseEntity.ok(produtosDTO);
     }
 

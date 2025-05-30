@@ -72,9 +72,26 @@ public class ProdutoService {
             .orElseThrow(() -> (new ResponseStatusException(HttpStatus.NOT_FOUND, "Fornecedor não encontrado!")));
 
         List<Produto> produtos = produtoRepository.findByFornecedor(fornecedor);
+        if (produtos.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum produto encontrado para a categoria com ID: " + fornecedorId);
+        }
         List<ProdutoDTO> produtosDTO = produtos.stream().map(this::converterParaDTO).toList();
         return produtosDTO;
         
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProdutoDTO> listarPorCategoria(Long categoriaId){
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada!"));
+
+        List<Produto> produtos = produtoRepository.findByCategoria(categoria);
+        if (produtos.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum produto encontrado para a categoria com ID: " + categoriaId);
+        }
+        
+        List<ProdutoDTO> produtosDTO = produtos.stream().map(this::converterParaDTO).toList();
+        return produtosDTO;
     }
 
     @Transactional
