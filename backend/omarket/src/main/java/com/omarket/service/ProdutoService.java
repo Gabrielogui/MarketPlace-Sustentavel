@@ -71,7 +71,7 @@ public class ProdutoService {
         Fornecedor fornecedor = fornecedorRepository.findById(fornecedorId)
             .orElseThrow(() -> (new ResponseStatusException(HttpStatus.NOT_FOUND, "Fornecedor não encontrado!")));
 
-        List<Produto> produtos = produtoRepository.findByIdFornecedor(fornecedor);
+        List<Produto> produtos = produtoRepository.findByFornecedor(fornecedor);
         List<ProdutoDTO> produtosDTO = produtos.stream().map(this::converterParaDTO).toList();
         return produtosDTO;
         
