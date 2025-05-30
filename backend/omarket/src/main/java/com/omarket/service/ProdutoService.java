@@ -1,8 +1,10 @@
 package com.omarket.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,6 +136,25 @@ public class ProdutoService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum produto encontrado com o nome: " + nome);
         }
         return produtos.stream().map(this::converterParaDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProdutoDTO> filtrar(BigDecimal precoMin, BigDecimal precoMax, Integer notaMin, String order){
+        // 1) Define os valores padrão, caso não venham da requisição
+        BigDecimal min = precoMin != null ? precoMin : BigDecimal.ZERO;
+        BigDecimal max = precoMax != null ? precoMax : BigDecimal.valueOf(Double.MAX_VALUE);
+        Double minNota = notaMin != null ? notaMin.doubleValue() : 0.0;
+        boolean asc = !"desc".equalsIgnoreCase(order);
+
+        // 2) Chama o repositório com método custom (veja método @Query mais abaixo)
+        Sort sort = Sort.by(asc ? Sort.Direction.ASC : Sort.Direction.DESC, "preco");
+        List<Produto> produtos = produtoRepository
+            .filtrarEOrdenar(min, max, sort);
+
+        // 3) Converte para DTO e retorna
+        return produtos.stream()
+                       .map(this::converterParaDTO)
+                       .toList();
     }
 
     private ProdutoDTO converterParaDTO(Produto produto) {

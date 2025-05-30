@@ -57,7 +57,7 @@ public class AvaliacaoController {
     }
 
     // ======= MÉTODO PARA LISTAR POR CLIENTE =======
-    @GetMapping("/listar/clietne/{clienteId}")
+    @GetMapping("/listar/cliente/{clienteId}")
     public ResponseEntity<List<AvaliacaoDTO>> listarPorCliente(@PathVariable Long clienteId){
         List<AvaliacaoDTO> avaliacoes = avaliacaoService.listarPorCliente(clienteId);
         return ResponseEntity.ok(avaliacoes);

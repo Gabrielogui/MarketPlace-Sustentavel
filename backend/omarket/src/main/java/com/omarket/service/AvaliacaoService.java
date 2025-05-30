@@ -47,6 +47,8 @@ public class AvaliacaoService {
         LocalDateTime dataHoraCriacao = LocalDateTime.now(); 
         avaliacao.setDataModificacao(dataHoraCriacao);
 
+        avaliacaoRepository.save(avaliacao);
+
         return converterParaDTO(avaliacao);
     }
 

@@ -1,5 +1,6 @@
 package com.omarket.controller;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -84,5 +86,17 @@ public class ProdutoController {
         List<ProdutoDTO> produtosDTO = produtoService.buscarPorNome(nome);
         return ResponseEntity.ok(produtosDTO);
     }
+
+    @GetMapping("/filtrar")
+    public ResponseEntity<List<ProdutoDTO>> filtrar(
+        @RequestParam(name = "precoMin", required = false) BigDecimal precoMin,
+        @RequestParam(name = "precoMax", required = false) BigDecimal precoMax,
+        @RequestParam(name = "notaMin",  required = false) Integer notaMin,
+        @RequestParam(name = "order",    required = false, defaultValue = "asc") String order
+    ){
+        List<ProdutoDTO> produtosFiltrados = produtoService.filtrar(precoMin, precoMax, notaMin, order);
+        return ResponseEntity.ok(produtosFiltrados);
+    }
+    
 
 }
