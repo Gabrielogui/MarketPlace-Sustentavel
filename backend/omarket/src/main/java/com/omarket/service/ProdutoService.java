@@ -77,6 +77,16 @@ public class ProdutoService {
         
     }
 
+    @Transactional
+    public ProdutoDTO ativar(Long id) {
+        Produto produto = produtoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+
+        produto.setStatus("ATIVO");
+
+        return converterParaDTO(produto);
+    }
+
     private ProdutoDTO converterParaDTO(Produto produto) {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setId(produto.getId());

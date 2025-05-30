@@ -65,12 +65,12 @@ Métodos:
 		listar - get --CHECK--
 		
 	- Produto: (CRUD) --META INICIAR 28/05-- 
-		Cadastrar - @post
-		Editar - @patch
-		Visualizar - @get
-		MudarStatus - @patch
-		Listar - @get
-		ListarPorFornecedor - @get
+		Cadastrar - @post --CHECK--
+		Editar - @patch 
+		Visualizar - @get --CHECK--
+		setAtivo - @patch
+		Listar - @get --CHECK--
+		ListarPorFornecedor - @get --CHECK--
 		Buscar - @get
 		Filtrar - @get
 

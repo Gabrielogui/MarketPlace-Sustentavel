@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,5 +58,11 @@ public class ProdutoController {
     public ResponseEntity<List<ProdutoDTO>> listarPorFornecedor(@PathVariable Long fornecedorId){
         List<ProdutoDTO> produtosDTO = produtoService.listarPorFornecedor(fornecedorId);
         return ResponseEntity.ok(produtosDTO);
+    }
+
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<ProdutoDTO> ativar(@PathVariable Long id){
+        ProdutoDTO produtoAtivado = produtoService.ativar(id);
+        return ResponseEntity.ok(produtoAtivado);
     }
 }
