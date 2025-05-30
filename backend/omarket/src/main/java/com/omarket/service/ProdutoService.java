@@ -87,6 +87,29 @@ public class ProdutoService {
         return converterParaDTO(produto);
     }
 
+    @Transactional
+    public ProdutoDTO editar(Long id, ProdutoDTO produtoDTO) {
+        Produto produto = produtoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+
+        // Atualiza os campos do produto
+        produto.setNome(produtoDTO.getNome());
+        produto.setDescricao(produtoDTO.getDescricao());
+        produto.setPreco(produtoDTO.getPreco());
+        produto.setEstoque(produtoDTO.getEstoque());
+        
+        // Atualiza a categoria e o fornecedor
+        Categoria categoria = categoriaRepository.findById(produtoDTO.getCategoriaId())
+            .orElseThrow(() -> new RuntimeException("Categoria não encontrada com o ID: " + produtoDTO.getCategoriaId()));
+        produto.setCategoria(categoria);
+        
+        Fornecedor fornecedor = fornecedorRepository.findById(produtoDTO.getFornecedorId())
+            .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com o ID: " + produtoDTO.getFornecedorId()));
+        produto.setFornecedor(fornecedor);
+
+        return converterParaDTO(produto);
+    }
+
     private ProdutoDTO converterParaDTO(Produto produto) {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setId(produto.getId());

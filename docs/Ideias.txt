@@ -68,7 +68,7 @@ Métodos:
 		Cadastrar - @post --CHECK--
 		Editar - @patch 
 		Visualizar - @get --CHECK--
-		setAtivo - @patch
+		setAtivo - @patch --CHECK--
 		Listar - @get --CHECK--
 		ListarPorFornecedor - @get --CHECK--
 		Buscar - @get

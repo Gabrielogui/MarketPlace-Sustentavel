@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,5 +65,11 @@ public class ProdutoController {
     public ResponseEntity<ProdutoDTO> ativar(@PathVariable Long id){
         ProdutoDTO produtoAtivado = produtoService.ativar(id);
         return ResponseEntity.ok(produtoAtivado);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProdutoDTO> editar(@PathVariable Long id, @RequestBody @Validated ProdutoDTO produtoDTO){
+        ProdutoDTO produtoEditado = produtoService.editar(id, produtoDTO);
+        return ResponseEntity.ok(produtoEditado);
     }
 }
