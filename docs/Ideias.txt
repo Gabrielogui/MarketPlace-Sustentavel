@@ -68,11 +68,12 @@ Métodos:
 		Cadastrar - @post --CHECK--
 		Editar - @patch --CHECK--
 		Visualizar - @get --CHECK--
-		setAtivo - @patch --CHECK--
+		ativar - @patch --CHECK--
+		desativar - @patch
 		Listar - @get --CHECK--
 		ListarPorFornecedor - @get --CHECK--
-		Buscar - @get
-		Filtrar - @get
+		Buscar - @get --CHECK--
+		Filtrar - @get --CHECK-- +-
 
 	- Carrinho: (CRUD)
 		Criar - @post

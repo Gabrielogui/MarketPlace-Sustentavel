@@ -75,6 +75,12 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoAtivado);
     }
 
+    @PatchMapping("/{id}/desativar")
+    public ResponseEntity<ProdutoDTO> desativar(@PathVariable Long id){
+        ProdutoDTO produtoDesativado = produtoService.desativar(id);
+        return ResponseEntity.ok(produtoDesativado);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoDTO> editar(@PathVariable Long id, @RequestBody @Validated ProdutoDTO produtoDTO){
         ProdutoDTO produtoEditado = produtoService.editar(id, produtoDTO);

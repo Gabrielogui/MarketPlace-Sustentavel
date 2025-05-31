@@ -107,6 +107,16 @@ public class ProdutoService {
     }
 
     @Transactional
+    public ProdutoDTO desativar(Long id) {
+        Produto produto = produtoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+
+        produto.setStatus("INATIVO");
+
+        return converterParaDTO(produto);
+    }
+
+    @Transactional
     public ProdutoDTO editar(Long id, ProdutoDTO produtoDTO) {
         Produto produto = produtoRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
