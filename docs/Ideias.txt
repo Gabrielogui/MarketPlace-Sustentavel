@@ -90,9 +90,13 @@ Métodos:
 		VisualizarPedido - @get
 		CalcularTotal
 		CalcularFrete
+
+	- Favorito:
+		- Adicionar - @put
+		- Remover - @delete
+		- Listar - @get
 		
 	- Pagamento:
-		CalcularFrete - SEM METODO HTTP
 		Pagar - @post
 
 	- Avaliação: (CRUD) --CHECK--
@@ -101,6 +105,17 @@ Métodos:
 		ListarPorProduto - @get --CHECK--
 		ListarPorCliente - @get --CHECK--
 		Editar - @put --CHECK--
+
+-> to do:
+	* Pedido
+	* carrinho
+	* testar imagemproduto
+	* favorito
+	* autenticação
+	* filtro produto (rever)
+	* imagemfornecedor
+	* pagamento
+	* Administrador
 		
 		
 Total{
