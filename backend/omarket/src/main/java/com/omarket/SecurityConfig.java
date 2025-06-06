@@ -5,9 +5,11 @@ import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 //import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,11 +24,39 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            // Regras de autorização
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() // Permite tudo
+                // 1) Endpoints totalmente públicos (não exigem token)
+                .requestMatchers(
+                    HttpMethod.POST, "/usuario/cadastrar"
+                ).permitAll()
+                .requestMatchers(
+                    HttpMethod.POST, "/auth/login"
+                ).permitAll()
+                .requestMatchers(
+                    HttpMethod.GET, "/api/produtos/**"
+                ).permitAll()
+
+                // 2) Endpoints do administrador: só ROLE_ADMINISTRADOR
+                // OBS: usando hasRole("ADMINISTRADOR") equivale a hasAuthority("ROLE_ADMINISTRADOR")
+                .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
+
+                // 3) Endpoints do fornecedor: só ROLE_FORNECEDOR
+                .requestMatchers("/api/fornecedor/**").hasRole("FORNECEDOR")
+
+                // 4) Endpoints do cliente: só ROLE_CLIENTE
+                .requestMatchers("/api/cliente/**").hasRole("CLIENTE")
+                .requestMatchers("/api/carrinhos/**").hasRole("CLIENTE")
+                .requestMatchers("/api/pedidos/**").hasRole("CLIENTE")
+
+                // 5) Quaisquer outras requisições exigem autenticação genérica
+                .anyRequest().authenticated()
             )
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable());
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Configura a política de sessão como stateless
+            );
         
         return http.build();
     }
