@@ -13,6 +13,8 @@ import com.omarket.entity.Cliente;
 import com.omarket.entity.Endereco;
 import com.omarket.entity.Fornecedor;
 import com.omarket.entity.Usuario;
+import com.omarket.entity.enum_.StatusUsuario;
+import com.omarket.entity.enum_.TipoUsuario;
 import com.omarket.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +41,7 @@ public class UsuarioService {
         Usuario usuario;
 
         // ATRIBUINDO OS ATRIBUTOS ESPECÍFICOS
-        switch (usuarioDTO.getTipoConta()) {
+        switch (usuarioDTO.getTipoUsuario()) {
             case CLIENTE:
                 Cliente cliente = new Cliente();
 
@@ -47,7 +49,7 @@ public class UsuarioService {
                 cliente.setCpf(usuarioDTO.getCpf());
 
                 cliente.setDataNascimento(usuarioDTO.getDataNascimento());
-                cliente.setStatus("ATIVO");
+                cliente.setStatus(StatusUsuario.ATIVO);
                 usuario = cliente;
                 break;
         
@@ -57,7 +59,7 @@ public class UsuarioService {
                 // VERIFICAR SE O CNPJ JÁ ESTÁ CADASTRADO
                 fornecedor.setCnpj(usuarioDTO.getCnpj());
                 
-                fornecedor.setStatus("INATIVO");
+                fornecedor.setStatus(StatusUsuario.INATIVO);
                 usuario = fornecedor;
                 break;
 
@@ -110,7 +112,7 @@ public class UsuarioService {
         }
 
         // SETANDO O STATUS COMO INATIVO
-        usuario.setStatus("INATIVO");
+        usuario.setStatus(StatusUsuario.INATIVO);
 
         return converterParaDTO(usuario);
     }
@@ -175,7 +177,7 @@ public class UsuarioService {
             Cliente cliente = (Cliente) usuario;
             usuarioDTO.setCpf(cliente.getCpf());
             usuarioDTO.setDataNascimento(cliente.getDataNascimento());
-            usuarioDTO.setTipoConta(UsuarioDTO.TipoConta.CLIENTE);
+            usuarioDTO.setTipoUsuario(TipoUsuario.CLIENTE);
 
             if(cliente.getEndereco() != null){
                 EnderecoDTO enderecoDTO = new EnderecoDTO();
@@ -189,7 +191,7 @@ public class UsuarioService {
         } else if (usuario instanceof Fornecedor) {
             Fornecedor fornecedor = (Fornecedor) usuario;
             usuarioDTO.setCnpj(fornecedor.getCnpj());
-            usuarioDTO.setTipoConta(UsuarioDTO.TipoConta.FORNECEDOR);
+            usuarioDTO.setTipoUsuario(TipoUsuario.FORNECEDOR);
 
             if(fornecedor.getEndereco() != null){
                 EnderecoDTO enderecoDTO = new EnderecoDTO();
@@ -202,7 +204,7 @@ public class UsuarioService {
             }
             
         } else if(usuario instanceof Administrador){
-            usuarioDTO.setTipoConta(UsuarioDTO.TipoConta.ADMINISTRADOR);
+            usuarioDTO.setTipoUsuario(TipoUsuario.ADMINISTRADOR);
         }
         
         return usuarioDTO;
