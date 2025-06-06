@@ -21,7 +21,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "usuario")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_usuario", 
+@DiscriminatorColumn(name = "disc_tipo_usuario", 
 discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter

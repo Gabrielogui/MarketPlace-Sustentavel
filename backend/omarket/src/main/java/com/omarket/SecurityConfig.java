@@ -39,7 +39,7 @@ public class SecurityConfig {
                     HttpMethod.POST, "/usuario/cadastrar"
                 ).permitAll()
                 .requestMatchers(
-                    HttpMethod.POST, "/auth/login"
+                    HttpMethod.POST, "/auth/**"
                 ).permitAll()
                 .requestMatchers(
                     HttpMethod.GET, "/api/produtos/**"
