@@ -3,6 +3,8 @@ package com.omarket.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.omarket.entity.enum_.TipoUsuario;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -10,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +32,14 @@ public class Fornecedor extends Usuario {
 
     @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagemFornecedor> imagens = new ArrayList<>();
+
+    @PrePersist
+    public void prePersistRole() {
+        // Ao persistir pela primeira vez, garante que TipoUsuario seja FORNECEDOR
+        if (getTipoUsuario() == null) {
+            setTipoUsuario(TipoUsuario.FORNECEDOR);
+        }
+    }
 
     
 }

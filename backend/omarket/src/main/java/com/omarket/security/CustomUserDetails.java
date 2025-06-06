@@ -20,7 +20,7 @@ public class CustomUserDetails implements UserDetails{
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(
             new SimpleGrantedAuthority(usuario.getTipoUsuario().toString())
-        ); // Retorna uma lista vazia de autoridades
+        );
     }
 
     @Override

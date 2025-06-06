@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.omarket.entity.enum_.TipoUsuario;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -12,6 +14,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,5 +41,13 @@ public class Cliente extends Usuario {
 
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Carrinho carrinho;
+
+    @PrePersist
+    public void prePersistRole() {
+        // Ao persistir pela primeira vez, garante que role seja ROLE_CLIENTE
+        if (getTipoUsuario() == null) {
+            setTipoUsuario(TipoUsuario.CLIENTE);
+        }
+    }
 
 }
