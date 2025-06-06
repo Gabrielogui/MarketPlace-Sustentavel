@@ -2,6 +2,9 @@ package com.omarket.dto;
 
 import java.time.LocalDate;
 
+import com.omarket.entity.enum_.StatusUsuario;
+import com.omarket.entity.enum_.TipoUsuario;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -30,10 +33,10 @@ public class UsuarioDTO {
     @NotBlank(message = "Telefone é obrigatório!")
     private String telefone;
 
-    private String status;
+    private StatusUsuario status;
 
     @NotNull(message = "É necessário selecionar o tipo da conta!")
-    private TipoConta tipoConta;
+    private TipoUsuario tipoUsuario;
 
     @Valid
     private EnderecoDTO enderecoDTO;
@@ -49,6 +52,4 @@ public class UsuarioDTO {
 
     // ======= CAMPOS ESPECÍFICOS PARA ADM        =======
 
-    // |=======| ENUM DO TIPO CONTA |=======|
-    public enum TipoConta { CLIENTE, FORNECEDOR, ADMINISTRADOR }
 }
