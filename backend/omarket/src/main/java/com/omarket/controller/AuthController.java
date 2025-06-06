@@ -1,0 +1,59 @@
+package com.omarket.controller;
+
+import java.net.URI;
+
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.omarket.dto.AuthRequestDTO;
+import com.omarket.dto.RegisterDTO;
+import com.omarket.dto.UsuarioDTO;
+import com.omarket.repository.UsuarioRepository;
+import com.omarket.security.CustomUserDetails;
+import com.omarket.service.UsuarioService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+    private final AuthenticationManager authenticationManager;
+    private final UsuarioService usuarioService;
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody @Valid AuthRequestDTO loginRequest) {
+        var usernamePassword = new UsernamePasswordAuthenticationToken(
+            loginRequest.getEmail(), 
+            loginRequest.getSenha()
+        );
+        var auth = authenticationManager.authenticate(usernamePassword);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/cadastrar")
+    public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Validated UsuarioDTO usuarioDTO){
+        UsuarioDTO usuarioNovo = usuarioService.cadastrar(usuarioDTO);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(usuarioNovo.getId())
+            .toUri();
+
+        return ResponseEntity.created(location).body(usuarioNovo);
+    }
+
+}

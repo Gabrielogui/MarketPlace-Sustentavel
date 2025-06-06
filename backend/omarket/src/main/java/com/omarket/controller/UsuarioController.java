@@ -28,7 +28,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     // ======= POST PARA CADASTRO DO USUÁRIO =======
-    @PostMapping("/cadastrar")
+    /*@PostMapping("/cadastrar")
     public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Validated UsuarioDTO usuarioDTO){
         UsuarioDTO usuarioNovo = usuarioService.cadastrar(usuarioDTO);
 
@@ -38,7 +38,7 @@ public class UsuarioController {
             .toUri();
 
         return ResponseEntity.created(location).body(usuarioNovo);
-    }
+    } */
 
     // ======= GET DE UM USUÁRIO =======
     @GetMapping("/{id}")
