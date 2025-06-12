@@ -19,7 +19,9 @@ public class ClienteService implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // |  
+    // |=======| MÉTODOS |=======|
+    
+    // CADASTRAR
     @Override
     @Transactional
     public UsuarioDTO cadastrar(UsuarioDTO usuarioDTO){
@@ -57,6 +59,17 @@ public class ClienteService implements UsuarioService {
         return converterParaDTO(usuario);
     }
 
+    //BUSCAR:
+    @Override
+    @Transactional(readOnly = true)
+    public UsuarioDTO buscar(Long id){
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+    
+        return converterParaDTO(usuario);
+    }
+
+    // CONVERTER PARA DTO
     @Override
     @Transactional
     public UsuarioDTO converterParaDTO(Usuario usuario){
