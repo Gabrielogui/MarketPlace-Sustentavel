@@ -17,7 +17,7 @@ import com.omarket.dto.AuthResponseDTO;
 import com.omarket.dto.UsuarioDTO;
 import com.omarket.security.CustomUserDetails;
 import com.omarket.security.TokenService;
-import com.omarket.service.UsuarioService;
+import com.omarket.service.UsuarioService2;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
-    private final UsuarioService usuarioService;
+    private final UsuarioService2 usuarioService;
     private final TokenService tokenService;
 
 

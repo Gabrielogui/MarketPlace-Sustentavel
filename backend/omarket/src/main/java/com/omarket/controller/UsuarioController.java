@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.omarket.dto.UsuarioDTO;
-import com.omarket.service.UsuarioService;
+import com.omarket.service.UsuarioService2;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioController {
     // |=======| ATRIBUTOS |=======|
     //private final UsuarioRepository usuarioRepository; 
-    private final UsuarioService usuarioService;
+    private final UsuarioService2 usuarioService;
 
     // ======= POST PARA CADASTRO DO USUÁRIO =======
     /*@PostMapping("/cadastrar")
