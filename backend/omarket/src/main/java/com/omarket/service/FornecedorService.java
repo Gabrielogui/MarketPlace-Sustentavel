@@ -74,6 +74,24 @@ public class FornecedorService implements UsuarioService {
         return converterParaDTO(usuario);
     }
 
+    // INATIVAR
+    @Override
+    @Transactional
+    public UsuarioDTO inativar(Long id){
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+
+        // VERIFICAR SE O USUÁRIO JÁ ESTÁ INATIVO
+        if(usuario.getStatus() == StatusUsuario.INATIVO){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está inativo!");
+        }
+
+        // SETANDO O STATUS COMO INATIVO
+        usuario.setStatus(StatusUsuario.INATIVO);
+
+        return converterParaDTO(usuario);
+    }
+
     @Override
     public UsuarioDTO converterParaDTO(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
