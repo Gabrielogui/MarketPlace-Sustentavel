@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.omarket.entity.Usuario;
+import com.omarket.entity.enum_.StatusUsuario;
 
 import lombok.AllArgsConstructor;
 
@@ -40,7 +41,7 @@ public class CustomUserDetails implements UserDetails{
 
     @Override
     public boolean isAccountNonLocked() {
-        return usuario.getStatus().equals("ATIVO"); // Indica que a conta não está bloqueada
+        return usuario.getStatus() == StatusUsuario.ATIVO; // Indica que a conta não está bloqueada
     }
     
     @Override
@@ -50,7 +51,7 @@ public class CustomUserDetails implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return usuario.getStatus().equals("ATIVO"); // Indica que a conta está habilitada
+        return usuario.getStatus() == StatusUsuario.ATIVO; // Indica que a conta está habilitada
     }
 
 }
