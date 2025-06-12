@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.omarket.dto.EnderecoDTO;
 import com.omarket.dto.UsuarioDTO;
+import com.omarket.entity.Endereco;
 import com.omarket.entity.Fornecedor;
 import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusUsuario;
+import com.omarket.entity.enum_.TipoUsuario;
 import com.omarket.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -59,5 +62,41 @@ public class FornecedorService implements UsuarioService {
         // PREPARAR RESPOSTA DTO PARA O CONTROLLER
         
         return converterParaDTO(usuario);
+    }
+
+    // BUSCAR:
+    @Override
+    @Transactional(readOnly = true)
+    public UsuarioDTO buscar(Long id){
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+    
+        return converterParaDTO(usuario);
+    }
+
+    @Override
+    public UsuarioDTO converterParaDTO(Usuario usuario) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setId(usuario.getId());
+        usuarioDTO.setNome(usuario.getNome());
+        usuarioDTO.setEmail(usuario.getEmail());
+        usuarioDTO.setTelefone(usuario.getTelefone());
+        usuarioDTO.setStatus(usuario.getStatus());
+
+        Fornecedor fornecedor = (Fornecedor) usuario;
+        usuarioDTO.setCnpj(fornecedor.getCnpj());
+        usuarioDTO.setTipoUsuario(TipoUsuario.FORNECEDOR);
+
+        if(fornecedor.getEndereco() != null){
+            EnderecoDTO enderecoDTO = new EnderecoDTO();
+            Endereco endereco = fornecedor.getEndereco();
+            enderecoDTO.setCep(endereco.getCep());
+            enderecoDTO.setComplemento(endereco.getComplemento());
+            enderecoDTO.setId(endereco.getId());
+            enderecoDTO.setNumero(endereco.getNumero());
+            usuarioDTO.setEnderecoDTO(enderecoDTO);
+        }
+
+        return usuarioDTO;
     }
 }

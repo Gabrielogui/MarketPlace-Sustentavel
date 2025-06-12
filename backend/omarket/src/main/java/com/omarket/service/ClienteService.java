@@ -131,7 +131,6 @@ public class ClienteService implements UsuarioService {
 
     // CONVERTER PARA DTO
     @Override
-    @Transactional
     public UsuarioDTO converterParaDTO(Usuario usuario){
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setId(usuario.getId());
