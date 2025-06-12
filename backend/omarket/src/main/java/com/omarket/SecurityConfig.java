@@ -37,22 +37,22 @@ public class SecurityConfig {
                 // 1) Endpoints totalmente públicos (não exigem token)
                 .requestMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/produtos/**").permitAll()
 
                 // **libera o dispatcher de erro**
                 .requestMatchers("/error").permitAll()
 
                 // 2) Endpoints do administrador: só ROLE_ADMINISTRADOR
                 // OBS: usando hasRole("ADMINISTRADOR") equivale a hasAuthority("ROLE_ADMINISTRADOR")
-                .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
+                .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
 
                 // 3) Endpoints do fornecedor: só ROLE_FORNECEDOR
-                .requestMatchers("/api/fornecedor/**").hasRole("FORNECEDOR")
+                .requestMatchers("/fornecedor/**").hasRole("FORNECEDOR")
 
                 // 4) Endpoints do cliente: só ROLE_CLIENTE
-                .requestMatchers("/api/cliente/**").hasRole("CLIENTE")
-                .requestMatchers("/api/carrinhos/**").hasRole("CLIENTE")
-                .requestMatchers("/api/pedidos/**").hasRole("CLIENTE")
+                .requestMatchers("/cliente/**").hasRole("CLIENTE")
+                .requestMatchers("/carrinhos/**").hasRole("CLIENTE")
+                .requestMatchers("/pedidos/**").hasRole("CLIENTE")
 
                 // 5) Quaisquer outras requisições exigem autenticação genérica
                 .anyRequest().authenticated()               
