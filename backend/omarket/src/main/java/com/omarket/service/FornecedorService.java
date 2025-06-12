@@ -26,7 +26,7 @@ public class FornecedorService implements UsuarioService {
 
     // |=======| MÉTODOS |=======|
 
-    // CADASTRAR
+    // CADASTRAR:
     @Override
     @Transactional
     public UsuarioDTO cadastrar(UsuarioDTO usuarioDTO){
@@ -74,7 +74,7 @@ public class FornecedorService implements UsuarioService {
         return converterParaDTO(usuario);
     }
 
-    // INATIVAR
+    // INATIVAR:
     @Override
     @Transactional
     public UsuarioDTO inativar(Long id){
@@ -88,6 +88,43 @@ public class FornecedorService implements UsuarioService {
 
         // SETANDO O STATUS COMO INATIVO
         usuario.setStatus(StatusUsuario.INATIVO);
+
+        return converterParaDTO(usuario);
+    }
+
+    // EDITAR:
+    @Override
+    @Transactional
+    public UsuarioDTO editar(Long id, UsuarioDTO usuarioDTO){
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+
+        // VERIFICAR SE O EMAIL JÁ ESTÁ CADASTRADO
+        if(!usuario.getEmail().equals(usuarioDTO.getEmail()) && 
+            usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
+        }
+
+        Fornecedor fornecedor = (Fornecedor) usuario;
+        // ATUALIZANDO O ENDEREÇO SE EXISTIR
+        if (usuarioDTO.getEnderecoDTO() != null) {
+            Endereco endereco = new Endereco();
+            endereco.setCep(usuarioDTO.getEnderecoDTO().getCep());
+            endereco.setComplemento(usuarioDTO.getEnderecoDTO().getComplemento());
+            endereco.setNumero(usuarioDTO.getEnderecoDTO().getNumero());
+            fornecedor.setEndereco(endereco);
+            usuario = fornecedor;
+        }
+
+        // ATUALIZANDO OS DADOS DO USUÁRIO
+        usuario.setNome(usuarioDTO.getNome());
+        usuario.setEmail(usuarioDTO.getEmail());
+        usuario.setTelefone(usuarioDTO.getTelefone());
+
+        // ATUALIZANDO A SENHA SE FOR DIFERENTE
+        if (!passwordEncoder.matches(usuarioDTO.getSenha(), usuario.getSenha())) {
+            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        }
 
         return converterParaDTO(usuario);
     }
