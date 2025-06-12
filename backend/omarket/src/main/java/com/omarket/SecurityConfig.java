@@ -35,15 +35,12 @@ public class SecurityConfig {
             // Regras de autorização
             .authorizeHttpRequests(auth -> auth
                 // 1) Endpoints totalmente públicos (não exigem token)
-                .requestMatchers(
-                    HttpMethod.POST, "/usuario/cadastrar"
-                ).permitAll()
-                .requestMatchers(
-                    HttpMethod.POST, "/auth/**"
-                ).permitAll()
-                .requestMatchers(
-                    HttpMethod.GET, "/api/produtos/**"
-                ).permitAll()
+                .requestMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/produtos/**").permitAll()
+
+                // **libera o dispatcher de erro**
+                .requestMatchers("/error").permitAll()
 
                 // 2) Endpoints do administrador: só ROLE_ADMINISTRADOR
                 // OBS: usando hasRole("ADMINISTRADOR") equivale a hasAuthority("ROLE_ADMINISTRADOR")
