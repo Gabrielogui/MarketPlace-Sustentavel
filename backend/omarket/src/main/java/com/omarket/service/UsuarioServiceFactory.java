@@ -1,9 +1,12 @@
 package com.omarket.service;
 
+import org.springframework.stereotype.Component;
+
 import com.omarket.entity.enum_.TipoUsuario;
 
 import lombok.RequiredArgsConstructor;
 
+@Component
 @RequiredArgsConstructor
 public class UsuarioServiceFactory {
     private final ClienteService clienteService;

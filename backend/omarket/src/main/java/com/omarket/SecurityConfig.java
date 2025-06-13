@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/produtos/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/cliente/cadastrar").permitAll()
 
                 // **libera o dispatcher de erro**
                 .requestMatchers("/error").permitAll()
