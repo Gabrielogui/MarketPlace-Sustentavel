@@ -30,7 +30,7 @@ public class Cliente extends Usuario {
     
     private String cpf;
 
-    @Column(name="data_nascimento", nullable = false)
+    @Column(name="data_nascimento", nullable = true)
     private LocalDate dataNascimento;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -38,14 +38,14 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/produtos/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/cliente/cadastrar").permitAll()
+                //.requestMatchers(HttpMethod.POST, "/cliente/cadastrar").permitAll()
 
                 // **libera o dispatcher de erro**
                 .requestMatchers("/error").permitAll()
 
                 // 2) Endpoints do administrador: só ROLE_ADMINISTRADOR
                 // OBS: usando hasRole("ADMINISTRADOR") equivale a hasAuthority("ROLE_ADMINISTRADOR")
-                .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
+                .requestMatchers("/administrador/**").hasRole("ADMINISTRADOR")
 
                 // 3) Endpoints do fornecedor: só ROLE_FORNECEDOR
                 .requestMatchers("/fornecedor/**").hasRole("FORNECEDOR")
