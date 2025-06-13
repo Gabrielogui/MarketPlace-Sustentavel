@@ -45,6 +45,7 @@ public class AdministradorController {
         return ResponseEntity.ok(administradorInativado);
     }
 
+    // ======= EDITAR ADMINISTRADOR =======
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioDTO usuarioDTO){
         UsuarioService administradorService = usuarioServiceFactory.getUsuarioService(TipoUsuario.ADMINISTRADOR);

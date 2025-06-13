@@ -62,6 +62,7 @@ public class ClienteController {
         return ResponseEntity.ok(clienteInativado);
     }
 
+    // ======= EDITAR CLIENTE =======
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioDTO usuarioDTO){
         UsuarioService clienteService = usuarioServiceFactory.getUsuarioService(TipoUsuario.CLIENTE);

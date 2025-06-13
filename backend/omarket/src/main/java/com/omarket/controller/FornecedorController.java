@@ -62,6 +62,7 @@ public class FornecedorController {
         return ResponseEntity.ok(fornecedorInativado);
     }
 
+    // ======= EDITAR FORNECEDOR =======
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioDTO usuarioDTO){
         UsuarioService fornecedorService = usuarioServiceFactory.getUsuarioService(TipoUsuario.FORNECEDOR);
