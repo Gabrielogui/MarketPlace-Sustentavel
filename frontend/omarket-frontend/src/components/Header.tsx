@@ -11,6 +11,7 @@ export default function Header () {
     return(
         <header>
             <Image src={"/logo_no_bg.png"} alt="omarket" width={100} height={100}></Image>
+            
         </header>
     );
 }
