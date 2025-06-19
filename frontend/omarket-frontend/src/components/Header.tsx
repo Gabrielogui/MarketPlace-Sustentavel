@@ -1,8 +1,9 @@
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { CircleUser, Heart, Logs, Search, ShoppingCart } from "lucide-react";
 //import Image from "next/image";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { DropdownMenuShortcut } from "./ui/dropdown-menu";
 
 /* 
 COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU: 
@@ -23,9 +24,9 @@ export default function Header () {
                 <div>
                     <DropdownMenu>
                         <DropdownMenuTrigger>
-                            <Logs/>
+                            <Logs className="cursor-pointer hover:scale-110 transition-all"/>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48 bg-amber-50 border-green-200 text-emerald-900">
+                        <DropdownMenuContent align="center" className="w-48 bg-amber-50 border-green-200 text-emerald-900 cursor-pointer">
                             <DropdownMenuItem>Frutas Orgânicas</DropdownMenuItem>
                             <DropdownMenuItem>Verduras Frescas</DropdownMenuItem>
                             <DropdownMenuItem>Grãos e Cereais</DropdownMenuItem>
@@ -42,14 +43,37 @@ export default function Header () {
                 </div>
             </div>
 
-             <p>Meus Pedidos</p>
+             <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
+                 <p>Meus Pedidos</p>
+             </div>
             
             
-            <Heart/>
+            <Heart className="cursor-pointer hover:scale-110 transition-all" />
     
-            <ShoppingCart/>
+            <ShoppingCart className="cursor-pointer hover:scale-110 transition-all" />
 
-            <CircleUser/>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <CircleUser className="cursor-pointer hover:scale-110 transition-all" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent  align="start" className="w-40 bg-white rounded-md border-2 border-gray-300 cursor-pointer">
+                    <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                            Perfil
+                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Editar
+                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Inativar
+                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
             
 
         </header>
