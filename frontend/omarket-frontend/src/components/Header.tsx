@@ -13,7 +13,7 @@ COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU:
 export default function Header () {
     return(
         <header className="flex flex-row items-center justify-center gap-12 py-5 px-12 
-            border-b-2 border-b-gray-300 
+             shadow-sm
         ">
             <div>
                 {/*<Image src={"/logo_no_bg.png"} alt="omarket" width={100} height={100}></Image>*/}
