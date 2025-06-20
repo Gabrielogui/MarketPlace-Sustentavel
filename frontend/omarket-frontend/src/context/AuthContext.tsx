@@ -41,10 +41,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload: any = jwtDecode(t);
+      // COLOCAR TEMPO DE EXPIRAÇÃO PARA O FRONT SABER **
       const r: Role = payload.role || payload.tipoUsuario;
       setToken(t);
       setRole(r);
-
+        // ADICIONAR UM LISTNER **
       // Monta um objeto mínimo de UsuarioBase
       const base: Usuario = {
         id: payload.id ?? 0,
