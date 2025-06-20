@@ -11,21 +11,21 @@ interface GuardRouteProps {
 }
 
 export function GuardRoute({ role: allowedRole, children }: GuardRouteProps) {
-  const { token, role } = useContext(AuthContext);
-  const router = useRouter();
+    const { token, role } = useContext(AuthContext);
+    const router = useRouter();
 
-  const [checked, setChecked] = useState(false); // só renderiza depois da checagem
+    const [checked, setChecked] = useState(false); // só renderiza depois da checagem
 
-  useEffect(() => {
-    if (!token) {
-      // MANDAR PARA UMA FUTURA ROTA DE LOGIN -> router.replace('/auth/login'); 
-    } else if (role !== allowedRole) {
-      // DEFINIR PARA QUAL ROTA ELE VAI QUANDO NÃO TIVER AUTORIZADO -> router.replace('/unauthorized') ou '/' ou qualquer outra
-    } else {
-      setChecked(true); // só permite renderizar se tudo ok
-    }
-  }, [token, role, router, allowedRole]);
+    useEffect(() => {
+        if (!token) {
+            // MANDAR PARA UMA FUTURA ROTA DE LOGIN -> router.replace('/auth/login'); 
+        } else if (role !== allowedRole) {
+            router.replace('/')// DEFINIR PARA QUAL ROTA ELE VAI QUANDO NÃO TIVER AUTORIZADO -> router.replace('/unauthorized') ou '/' ou qualquer outra
+        } else {
+            setChecked(true); // só permite renderizar se tudo ok
+        }
+      }, [token, role, router, allowedRole]);
 
-  if (!checked) return null; // evita piscar conteúdo indevido
-  return <>{children}</>;
+    if (!checked) return null; // evita piscar conteúdo indevido
+    return <>{children}</>;
 }
