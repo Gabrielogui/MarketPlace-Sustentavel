@@ -1,3 +1,5 @@
+'use client'
+
 import { Role } from "@/core/types";
 import { Usuario } from "@/core/usuario/usuario";
 import { fakeUsers, getMockToken } from "@/service/authMock";
