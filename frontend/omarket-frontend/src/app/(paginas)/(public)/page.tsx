@@ -1,7 +1,20 @@
+'use client';
+
+import { AuthContext } from "@/context/AuthContext";
+import { useContext } from "react";
+
 export default function Home() {
-  return (
-    <div className="h-screen">
-        Conteúdo
-    </div>
-  );
+
+    const { token } = useContext(AuthContext);
+
+    return (
+        <div className="h-screen">
+            Conteúdo
+            {
+                token ? (<div>Você Está logado!</div>)
+                : (<div>Você não está logado</div>)
+            }
+
+        </div>
+    );
 }
