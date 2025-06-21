@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function Login () {
     return(
-        <div className="flex flex-col min-h-screen justify-center items-center w-full gap-5 py-10">
+        <div className="flex flex-col min-h-screen items-center w-full gap-5 py-10">
             <div className="w-full max-w-md space-y-4">
                 <Tabs defaultValue={"Login"} className="space-y-4">
                 
@@ -21,9 +21,18 @@ export default function Login () {
                         <div className="">
                             <h2 className="text-2xl font-bold text-center">Efetue o Login</h2>
                         </div>
-                        <div>
-                            <div>
-                                
+                        <div className="flex flex-col gap-5">
+                            <div className="flex flex-col gap-2">
+                                <Label>E-mail</Label>
+                                <Input type="email" placeholder="email@exemplo.com"></Input>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label>Senha</Label>
+                                <Input type="password" placeholder="Insira a senha"></Input>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <Label>esqueci a senha</Label>
+                                <Button className="w-full">Fazer Login</Button>
                             </div>
                         </div>
                     </TabsContent>
