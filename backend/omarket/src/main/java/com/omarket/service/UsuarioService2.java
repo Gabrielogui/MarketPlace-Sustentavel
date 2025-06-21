@@ -1,5 +1,6 @@
 package com.omarket.service;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import com.omarket.entity.Fornecedor;
 import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
+import com.omarket.event.ClienteCriadoEvent;
 import com.omarket.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class UsuarioService2 {
     // |=======| ATRIBUTOS |=======|
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     // |=======| MÉTODOS |=======|
 
@@ -86,6 +89,10 @@ public class UsuarioService2 {
 
         // SALVANDO USUÁRIO NO BANCO DE DADOS
         usuarioRepository.save(usuario);
+
+        if (usuario.getTipoUsuario() == TipoUsuario.CLIENTE) {
+            eventPublisher.publishEvent(new ClienteCriadoEvent(usuario));
+        }
 
         // PREPARAR RESPOSTA DTO PARA O CONTROLLER
         

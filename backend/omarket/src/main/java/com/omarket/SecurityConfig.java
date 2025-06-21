@@ -38,6 +38,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/usuario/cadastrar").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/produtos/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "cliente/cadastrar").permitAll()
+                .requestMatchers(HttpMethod.POST, "fornecedor/cadastrar").permitAll()
                 //.requestMatchers(HttpMethod.POST, "/cliente/cadastrar").permitAll()
 
                 // **libera o dispatcher de erro**
@@ -49,10 +51,12 @@ public class SecurityConfig {
 
                 // 3) Endpoints do fornecedor: só ROLE_FORNECEDOR
                 .requestMatchers("/fornecedor/**").hasRole("FORNECEDOR")
-
+                .requestMatchers("/produto/**").hasRole("FORNECEDOR")
+                //MUDAR PARA ADMINISTRADOR DEPOIS
+                .requestMatchers("/categoria/**").hasRole("FORNECEDOR")
                 // 4) Endpoints do cliente: só ROLE_CLIENTE
                 .requestMatchers("/cliente/**").hasRole("CLIENTE")
-                .requestMatchers("/carrinhos/**").hasRole("CLIENTE")
+                .requestMatchers("/carrinho/**").hasRole("CLIENTE")
                 .requestMatchers("/pedidos/**").hasRole("CLIENTE")
 
                 // 5) Quaisquer outras requisições exigem autenticação genérica
@@ -76,8 +80,13 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        /* Exemplo para produção
+        configuration.setAllowedOrigins(Arrays.asList(
+            "https://www.meu-omarket.com", 
+            "https://app.meu-omarket.com"
+        )); */ 
         configuration.setAllowedOrigins(Arrays.asList("*")); // Ou List.of("*") no Java 11+
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE, PATCH", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(false); // Mude para true se usar credenciais
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

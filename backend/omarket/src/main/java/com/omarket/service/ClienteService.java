@@ -1,5 +1,6 @@
 package com.omarket.service;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.omarket.entity.Endereco;
 import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
+import com.omarket.event.ClienteCriadoEvent;
 import com.omarket.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class ClienteService implements UsuarioService {
     // |=======| ATRIBUTOS |=======|
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     // |=======| MÉTODOS |=======|
     
@@ -44,6 +47,8 @@ public class ClienteService implements UsuarioService {
         cliente.setDataNascimento(usuarioDTO.getDataNascimento());
         cliente.setStatus(StatusUsuario.ATIVO);
 
+        cliente.setTipoUsuario(TipoUsuario.CLIENTE);
+
         usuario = cliente;
 
         // ATRIBUINDO OS ATRIBUTOS EM COMUM
@@ -51,6 +56,8 @@ public class ClienteService implements UsuarioService {
         usuario.setEmail(usuarioDTO.getEmail());
         usuario.setTelefone(usuarioDTO.getTelefone());
 
+        usuario.setTipoUsuario(TipoUsuario.CLIENTE);
+        
         // CRIPTOGRAFANDO SENHA
         String senhaString = usuarioDTO.getSenha();
         String senhaHash = passwordEncoder.encode(senhaString);
@@ -59,6 +66,10 @@ public class ClienteService implements UsuarioService {
 
         // SALVANDO USUÁRIO NO BANCO DE DADOS
         usuarioRepository.save(usuario);
+
+        if (usuario.getTipoUsuario() == TipoUsuario.CLIENTE) {
+            eventPublisher.publishEvent(new ClienteCriadoEvent(usuario));
+        }
 
         // PREPARAR RESPOSTA DTO PARA O CONTROLLER
         return converterParaDTO(usuario);

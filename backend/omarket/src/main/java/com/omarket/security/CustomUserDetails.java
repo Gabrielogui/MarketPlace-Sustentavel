@@ -17,6 +17,10 @@ public class CustomUserDetails implements UserDetails{
 
     private final Usuario usuario;
 
+    public Usuario getUsuario() {
+        return this.usuario;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String role = "ROLE_" + usuario.getTipoUsuario().toString();

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.omarket.dto.UsuarioDTO;
 import com.omarket.entity.enum_.TipoUsuario;
+import com.omarket.service.ClienteService;
 import com.omarket.service.UsuarioService;
 import com.omarket.service.UsuarioServiceFactory;
 
@@ -33,7 +34,7 @@ public class ClienteController {
     // ======= POST PARA CADASTRO DO CLIENTE ======= (PROVAVELMENTE FIQUE APENAS EM AUTHCONTROLLER)
     @PostMapping("/cadastrar")
     public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Validated UsuarioDTO usuarioDTO){
-        UsuarioService clienteService = usuarioServiceFactory.getUsuarioService(TipoUsuario.CLIENTE);
+        UsuarioService clienteService = (ClienteService)usuarioServiceFactory.getUsuarioService(TipoUsuario.CLIENTE);
         UsuarioDTO clienteNovo = clienteService.cadastrar(usuarioDTO);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
