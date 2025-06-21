@@ -1,12 +1,18 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 
 export default function Login () {
+
+    const [tipoUsuario, setTipoUsuario] = useState<'Cliente' | 'Fornecedor'>('Cliente');
+
     return(
         <div className="flex flex-col min-h-screen items-center w-full gap-5 py-10">
             <div className="w-full max-w-md space-y-4">
@@ -67,31 +73,37 @@ export default function Login () {
                                 </div>
                                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                                     <div className="flex flex-col gap-2">
-                                        <Label>cnpj</Label>
-                                        <Input placeholder="XX.XXX.XXX/XXXX-XX"></Input>
+                                        <Label>{tipoUsuario === 'Cliente' ? 'cpf' : 'cnpj'}</Label>
+                                        <Input placeholder={
+                                            tipoUsuario === 'Cliente' ? 'XXX.XXX.XXX-XX' : "XX.XXX.XXX/XXXX-XX"
+                                        }></Input>
                                     </div>
                                     <div className="flex flex-col gap-2">
                                         <Label>Telefone</Label>
                                         <Input placeholder="(XX) X XXXX-XXXX"></Input>
                                     </div>
                                 </div>
-                                <RadioGroup defaultValue="Fornecedor"
+                                <RadioGroup defaultValue="Fornecedor" 
+                                    value={tipoUsuario} 
+                                    onValueChange={(value) => setTipoUsuario(value as 'Cliente' | 'Fornecedor')}
                                     className="flex flex-row gap-7 w-full justify-between">
-                                    <div className="flex flex-row gap-5">
-                                        <RadioGroupItem value="Cliente" id="r1" />
-                                        <Label>Cliente</Label>
-                                    </div>
-                                    <div className="flex flex-row gap-5">
-                                        <RadioGroupItem value="Fornecedor" id="r2" />
-                                        <Label>Fornecedor</Label>
-                                    </div>
+                                        <div className="flex flex-row gap-5">
+                                            <RadioGroupItem value="Cliente" id="r1" />
+                                            <Label>Cliente</Label>
+                                        </div>
+                                        <div className="flex flex-row gap-5">
+                                            <RadioGroupItem value="Fornecedor" id="r2" />
+                                            <Label>Fornecedor</Label>
+                                        </div>
                                 </RadioGroup>
                             </div>
                             {/* CARTA DE MOTIVAÇÃO */}
+                            { tipoUsuario === 'Fornecedor' &&
                             <div className="flex flex-col gap-2">
                                 <Label>Carta de Motivação</Label>
                                 <Textarea className="h-24" placeholder="Informe sua motivação"/>
                             </div>
+                            }
                             {/* CADASTRAR */}
                             <div>
                                 <Button className="w-full">Cadastrar</Button>
