@@ -8,7 +8,7 @@ export default function Home() {
     const { token } = useContext(AuthContext);
 
     return (
-        <div className="h-screen">
+        <div className="">
             Conteúdo
             {
                 token ? (<div>Você Está logado!</div>)

@@ -14,7 +14,7 @@ export default function Login () {
     const [tipoUsuario, setTipoUsuario] = useState<'Cliente' | 'Fornecedor'>('Cliente');
 
     return(
-        <div className="flex flex-col min-h-screen items-center w-full gap-5 py-10">
+        <div className="flex flex-col items-center w-full gap-5 py-10">
             <div className="w-full max-w-md space-y-4">
                 <Tabs defaultValue={"Login"} className="space-y-4">
                 
