@@ -51,7 +51,7 @@ export default function Login () {
                             {/* NOME E EMAIL */}
                             <div className="flex flex-col gap-5">
                                 <div className="flex flex-col gap-2">
-                                    <Label>Nome Completo da Empresa</Label>
+                                    <Label>{tipoUsuario === 'Cliente' ? 'Nome Completo' : 'Nome Completo da Empresa'}</Label>
                                     <Input placeholder="Digite seu Nome"></Input>
                                 </div>
                                 <div className="flex flex-col gap-2">
