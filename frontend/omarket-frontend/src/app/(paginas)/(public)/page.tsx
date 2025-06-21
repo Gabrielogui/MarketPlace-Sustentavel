@@ -1,19 +1,21 @@
 'use client';
 
-import { AuthContext } from "@/context/AuthContext";
-import { useContext } from "react";
+import CategoriaCard from "@/components/cards/CategoriaCard";
+
+//import { AuthContext } from "@/context/AuthContext";
+//import { useContext } from "react";
 
 export default function Home() {
 
-    const { token } = useContext(AuthContext);
+    //const { token } = useContext(AuthContext);
 
     return (
         <div className="">
-            Conteúdo
-            {
-                token ? (<div>Você Está logado!</div>)
-                : (<div>Você não está logado</div>)
-            }
+            
+            <div className="flex flex-col gap-7">
+                <h1 className="text-3xl font-bold">Categoria</h1>
+                <CategoriaCard/>
+            </div>
 
         </div>
     );
