@@ -66,7 +66,23 @@ export default function Produto () {
                     <Button>Avaliar Produto</Button>
                 </div>
                 <div>
-                    <AvaliacaoCard/>
+                    <Carousel
+                        opts={{
+                            align: "center"
+                        }}
+                        className=""
+                    >
+                        <CarouselContent className="flex flex-row">
+                            {Array.from( {length:5} ).map((_, index) => (
+                                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 justify-items-center ">
+                                    <AvaliacaoCard/>
+                                </CarouselItem>
+                            )
+                            )}
+                        </CarouselContent>
+                        <CarouselPrevious/>
+                        <CarouselNext/>
+                    </Carousel>
                 </div>
             </div>
         </div>

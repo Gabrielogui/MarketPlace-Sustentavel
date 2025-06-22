@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 
 export default function AvaliacaoCard () {
     return(
-        <div className="flex flex-col gap-3 border-2 border-gray-400 rounded-md p-3">
+        <div className="flex flex-col gap-3 border-2 border-gray-400 rounded-md p-3 w-full">
             <div className="flex flex-row gap-0.5">
                 <Star/>
                 <Star/>
@@ -12,7 +12,7 @@ export default function AvaliacaoCard () {
             </div>
             <div className="flex flex-col">
                 <h3 className="text-lg">Título</h3>
-                <p className="text-gray-500">Texto: Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore quaerat explicabo iusto illo natus autem inventore. Fuga animi quasi explicabo neque cum quia ut, fugit praesentium. Officiis ducimus explicabo nemo.</p>
+                <p className="text-gray-500">Texto</p>
             </div>
             <div className="flex flex-col">
                 <p className="text-gray-500">Nome do Cliente</p>
