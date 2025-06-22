@@ -5,7 +5,8 @@ import Image from "next/image";
 
 export default function Produto () {
     return(
-        <div>
+        <div className="flex flex-col gap-10">
+            {/* PRODUTO */}
             <div className="flex flex-row gap-16">
                 <div>
                     <Carousel 
@@ -44,7 +45,7 @@ export default function Produto () {
             </div>
             {/* PRODUTOS RELACIONADOS */}
             <div>
-
+                <h1 className="text-3xl font-bold">Produtos Relacionados</h1>
             </div>
         </div>
     );
