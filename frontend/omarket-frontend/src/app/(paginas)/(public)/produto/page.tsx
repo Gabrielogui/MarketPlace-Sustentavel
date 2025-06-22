@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function Produto () {
     return(
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 ">
             {/* PRODUTO */}
             <div className="flex flex-col gap-5">
                 <h1 className="text-3xl font-bold">Produto</h1>
@@ -23,14 +23,14 @@ export default function Produto () {
                                 {Array.from( {length:5} ).map((_, index) => (
                                     <CarouselItem key={index} className="justify-items-center ">
                                         <Image src={"https://picsum.photos/500/500"} alt="Produto" height={500} width={500}
-                                            className="rounded-md">
+                                            className="rounded-md cursor-pointer">
                                         </Image>
                                     </CarouselItem>
                                 )
                                 )}
                             </CarouselContent>
-                            <CarouselPrevious/>
-                            <CarouselNext/>
+                            <CarouselPrevious className="cursor-pointer"/>
+                            <CarouselNext className="cursor-pointer"/>
                         </Carousel>
                     </div>
                     <div className="flex flex-col gap-3 justify-center">
@@ -41,9 +41,9 @@ export default function Produto () {
                         <p className="text-2xl text-gray-500 font-semibold">Descrição: Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos architecto dolorum sequi quia soluta quod accusantium doloremque repellat animi repellendus odio temporibus repudiandae, consequuntur itaque recusandae unde porro odit? </p>
                         <div className="flex flex-row justify-between">
                             <p className="text-2xl">$10.99</p>
-                            <Heart/>
-                        </div>
-                        <Button>Adicionar ao Carrinho</Button>
+                            <Heart className="cursor-pointer hover:scale-110 hover:text-red-500 transition-all duration-500"/>
+                        </div> 
+                        <Button className="cursor-pointer">Adicionar ao Carrinho</Button>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@ export default function Produto () {
             <div className="flex flex-col gap-5">
                 <div className="flex flex-row justify-between">
                     <h1 className="text-3xl font-bold">Avaliações</h1>
-                    <Button>Avaliar Produto</Button>
+                    <Button className="cursor-pointer">Avaliar Produto</Button>
                 </div>
                 <div>
                     <Carousel
@@ -80,8 +80,8 @@ export default function Produto () {
                             )
                             )}
                         </CarouselContent>
-                        <CarouselPrevious/>
-                        <CarouselNext/>
+                        <CarouselPrevious className="cursor-pointer"/>
+                        <CarouselNext className="cursor-pointer"/>
                     </Carousel>
                 </div>
             </div>

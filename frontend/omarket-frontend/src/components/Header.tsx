@@ -37,7 +37,7 @@ export default function Header () {
                 </div>
                 <div className="relative flex-grow w-3xl">
                     <Input type={"search"} placeholder="Busca" className="pl-4 pr-10 py-2 w-full rounded-lg"/>
-                    <Button variant={"ghost"} size={"icon"} className="absolute right-0 top-1/2 transform -translate-y-1/2 h-8 w-8">
+                    <Button variant={"ghost"} size={"icon"} className="absolute right-0 top-1/2 transform -translate-y-1/2 h-8 w-8 cursor-pointer">
                         <Search/>
                     </Button>
                 </div>

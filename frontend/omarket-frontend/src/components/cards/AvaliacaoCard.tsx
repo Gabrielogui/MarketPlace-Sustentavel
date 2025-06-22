@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 
 export default function AvaliacaoCard () {
     return(
-        <div className="flex flex-col gap-3 border-2 border-gray-400 rounded-md p-3 w-full">
+        <div className="flex flex-col gap-3 border-2 border-gray-400 rounded-md p-3 w-full ">
             <div className="flex flex-row gap-0.5">
                 <Star/>
                 <Star/>

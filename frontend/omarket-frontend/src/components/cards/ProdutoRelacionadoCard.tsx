@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function ProdutoRelacionadoCard () {
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 hover:cursor-pointer hover:scale-110 transition-all">
             <div>
                 <Image src={"https://picsum.photos/300/150"} alt="Produto" height={150} width={300} 
                     className="rounded-md">

@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 
 export default function ProdutoCard () {
     return(
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 hover:cursor-pointer hover:scale-110 transition-all">
             <div>
                 <Image src={"https://picsum.photos/150/150"} alt="Produto" height={150} width={150}></Image>
             </div>
@@ -16,7 +16,7 @@ export default function ProdutoCard () {
                 </div>
                 <div className="flex flex-row gap-2 items-center">
                     <Button>Adicionar ao Carrinho</Button>
-                    <Heart size={35}/>
+                    <Heart size={35} className="hover:text-red-500 transition-all"/>
                 </div>
             </div>
         </div>
