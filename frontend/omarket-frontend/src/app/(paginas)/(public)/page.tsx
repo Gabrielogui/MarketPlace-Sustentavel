@@ -1,6 +1,7 @@
 'use client';
 
 import CategoriaCard from "@/components/cards/CategoriaCard";
+import ProdutoCard from "@/components/cards/ProdutoCard";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 //import { AuthContext } from "@/context/AuthContext";
@@ -11,7 +12,7 @@ export default function Home() {
     //const { token } = useContext(AuthContext);
 
     return (
-        <div className="">
+        <div className="flex flex-col gap-10">
             
             <div className="flex flex-col gap-7">
                 <h1 className="text-3xl font-bold">Categoria</h1>
@@ -33,6 +34,21 @@ export default function Home() {
                     <CarouselPrevious/>
                     <CarouselNext/>
                 </Carousel>
+            </div>
+
+            <div className="flex flex-col gap-7">
+                <h1 className="text-3xl font-bold">Produtos</h1>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 justify-items-center">
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                </div>
             </div>
 
         </div>
