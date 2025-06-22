@@ -1,3 +1,4 @@
+import AvaliacaoCard from "@/components/cards/AvaliacaoCard";
 import ProdutoRelacionadoCard from "@/components/cards/ProdutoRelacionadoCard";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -56,6 +57,16 @@ export default function Produto () {
                     <ProdutoRelacionadoCard/>
                     <ProdutoRelacionadoCard/>
                     <ProdutoRelacionadoCard/>
+                </div>
+            </div>
+            {/* AVALIAÇÃO */}
+            <div className="flex flex-col gap-5">
+                <div className="flex flex-row justify-between">
+                    <h1 className="text-3xl font-bold">Avaliações</h1>
+                    <Button>Avaliar Produto</Button>
+                </div>
+                <div>
+                    <AvaliacaoCard/>
                 </div>
             </div>
         </div>
