@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-export default function ProdutoRalacionadoCard () {
+export default function ProdutoRelacionadoCard () {
     return (
         <div className="flex flex-col gap-2">
             <div>
-                <Image src={"https://picsum.photos/150/150"} alt="Produto" height={150} width={150} 
+                <Image src={"https://picsum.photos/300/150"} alt="Produto" height={150} width={300} 
                     className="rounded-md">
                 </Image>
             </div>
