@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function CategoriaCard () {
     return(
-        <div className="hover:cursor-pointer hover:border-2 hover:border-gray-400 rounded-md transition-all">
+        <div className="hover:cursor-pointer hover:shadow-md rounded-md transition-all">
             {/* IMAGEM */}
             <div>
                 <Image src={"https://picsum.photos/320/250"} alt="Categoria" height={250} width={320} 
