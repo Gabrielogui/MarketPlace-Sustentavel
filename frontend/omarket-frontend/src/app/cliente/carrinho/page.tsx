@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 
 export interface ProdutoNoCarrinho {
     id: number;
@@ -58,9 +58,9 @@ export default function Carrinho () {
                         {Object.entries(grouped).map(([fornecedor, itens]) => {
                            // const allChacked = itens.every(p => selected.has(p.id));
                             return(
-                                <tbody key={fornecedor}>
+                                <Fragment key={fornecedor}>
                                     {/* LINHA DO FORNECEDOR */}
-                                    <TableRow >
+                                    <TableRow className="bg-gray-100">
                                         <TableCell>
                                             <Checkbox/> {/* EDITAR */}
                                         </TableCell>
@@ -98,7 +98,7 @@ export default function Carrinho () {
                                     ))
                                     }
 
-                                </tbody>
+                                </Fragment>
                             )
                         })}
                     </TableBody>
