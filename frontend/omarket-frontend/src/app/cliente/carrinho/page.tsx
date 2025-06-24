@@ -84,7 +84,7 @@ export default function Carrinho () {
                                                 </div>  
                                             </TableCell>
                                             
-                                            <TableCell>R$ {produto.precoUnitario.toFixed(2)}</TableCell>
+                                            <TableCell className="justify-center items-center">R$ {produto.precoUnitario.toFixed(2)}</TableCell>
                                             <TableCell>{produto.quantidade}</TableCell>
                                             <TableCell>
                                                 R$ {(produto.precoUnitario * produto.quantidade).toFixed(2)}
@@ -103,6 +103,10 @@ export default function Carrinho () {
                         })}
                     </TableBody>
                 </Table>
+            </div>
+            <div className="flex flex-row justify-end gap-2">
+                <Label className="text-2xl font-semibold">Preço Total:</Label>
+                <Label className="text-2xl font-semibold">XXX,XX</Label>
             </div>
         </div>
     );
