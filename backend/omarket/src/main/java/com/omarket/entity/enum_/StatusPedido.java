@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum StatusPedido {
-    
+
     AGUARDANDO_PAGAMENTO("Aguardando Pagamento"),
     PAGAMENTO_APROVADO("Pagamento Aprovado"),
     EM_SEPARACAO("Em Separação"),
@@ -20,4 +20,5 @@ public enum StatusPedido {
     REEMBOLSADO("Reembolsado");
 
     private final String descricao;
+    
 }
