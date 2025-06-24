@@ -52,12 +52,15 @@ public class SecurityConfig {
                 // 3) Endpoints do fornecedor: só ROLE_FORNECEDOR
                 .requestMatchers("/fornecedor/**").hasRole("FORNECEDOR")
                 .requestMatchers("/produto/**").hasRole("FORNECEDOR")
+
                 //MUDAR PARA ADMINISTRADOR DEPOIS
                 .requestMatchers("/categoria/**").hasRole("FORNECEDOR")
+                
                 // 4) Endpoints do cliente: só ROLE_CLIENTE
                 .requestMatchers("/cliente/**").hasRole("CLIENTE")
                 .requestMatchers("/carrinho/**").hasRole("CLIENTE")
                 .requestMatchers("/pedidos/**").hasRole("CLIENTE")
+                .requestMatchers("/frete/**").hasRole("CLIENTE")
 
                 // 5) Quaisquer outras requisições exigem autenticação genérica
                 .anyRequest().authenticated()               
