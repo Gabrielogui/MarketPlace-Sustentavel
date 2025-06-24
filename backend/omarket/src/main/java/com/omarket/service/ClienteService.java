@@ -47,8 +47,6 @@ public class ClienteService implements UsuarioService {
         cliente.setDataNascimento(usuarioDTO.getDataNascimento());
         cliente.setStatus(StatusUsuario.ATIVO);
 
-        cliente.setTipoUsuario(TipoUsuario.CLIENTE);
-
         usuario = cliente;
 
         // ATRIBUINDO OS ATRIBUTOS EM COMUM
@@ -56,8 +54,6 @@ public class ClienteService implements UsuarioService {
         usuario.setEmail(usuarioDTO.getEmail());
         usuario.setTelefone(usuarioDTO.getTelefone());
 
-        usuario.setTipoUsuario(TipoUsuario.CLIENTE);
-        
         // CRIPTOGRAFANDO SENHA
         String senhaString = usuarioDTO.getSenha();
         String senhaHash = passwordEncoder.encode(senhaString);
@@ -67,10 +63,8 @@ public class ClienteService implements UsuarioService {
         // SALVANDO USUÁRIO NO BANCO DE DADOS
         usuarioRepository.save(usuario);
 
-        if (usuario.getTipoUsuario() == TipoUsuario.CLIENTE) {
-            eventPublisher.publishEvent(new ClienteCriadoEvent(usuario));
-        }
-
+        eventPublisher.publishEvent(new ClienteCriadoEvent(usuario));
+        
         // PREPARAR RESPOSTA DTO PARA O CONTROLLER
         return converterParaDTO(usuario);
     }
