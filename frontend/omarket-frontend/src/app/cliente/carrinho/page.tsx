@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
-import { Fragment, useMemo } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 export interface ProdutoNoCarrinho {
     id: number;
@@ -20,18 +20,57 @@ export interface ProdutoNoCarrinho {
 
 export default function Carrinho () {
 
+    // |=======| USE STATE |=======|
+    // ESTADO DA SELEÇÃO POR ID
+    const [selected, setSelected] = useState<Set<number>>(new Set());
+
+    // |=======| MPRODUTO MOCK PARA TESTE |=======|
     const produtosMock: ProdutoNoCarrinho[] = [
         { id: 1, nome: 'Maçã', categoria: 'Frutas', precoUnitario: 3.5, quantidade: 2, fornecedor: 'Fornecedor A', imagemUrl: 'https://picsum.photos/100/100' },
         { id: 2, nome: 'Pera', categoria: 'Frutas', precoUnitario: 4.2, quantidade: 1, fornecedor: 'Fornecedor A', imagemUrl: 'https://picsum.photos/100/100' },
         { id: 3, nome: 'Arroz', categoria: 'Grãos', precoUnitario: 5.0, quantidade: 3, fornecedor: 'Fornecedor B', imagemUrl: 'https://picsum.photos/100/100' }, 
     ];
 
+    // |=======| AGRUPA PRODUTO POR FORNECEDOR |=======|
     const grouped = useMemo(() => {
         return produtosMock.reduce<Record<string, ProdutoNoCarrinho[]>>((acc, p) => {
             (acc[p.fornecedor] ||= []).push(p);
             return acc;
         }, {});
     }, []);
+
+    // |=======| SELEÇÕES DOS CHECKBOX |=======|
+
+    // SELECIONA/DESCELECIONA APENAS UM PRODUTO
+    const selecionaUm = (id:number) => {
+        const next = new Set(selected);
+        if(next.has(id)) next.delete(id);
+        else next.add(id);
+        setSelected(next);
+    }
+
+    // AGRUPAR/DESAGRUPA GRUPO DE PRODUTOS POR FORNECEDOR
+    const selecionaGrupo = (fornecedor:string) => {
+        const ids = grouped[fornecedor].map(produto => produto.id);
+        const produtoAgrupado = ids.every(id => selected.has(id));
+        const next = new Set(selected);
+
+        ids.forEach(id => {
+        if (produtoAgrupado) next.delete(id);
+        else next.add(id);
+        });
+        setSelected(next);
+    }
+
+    // AGRUPAR/DESAGRUPA TODOS OS FORNECEDORES DO CARRINHO
+    const selecionaTodos = () => {
+        const todosIds = produtosMock.map(p => p.id);
+        if (selected.size === produtosMock.length) { // MUDAR ONDE PEGA O TAMANHO DA QUANTIDADE DE ITENS
+        setSelected(new Set());
+        } else {
+        setSelected(new Set(todosIds));
+        }
+    }
 
     return(
         <div className="flex flex-col gap-10">
@@ -45,7 +84,7 @@ export default function Carrinho () {
                 <Table>
                     <TableHeader>
                         <TableRow >
-                            <TableHead><Checkbox/></TableHead>
+                            <TableHead><Checkbox checked={selected.size === produtosMock.length} onCheckedChange={selecionaTodos}/></TableHead>
                             <TableHead>Produtos</TableHead>
                             <TableHead>Preço Unitário</TableHead>
                             <TableHead>Quantidade</TableHead>
@@ -56,13 +95,13 @@ export default function Carrinho () {
 
                     <TableBody className="w-full">
                         {Object.entries(grouped).map(([fornecedor, itens]) => {
-                           // const allChacked = itens.every(p => selected.has(p.id));
+                            const allChacked = itens.every(p => selected.has(p.id));
                             return(
                                 <Fragment key={fornecedor}>
                                     {/* LINHA DO FORNECEDOR */}
                                     <TableRow className="bg-gray-100">
                                         <TableCell>
-                                            <Checkbox/> {/* EDITAR */}
+                                            <Checkbox checked={allChacked} onCheckedChange={() => (selecionaGrupo(fornecedor))}/> {/* EDITAR */}
                                         </TableCell>
                                         <TableCell colSpan={5} className="font-semibold">
                                             {fornecedor}
@@ -73,7 +112,7 @@ export default function Carrinho () {
                                     { itens.map((produto) => (
                                         <TableRow key={produto.id}>
                                             <TableCell>
-                                                <Checkbox/> {/* EDITAR */}
+                                                <Checkbox checked={selected.has(produto.id)} onCheckedChange={() => (selecionaUm(produto.id))}/> {/* EDITAR */}
                                             </TableCell>
 
                                             <TableCell className="flex flex-row gap-3">
