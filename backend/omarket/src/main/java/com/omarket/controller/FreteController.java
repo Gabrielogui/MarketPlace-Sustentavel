@@ -23,17 +23,18 @@ public class FreteController {
     private final FreteService freteService;
 
     // CEP de origem pode ser fixo (o da sua loja)
-    private static final String CEP_ORIGEM = "01001000"; // Ex: Praça da Sé, SP
+    //private static final String CEP_ORIGEM = "01001000"; // Ex: Praça da Sé, SP
 
     @PostMapping("/calcular")
     public ResponseEntity<List<OpcaoFreteResponse>> calcular(
+            @RequestParam String cepOrigem,
             @RequestParam String cepDestino
             //, @RequestBody PacoteRequest pacote
             ) {
 
         PacoteRequest pacote = new PacoteRequest();
-        
-        List<OpcaoFreteResponse> opcoes = freteService.calcularFrete(CEP_ORIGEM, cepDestino, pacote);
+
+        List<OpcaoFreteResponse> opcoes = freteService.calcularFrete(cepOrigem, cepDestino, pacote);
         
         if (opcoes.isEmpty()) {
             return ResponseEntity.noContent().build(); // Retorna 204 se não houver opções

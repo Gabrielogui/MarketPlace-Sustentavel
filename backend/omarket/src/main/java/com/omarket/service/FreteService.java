@@ -15,6 +15,9 @@ import com.omarket.dto.frete.request.EnderecoCepRequest;
 import com.omarket.dto.frete.request.PacoteRequest;
 import com.omarket.dto.frete.response.OpcaoFreteResponse;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class FreteService {
     
@@ -54,6 +57,7 @@ public class FreteService {
             
             // 5. Se a resposta for bem-sucedida, retorna a lista de opções
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                // Retorna lista de opções de frete
                 return Arrays.asList(response.getBody());
             }
 

@@ -137,10 +137,6 @@ public class CarrinhoService {
         return converterCarrinhoParaDto(carrinho);
     }
 
-    /**
-     * Método auxiliar otimizado para calcular o subtotal a partir de uma lista de entidades ItemCarrinho,
-     * evitando a conversão desnecessária para DTO e novas buscas no banco.
-     */
     private BigDecimal calcularSubtotalComEntidades(List<ItemCarrinho> itens) {
         if (itens == null || itens.isEmpty()) {
             return BigDecimal.ZERO;
@@ -150,7 +146,7 @@ public class CarrinhoService {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-
+    // --FAZER-- GET ITENS CARRINHO POR FORNECEDOR --FAZER-- 
 
     public CarrinhoDTO converterCarrinhoParaDto(Carrinho carrinho) {
         CarrinhoDTO carrinhoDTO = new CarrinhoDTO();
