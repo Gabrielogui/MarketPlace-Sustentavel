@@ -19,8 +19,9 @@ export function GuardRoute({ role: allowedRole, children }: GuardRouteProps) {
     useEffect(() => {
         if (!token) {
             // MANDAR PARA UMA FUTURA ROTA DE LOGIN -> router.replace('/auth/login'); 
+            router.replace('/login');
         } else if (role !== allowedRole) {
-            router.replace('/')// DEFINIR PARA QUAL ROTA ELE VAI QUANDO NÃO TIVER AUTORIZADO -> router.replace('/unauthorized') ou '/' ou qualquer outra
+            router.replace('/') // DEFINIR PARA QUAL ROTA ELE VAI QUANDO NÃO TIVER AUTORIZADO -> router.replace('/unauthorized') ou '/' ou qualquer outra
         } else {
             setChecked(true); // só permite renderizar se tudo ok
         }

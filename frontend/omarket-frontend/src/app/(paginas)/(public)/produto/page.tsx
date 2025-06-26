@@ -11,7 +11,7 @@ export default function Produto () {
             {/* PRODUTO */}
             <div className="flex flex-col gap-5">
                 <h1 className="text-3xl font-bold">Produto</h1>
-                <div className="flex flex-row gap-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
                     <div>
                         <Carousel
                             opts={{
