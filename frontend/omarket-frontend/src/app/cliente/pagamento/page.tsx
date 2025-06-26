@@ -104,7 +104,7 @@ export default function Pagamento () {
                         <div className="mb-6">
                             <div className="flex justify-between items-start mb-2">
                                 <h2 className="text-xl font-bold">Endereço de Entrega</h2>
-                                <button className="text-blue-500 hover:text-blue-700 flex items-center">
+                                <button className="text-blue-500 hover:text-blue-700 flex items-center cursor-pointer">
                                     <PencilIcon className="w-4 h-4 mr-1" />
                                     Alterar
                                 </button>
@@ -120,19 +120,19 @@ export default function Pagamento () {
                         <div className="mb-6">
                             <h2 className="text-xl font-bold mb-2">Método de Pagamento</h2>
                             <div className="grid grid-cols-4 gap-2">
-                                <button className="border rounded-lg p-3 flex flex-col items-center hover:border-blue-400">
+                                <button className="border rounded-lg p-3 flex flex-col items-center hover:border-blue-400 cursor-pointer">
                                     <CreditCardIcon className="w-6 h-6 mb-1" />
                                     <span className="text-xs">Crédito</span>
                                 </button>
-                                <button className="border rounded-lg p-3 flex flex-col items-center hover:border-blue-400">
+                                <button className="border rounded-lg p-3 flex flex-col items-center hover:border-blue-400 cursor-pointer">
                                     <BanknoteIcon className="w-6 h-6 mb-1" />
                                     <span className="text-xs">Débito</span>
                                 </button>
-                                <button className="border rounded-lg p-3 flex flex-col items-center hover:border-blue-400">
+                                <button className="border rounded-lg p-3 flex flex-col items-center hover:border-blue-400 cursor-pointer">
                                     <BarcodeIcon className="w-6 h-6 mb-1" />
                                     <span className="text-xs">Boleto</span>
                                 </button>
-                                <button className="border rounded-lg p-3 flex flex-col items-center hover:border-blue-400">
+                                <button className="border rounded-lg p-3 flex flex-col items-center hover:border-blue-400 cursor-pointer">
                                     <QrCodeIcon className="w-6 h-6 mb-1" />
                                     <span className="text-xs">PIX</span>
                                 </button>
@@ -140,7 +140,7 @@ export default function Pagamento () {
                         </div>
 
                         {/* Botão de Pagamento */}
-                        <button className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-bold text-lg transition duration-200 flex items-center justify-center">
+                        <button className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-bold text-lg transition duration-200 flex items-center justify-center cursor-pointer">
                             <LockIcon className="w-5 h-5 mr-2" />
                             Finalizar Compra
                         </button>
