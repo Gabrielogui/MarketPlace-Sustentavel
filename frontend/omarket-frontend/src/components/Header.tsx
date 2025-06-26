@@ -13,7 +13,7 @@ COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU:
 
 export default function Header () {
     return(
-        <header className="flex flex-row items-center justify-center gap-12 py-5 px-12 
+        <header className="flex flex-row items-center justify-center gap-12 w-full py-5 px-12 
              shadow-sm
         ">
             <div>
@@ -35,7 +35,7 @@ export default function Header () {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <div className="relative flex-grow w-3xl">
+                <div className="relative flex-grow w-full">
                     <Input type={"search"} placeholder="Busca" className="pl-4 pr-10 py-2 w-full rounded-lg"/>
                     <Button variant={"ghost"} size={"icon"} className="absolute right-0 top-1/2 transform -translate-y-1/2 h-8 w-8 cursor-pointer">
                         <Search/>
