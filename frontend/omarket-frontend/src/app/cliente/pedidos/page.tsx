@@ -1,3 +1,4 @@
+import ProdutoCard from "@/components/cards/ProdutoCard";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Trash2 } from "lucide-react";
@@ -10,7 +11,7 @@ export default function MeusPedidos () {
                 <Label className="text-3xl font-bold">Meus Pedidos</Label>
             </div>
             {/* MOSTRANDO O PEDIDO */}
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-8">
                 {/* INFORMAÇÃO GERAL DO PEDIDO */}
                 <div className="flex flex-row justify-between">
                     <div className="flex flex-row gap-12">
@@ -27,8 +28,11 @@ export default function MeusPedidos () {
                     </div>
                 </div>
                 {/* TODOS OS PRODUTOS DO PEDIDO */}
-                <div>
-
+                <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center gap-5">
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
+                    <ProdutoCard/>
                 </div>
             </div>
         </div>
