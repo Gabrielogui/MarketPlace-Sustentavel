@@ -11,12 +11,15 @@ interface GuardRouteProps {
 }
 
 export function GuardRoute({ role: allowedRole, children }: GuardRouteProps) {
-    const { token, role } = useContext(AuthContext);
+    const { token, role, initialized } = useContext(AuthContext);
     const router = useRouter();
 
     const [checked, setChecked] = useState(false); // só renderiza depois da checagem
 
     useEffect(() => {
+
+        if(!initialized) return;
+        console.log("GuardRoute token: ", token);
         if (!token) {
             // MANDAR PARA UMA FUTURA ROTA DE LOGIN -> router.replace('/auth/login'); 
             router.replace('/login');

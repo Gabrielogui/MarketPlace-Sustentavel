@@ -36,16 +36,18 @@ export const fakeUsers: Record<Role, Cliente | Fornecedor | Administrador> = {
 
 // |=======| GERA UM "TOKEN" DE PROTÓTIPO |=======|
 export function getMockToken(role: Role): string {
+  console.log("role: ", role);
   // Serializamos um JSON simples e base64‑codificamos para simular um JWT:
   const header = btoa(JSON.stringify({ alg: 'none', typ: 'JWT' }));
   const payload = btoa(
     JSON.stringify({
       sub: fakeUsers[role].email,
-      role,
+      tipoUsuario: role,
       // exp fictício (timestamp futuro)
       exp: Math.floor(Date.now() / 1000) + 60 * 60, // VERIFICAR SE HÁ NECESSIDADE DEPOIS
     })
   );
+  console.log("AuthMock token: ", `${header}.${payload}.token.falso`);
   // Em protótipo, sem assinatura (só “token.falso”)
   return `${header}.${payload}.token.falso`;
 }

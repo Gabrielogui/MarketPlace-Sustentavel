@@ -10,6 +10,7 @@ type AuthContextType = {
   token: string | null;
   role: Role | null;
   user: Usuario | null;
+  initialized: boolean;
   login: (token: string) => void;
   logout: () => void;
 };
@@ -20,23 +21,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken]   = useState<string | null>(null);
   const [role, setRole]     = useState<Role | null>(null);
   const [user, setUser]     = useState<Usuario | null>(null);
+  const [initialized, setInitialized] = useState(false); 
 
   const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
 
   useEffect(() => {
     if (USE_MOCK) {
       // Protótipo: já logado como CLIENTE
-      const t = getMockToken('CLIENTE');
+      const t = getMockToken('FORNECEDOR');
       setToken(t);
-      setRole('CLIENTE');
+      setRole('FORNECEDOR');
       // fakeUsers.CLIENTE é um Cliente, que extende UsuarioBase
-      setUser(fakeUsers.CLIENTE);
+      setUser(fakeUsers.FORNECEDOR);
+      setInitialized(true);
       return;
     }
 
     // Modo real: tenta carregar do localStorage
     const t = localStorage.getItem('token');
-    if (!t) return;
+    if (!t){
+      setInitialized(true);
+      return;
+    } 
 
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,6 +66,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // token inválido
       logout();
+    }finally{
+      setInitialized(true);
     }
   }, []);
 
@@ -96,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ token, role, user, login, logout }}>
+    <AuthContext.Provider value={{ token, role, user, initialized, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
