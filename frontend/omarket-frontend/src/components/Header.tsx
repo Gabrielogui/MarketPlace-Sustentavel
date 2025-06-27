@@ -1,9 +1,13 @@
+'use client'
+
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { CircleUser, Heart, Logs, Search, ShoppingCart } from "lucide-react";
 //import Image from "next/image";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { DropdownMenuShortcut } from "./ui/dropdown-menu";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 /* 
 COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU: 
@@ -12,6 +16,9 @@ COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU:
 */
 
 export default function Header () {
+
+    const { role } = useContext(AuthContext)
+
     return(
         <header className="flex flex-row items-center justify-center gap-12 w-full py-5 px-12 
              shadow-sm
@@ -20,6 +27,7 @@ export default function Header () {
                 {/*<Image src={"/logo_no_bg.png"} alt="omarket" width={100} height={100}></Image>*/}
                 <h1 className="text-2xl">omarket</h1>
             </div>
+            { role === "CLIENTE" && (
             <div className="flex flex-row gap-2 items-center justify-items-center">
                 <div>
                     <DropdownMenu>
@@ -43,14 +51,25 @@ export default function Header () {
                 </div>
             </div>
 
+            )}
+                
+            { role === "CLIENTE" &&
              <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
                  <p>Meus Pedidos</p>
              </div>
+            } 
+            { role === "FORNECEDOR" &&
+                <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
+                    <p>Meus Produtos</p>
+                </div>
+            }
             
-            
-            <Heart className="cursor-pointer hover:scale-110 transition-all" />
-    
-            <ShoppingCart className="cursor-pointer hover:scale-110 transition-all" />
+            { role === "CLIENTE" &&
+            <div className="flex flex-row gap-12">
+                <Heart className="cursor-pointer hover:scale-110 transition-all" />
+                <ShoppingCart className="cursor-pointer hover:scale-110 transition-all" />
+            </div>
+            }
 
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
