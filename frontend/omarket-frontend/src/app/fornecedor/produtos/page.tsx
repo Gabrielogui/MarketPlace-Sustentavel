@@ -1,3 +1,4 @@
+import ProdutoFornecedorCard from "@/components/cards/ProdutoFornecedorCard";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -22,7 +23,7 @@ export default function MeusProdutos () {
                 </div>
             </div>
             <div >
-                
+                <ProdutoFornecedorCard/>
             </div>
         </div>
     );
