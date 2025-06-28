@@ -1,4 +1,5 @@
 import ProdutoFornecedorCard from "@/components/cards/ProdutoFornecedorCard";
+import Navigation from "@/components/Navigation";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -33,6 +34,9 @@ export default function MeusProdutos () {
                 <ProdutoFornecedorCard/>
                 <ProdutoFornecedorCard/>
                 <ProdutoFornecedorCard/>
+            </div>
+            <div>
+                <Navigation currentPage={1} totalPages={5}/>
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 import ProdutoCard from "@/components/cards/ProdutoCard";
+import Navigation from "@/components/Navigation";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Favoritos () {
@@ -34,6 +35,9 @@ export default function Favoritos () {
                 <ProdutoCard/>
                 <ProdutoCard/>
                 <ProdutoCard/>
+            </div>
+            <div>
+                <Navigation currentPage={1} totalPages={5}/>
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 import ProdutoCard from "@/components/cards/ProdutoCard";
+import Navigation from "@/components/Navigation";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { SliderThumb } from "@radix-ui/react-slider";
@@ -55,6 +56,9 @@ export default function busca () {
                 <ProdutoCard/>
                 <ProdutoCard/>
                 <ProdutoCard/>
+            </div>
+            <div>
+                <Navigation currentPage={1} totalPages={5}/>
             </div>
         </div>
     );
