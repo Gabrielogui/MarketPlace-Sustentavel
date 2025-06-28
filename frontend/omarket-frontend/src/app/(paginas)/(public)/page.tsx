@@ -2,6 +2,7 @@
 
 import CategoriaCard from "@/components/cards/CategoriaCard";
 import ProdutoCard from "@/components/cards/ProdutoCard";
+import Navegation from "@/components/Navigation";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 //import { AuthContext } from "@/context/AuthContext";
@@ -49,6 +50,10 @@ export default function Home() {
                     <ProdutoCard/>
                     <ProdutoCard/>
                 </div>
+            </div>
+            
+            <div className="mt-8">
+                <Navegation currentPage={1} totalPages={5}/>
             </div>
 
         </div>

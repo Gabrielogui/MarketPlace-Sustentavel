@@ -33,12 +33,12 @@ export default function Header () {
                         <DropdownMenuTrigger>
                             <Logs className="cursor-pointer hover:scale-110 transition-all"/>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="center" className="w-48 bg-amber-50 border-green-200 text-emerald-900 cursor-pointer">
-                            <DropdownMenuItem>Frutas Orgânicas</DropdownMenuItem>
-                            <DropdownMenuItem>Verduras Frescas</DropdownMenuItem>
-                            <DropdownMenuItem>Grãos e Cereais</DropdownMenuItem>
-                            <DropdownMenuItem>Produtos Lácteos</DropdownMenuItem>
-                            <DropdownMenuItem>Mel e Derivados</DropdownMenuItem>
+                        <DropdownMenuContent align="center" className="w-48 bg-amber-50 border-green-200 text-emerald-900 ">
+                            <DropdownMenuItem className="cursor-pointer">Frutas Orgânicas</DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">Verduras Frescas</DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">Grãos e Cereais</DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">Produtos Lácteos</DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">Mel e Derivados</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
@@ -85,17 +85,17 @@ export default function Header () {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer">
                             <User/>
                             Perfil
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer">
                             <UserPen/>
                             Editar
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer">
                             <UserX/>
                             Inativar
                             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
@@ -103,7 +103,7 @@ export default function Header () {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer">
                             <LogOut/>
                             Logout
                             <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
