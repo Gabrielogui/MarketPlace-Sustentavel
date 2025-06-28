@@ -1,11 +1,10 @@
 'use client'
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { CircleUser, Heart, Logs, Search, ShoppingCart } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { CircleUser, Heart, LogOut, Logs, Search, ShoppingCart, User, UserPen, UserX } from "lucide-react";
 //import Image from "next/image";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { DropdownMenuShortcut } from "./ui/dropdown-menu";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 
@@ -75,20 +74,39 @@ export default function Header () {
                 <DropdownMenuTrigger asChild>
                     <CircleUser className="cursor-pointer hover:scale-110 transition-all" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent  align="start" className="w-40 bg-white rounded-md border-2 border-gray-300 cursor-pointer">
-                    <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                <DropdownMenuContent  align="start" className="max-w-40">
+                    <DropdownMenuLabel className="flex flex-col">
+                        <span className="text-foreground truncate text-sm font-medium">
+                            Nome Sobrenome
+                        </span>
+                        <span className="text-muted-foreground truncate text-xs font-normal">
+                            email@exemplo.com
+                        </span>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
                         <DropdownMenuItem>
+                            <User/>
                             Perfil
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
+                            <UserPen/>
                             Editar
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
+                            <UserX/>
                             Inativar
                             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator/>
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                            <LogOut/>
+                            Logout
+                            <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
