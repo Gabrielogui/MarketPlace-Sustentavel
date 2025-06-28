@@ -22,7 +22,16 @@ export default function MeusProdutos () {
                     </Select>
                 </div>
             </div>
-            <div >
+            <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center gap-4">
+                <ProdutoFornecedorCard/>
+                <ProdutoFornecedorCard/>
+                <ProdutoFornecedorCard/>
+                <ProdutoFornecedorCard/>
+                <ProdutoFornecedorCard/>
+                <ProdutoFornecedorCard/>
+                <ProdutoFornecedorCard/>
+                <ProdutoFornecedorCard/>
+                <ProdutoFornecedorCard/>
                 <ProdutoFornecedorCard/>
             </div>
         </div>

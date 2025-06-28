@@ -13,10 +13,10 @@ export default function ProdutoFornecedorCard () {
                 <Label className="text-gray-500">Preço</Label>
                 <div className="flex flex-row justify-start gap-4">
                     <Button variant={"outline"} size={"icon"}>
-                        <Trash2/>
+                        <PencilLine/>
                     </Button>
                     <Button variant={"outline"} size={"icon"}>
-                        <PencilLine/>
+                        <Trash2/>
                     </Button>
                 </div>
             </div>
