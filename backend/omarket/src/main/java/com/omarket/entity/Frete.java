@@ -28,6 +28,6 @@ public class Frete {
     private BigDecimal valor; // Valor do frete
     
     @Column(name = "prazo_entrega", nullable = false)
-    private Integer prazoEntrega; // Prazo de entrega estimado
+    private int prazoEntrega; // Prazo de entrega estimado
 
 }

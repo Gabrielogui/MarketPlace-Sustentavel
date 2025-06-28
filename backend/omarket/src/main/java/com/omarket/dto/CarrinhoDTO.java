@@ -19,7 +19,7 @@ public class CarrinhoDTO {
 
     @NotNull(message = "Subtotal é obrigatório!")
     @Digits(integer = 9, fraction = 4, message = "O subtotal deve ter no máximo 9 dígitos inteiros e 4 casas decimais.")
-    @PositiveOrZero(message = "O subtotal deve ser um valor positivo!")
+    @PositiveOrZero(message = "O subtotal deve ser um valor positivo ou nulo!")
     private BigDecimal subtotal = BigDecimal.ZERO;
 
     @NotNull(message = "A lista de itens é obrigatória!")
