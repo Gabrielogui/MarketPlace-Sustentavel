@@ -76,7 +76,7 @@ export default function Carrinho () {
         <div className="flex flex-col gap-10">
             {/* TÍTULO + BOTÃO DE FAZER A COMPRA */}
             <div className="flex flex-row justify-between">
-                <h1 className="text-3xl font-bold">Favoritos</h1> 
+                <h1 className="text-3xl font-bold">Carrinho</h1> 
                 <Button>Finalizar a Compra</Button>
             </div>
             {/* TABELA DO CARRINHO */}

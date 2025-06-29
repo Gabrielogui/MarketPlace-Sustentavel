@@ -5,8 +5,10 @@ import { CircleUser, Heart, LogOut, Logs, Search, ShoppingCart, User, UserPen, U
 //import Image from "next/image";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import Perfil from "./usuario/Perfil";
+import EditarPerfil from "./usuario/EditarPerfil";
 
 /* 
 COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU: 
@@ -17,6 +19,16 @@ COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU:
 export default function Header () {
 
     const { role } = useContext(AuthContext)
+
+    // |======| SABER SE O DRAWER E SHEET ESTÃO ABERTOS (PERFIL E EDITAR) |======|
+    // DROPDOWNMENU - SABER SE ESTÁ ABERTO  
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    // PERFIL - DRAWER
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    // EDITAR - SHEET
+    const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+    
 
     return(
         <header className="flex flex-row items-center justify-center gap-12 w-full py-5 px-12 
@@ -70,7 +82,7 @@ export default function Header () {
             </div>
             }
 
-            <DropdownMenu>
+            <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                     <CircleUser className="cursor-pointer hover:scale-110 transition-all" />
                 </DropdownMenuTrigger>
@@ -85,12 +97,24 @@ export default function Header () {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem className="cursor-pointer">
+                        
+                        <DropdownMenuItem className="cursor-pointer"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setIsDrawerOpen(true);
+                                setIsDropdownOpen(false);
+                            }}>
                             <User/>
                             Perfil
                             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer">
+                        
+                        <DropdownMenuItem className="cursor-pointer"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setIsSheetOpen(true);
+                                setIsDropdownOpen(false);
+                            }}>
                             <UserPen/>
                             Editar
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
@@ -110,6 +134,11 @@ export default function Header () {
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
+
+                {/* DRAWER DE PERFIL E SHEET DE EDITAR PERFIL */}
+                <Perfil isOpen={isDrawerOpen} onOpenChange={setIsDrawerOpen}/>
+                <EditarPerfil isOpen={isSheetOpen} onOpenChange={setIsSheetOpen}/>
+
             </DropdownMenu>
             
 
