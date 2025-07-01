@@ -58,7 +58,7 @@ export default function Perfil ( {isOpen, onOpenChange}: PerfilProps ) {
                                 </Button>
                             </h3>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 space-y-3 ml-2">
+                            <div className="grid grid-cols-2 space-y-3 ml-2">
                                 <div className="flex flex-col">
                                     <div className="flex flex-row gap-1 text-gray-500 items-center">
                                         <User size={16} className="text-xs"/>
