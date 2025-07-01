@@ -38,7 +38,7 @@ export default function Produto () {
                         <p className="text-2xl text-gray-500 font-semibold">Fornecedor</p>
                         <p className="text-2xl text-gray-500 font-semibold">Categoria</p>
                         <p className="text-2xl text-gray-500 font-semibold">Avaliação</p>
-                        <p className="text-2xl text-gray-500 font-semibold">Descrição: Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos architecto dolorum sequi quia soluta quod accusantium doloremque repellat animi repellendus odio temporibus repudiandae, consequuntur itaque recusandae unde porro odit? </p>
+                        <p className="text-2xl text-gray-500 font-semibold">Descrição: Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae eos architecto dolorum sequi quia soluta quod accusantium doloremque repellat animi repellendus odio temporibus repudiandae, consequuntur itaque recusandae unde porro odit?  </p>
                         <div className="flex flex-row justify-between">
                             <p className="text-2xl">$10.99</p>
                             <Heart className="cursor-pointer hover:scale-110 hover:text-red-500 transition-all duration-500"/>
