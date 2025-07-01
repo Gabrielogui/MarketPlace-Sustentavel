@@ -9,6 +9,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Perfil from "./usuario/Perfil";
 import EditarPerfil from "./usuario/EditarPerfil";
+import InativarPerfil from "./usuario/InativarPerfil";
 
 /* 
 COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU: 
@@ -20,13 +21,15 @@ export default function Header () {
 
     const { role } = useContext(AuthContext)
 
-    // |======| SABER SE O DRAWER E SHEET ESTÃO ABERTOS (PERFIL E EDITAR) |======|
+    // |======| SABER SE O DRAWER DO PERIFL E DE EDITAR E O ALERT DIALOG DE INATIVAR ESTÃO ABERTOS |======|
     // DROPDOWNMENU - SABER SE ESTÁ ABERTO  
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     // PERFIL - DRAWER
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    // EDITAR - SHEET
-    const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [isDrawerPerfilOpen, setIsDrawerPerfilOpen] = useState(false);
+    // EDITAR - DRAWER
+    const [isDrawerEditarOpen, setisDrawerEditarOpen] = useState(false);
+    // INATIVAR - ALERTDIALOG
+    const [isAlertDialogInativarOpen, setIsAlertDialogInativarOpen] = useState(false);
 
     
 
@@ -101,7 +104,7 @@ export default function Header () {
                         <DropdownMenuItem className="cursor-pointer"
                             onClick={(e) => {
                                 e.preventDefault();
-                                setIsDrawerOpen(true);
+                                setIsDrawerPerfilOpen(true);
                                 setIsDropdownOpen(false);
                             }}>
                             <User/>
@@ -112,14 +115,19 @@ export default function Header () {
                         <DropdownMenuItem className="cursor-pointer"
                             onClick={(e) => {
                                 e.preventDefault();
-                                setIsSheetOpen(true);
+                                setisDrawerEditarOpen(true);
                                 setIsDropdownOpen(false);
                             }}>
                             <UserPen/>
                             Editar
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer">
+                        <DropdownMenuItem className="cursor-pointer"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setIsAlertDialogInativarOpen(true);
+                                setIsDropdownOpen(false);
+                            }}>
                             <UserX/>
                             Inativar
                             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
@@ -135,9 +143,10 @@ export default function Header () {
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
 
-                {/* DRAWER DE PERFIL E SHEET DE EDITAR PERFIL */}
-                <Perfil isOpen={isDrawerOpen} onOpenChange={setIsDrawerOpen}/>
-                <EditarPerfil isOpen={isSheetOpen} onOpenChange={setIsSheetOpen}/>
+                {/* DRAWER DE PERFIL E DE EDITAR PERFIL E ALERTDIALOG DE INATIVAR */}
+                <Perfil isOpen={isDrawerPerfilOpen} onOpenChange={setIsDrawerPerfilOpen}/>
+                <EditarPerfil isOpen={isDrawerEditarOpen} onOpenChange={setisDrawerEditarOpen}/>
+                <InativarPerfil isOpen={isAlertDialogInativarOpen} onOpenChange={setIsAlertDialogInativarOpen} />
 
             </DropdownMenu>
             
