@@ -1,7 +1,7 @@
 'use client'
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { CircleUser, Heart, LogOut, Logs, Search, ShoppingCart, User, UserPen, UserX } from "lucide-react";
+import { CircleUser, Heart, LogOut, Logs, MapPin, Search, ShoppingCart, User, UserPen, UserX } from "lucide-react";
 //import Image from "next/image";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -10,6 +10,7 @@ import { AuthContext } from "@/context/AuthContext";
 import Perfil from "./usuario/Perfil";
 import EditarPerfil from "./usuario/EditarPerfil";
 import InativarPerfil from "./usuario/InativarPerfil";
+import Endereco from "./usuario/Endereco";
 
 /* 
 COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU: 
@@ -30,6 +31,8 @@ export default function Header () {
     const [isDrawerEditarOpen, setisDrawerEditarOpen] = useState(false);
     // INATIVAR - ALERTDIALOG
     const [isAlertDialogInativarOpen, setIsAlertDialogInativarOpen] = useState(false);
+    // ENDEREÇO - DRAWER
+    const [isDrawerEnderecoOpen, setIsDrawerEnderecoOpen] = useState(false);
 
     
 
@@ -135,6 +138,18 @@ export default function Header () {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={(e) => {
+                                e.preventDefault();
+                                setIsDrawerEnderecoOpen(true);
+                                setIsDropdownOpen(false);
+                            }}>
+                            <MapPin />
+                            Endereço
+                            <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator/>
+                    <DropdownMenuGroup>
                         <DropdownMenuItem className="cursor-pointer">
                             <LogOut/>
                             Logout
@@ -147,6 +162,9 @@ export default function Header () {
                 <Perfil isOpen={isDrawerPerfilOpen} onOpenChange={setIsDrawerPerfilOpen}/>
                 <EditarPerfil isOpen={isDrawerEditarOpen} onOpenChange={setisDrawerEditarOpen}/>
                 <InativarPerfil isOpen={isAlertDialogInativarOpen} onOpenChange={setIsAlertDialogInativarOpen} />
+
+                {/* DRAWER PARA VISUALIZAR E EDITAR ENDEREÇO */}
+                <Endereco isOpen={isDrawerEnderecoOpen} onOpenChange={setIsDrawerEnderecoOpen}/>
 
             </DropdownMenu>
             
