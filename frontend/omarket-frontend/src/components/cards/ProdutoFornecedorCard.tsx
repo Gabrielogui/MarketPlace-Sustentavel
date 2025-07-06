@@ -6,9 +6,11 @@ import { Button } from "../ui/button";
 import { PencilLine, Trash2 } from "lucide-react";
 import { useState } from "react";
 import EditarProduto from "../produto/EditarProduto";
+import InativarProduto from "../produto/InativarProduto";
 
 export default function ProdutoFornecedorCard () {
     const [isDrawerEditarProdutoOpen, setIsDrawerEditarProdutoOpen] = useState(false);
+    const [isAlertDialogInativarProdutoOpen, setIsAlertDialogInativarProdutoOpen] = useState(false);
 
     return(
         <div className="flex flex-row gap-2 p-2 hover:shadow hover:scale-105 transition-all ">
@@ -25,12 +27,17 @@ export default function ProdutoFornecedorCard () {
                         className="cursor-pointer" variant={"outline"} size={"icon"}>
                         <PencilLine/>
                     </Button>
-                    <Button className="cursor-pointer" variant={"outline"} size={"icon"}>
+                    <Button onClick={(e) => {
+                        e.preventDefault();
+                        setIsAlertDialogInativarProdutoOpen(true);
+                    }} 
+                        className="cursor-pointer" variant={"outline"} size={"icon"}>
                         <Trash2/>
                     </Button>
                 </div>
             </div>
             <EditarProduto isOpen={isDrawerEditarProdutoOpen} onOpenChange={setIsDrawerEditarProdutoOpen} produto={null}/>
+            <InativarProduto isOpen={isAlertDialogInativarProdutoOpen} onOpenChange={setIsAlertDialogInativarProdutoOpen}/>
         </div>
     );
 }
