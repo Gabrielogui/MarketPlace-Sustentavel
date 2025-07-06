@@ -30,7 +30,7 @@ export default function ProdutoFornecedorCard () {
                     </Button>
                 </div>
             </div>
-            <EditarProduto isOpen={isDrawerEditarProdutoOpen} onOpenChange={setIsDrawerEditarProdutoOpen}/>
+            <EditarProduto isOpen={isDrawerEditarProdutoOpen} onOpenChange={setIsDrawerEditarProdutoOpen} produto={null}/>
         </div>
     );
 }
