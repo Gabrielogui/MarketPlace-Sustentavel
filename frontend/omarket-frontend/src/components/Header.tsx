@@ -11,6 +11,7 @@ import Perfil from "./usuario/Perfil";
 import EditarPerfil from "./usuario/EditarPerfil";
 import InativarPerfil from "./usuario/InativarPerfil";
 import Endereco from "./usuario/Endereco";
+import AdicionarProduto from "./produto/AdicionarProduto";
 
 /* 
 COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU: 
@@ -33,6 +34,8 @@ export default function Header () {
     const [isAlertDialogInativarOpen, setIsAlertDialogInativarOpen] = useState(false);
     // ENDEREÇO - DRAWER
     const [isDrawerEnderecoOpen, setIsDrawerEnderecoOpen] = useState(false);
+    // ADCIONAR PRODUTO - DRAWER
+    const [isDrawerAddProdutoOpen, setIsDrawerAddProdutoOpen] = useState(false);
 
     
 
@@ -76,8 +79,18 @@ export default function Header () {
              </div>
             } 
             { role === "FORNECEDOR" &&
-                <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
-                    <p>Meus Produtos</p>
+                <div className="flex flex-row gap-12">
+                    <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
+                        <p>Meus Produtos</p>
+                    </div>
+                    <div onClick={(e) => {
+                        e.preventDefault()
+                        setIsDrawerAddProdutoOpen(true);
+                        setIsDropdownOpen(false);
+                    }}
+                        className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
+                        <p>Adicionar Produto</p>
+                    </div>
                 </div>
             }
             
@@ -168,7 +181,8 @@ export default function Header () {
 
             </DropdownMenu>
             
-
+            {/* DRAWER DE PRODUTO PARA FORNECEDOR */}
+            <AdicionarProduto isOpen={isDrawerAddProdutoOpen} onOpenChange={setIsDrawerAddProdutoOpen}/>
         </header>
     );
 }

@@ -28,11 +28,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (USE_MOCK) {
       // Protótipo: já logado como CLIENTE
-      const t = getMockToken('CLIENTE');
+      const t = getMockToken('FORNECEDOR');
       setToken(t);
-      setRole('CLIENTE');
+      setRole('FORNECEDOR');
       // fakeUsers.CLIENTE é um Cliente, que extende UsuarioBase
-      setUser(fakeUsers.CLIENTE);
+      setUser(fakeUsers.FORNECEDOR);
       setInitialized(true);
       return;
     }
