@@ -137,7 +137,7 @@ public class CarrinhoService {
         return converterCarrinhoParaDto(carrinho);
     }
 
-    private BigDecimal calcularSubtotalComEntidades(List<ItemCarrinho> itens) {
+    public BigDecimal calcularSubtotalComEntidades(List<ItemCarrinho> itens) {
         if (itens == null || itens.isEmpty()) {
             return BigDecimal.ZERO;
         }
