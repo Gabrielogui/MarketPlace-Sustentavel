@@ -29,12 +29,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PedidoService {
 
+    private final FreteService freteService;
+
     private final PedidoRepository pedidoRepository;
     private final CarrinhoRepository carrinhoRepository;
     private final PagamentoService pagamentoService; // Manteremos injetado para a Etapa 2
     private final ProdutoRepository produtoRepository;
     private final CarrinhoService carrinhoService;
     private final ClienteService clienteService;
+
+    PedidoService(FreteService freteService) {
+        this.freteService = freteService;
+    }
 
     @Transactional
     public PedidoDTO criarPedidoAPartirDoCarrinho(Cliente cliente, List<ItemCarrinhoDTO> itensCarrinhoDTO) {
@@ -106,8 +112,8 @@ public class PedidoService {
         pedidoDTO.setValorTotal(pedido.getValorTotal());
         pedidoDTO.setSubtotal(pedido.getSubTotal());
 
-        // FRETE PRECISA SER PERSISTIDO NO DB
-        // pedidoDTO.setFrete();
+        pedidoDTO.setFrete(pedido.getFrete() != null ? 
+            freteService.converterParaDTO(pedido.getFrete()) : null);
 
         // PAGAMENTO PRECISA SER PERSISTIDO NO DB
         // pedidoDTO.setPagamento();

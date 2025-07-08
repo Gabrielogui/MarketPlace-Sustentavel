@@ -3,9 +3,11 @@ package com.omarket.service;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.springframework.http.HttpHeaders;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -15,8 +17,8 @@ import com.omarket.dto.frete.request.CalculoFreteRequest;
 import com.omarket.dto.frete.request.EnderecoCepRequest;
 import com.omarket.dto.frete.request.PacoteRequest;
 import com.omarket.dto.frete.response.OpcaoFreteResponse;
-import com.omarket.entity.Cliente;
 import com.omarket.entity.Frete;
+import com.omarket.event.FreteSelecionadoEvent;
 import com.omarket.repository.FreteRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class FreteService {
     
     private final RestTemplate restTemplate = new RestTemplate();
     private final FreteRepository freteRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Value("${melhorenvio.api.url}")
     private String apiUrl;
@@ -75,22 +78,26 @@ public class FreteService {
         return Collections.emptyList();
     }
 
-    public FreteDTO selecionarOpcaoFrete(OpcaoFreteResponse opcaoFrete, Cliente cliente) {
-        // Aqui você pode implementar a lógica para salvar a opção de frete selecionada no banco de dados
-        // ou associá-la ao pedido do cliente.
+    @Transactional
+    public FreteDTO selecionarOpcaoFrete(OpcaoFreteResponse opcaoFrete, Long pedidoId) {
+
+        if (opcaoFrete == null || pedidoId == null) {
+            throw new IllegalArgumentException("A opção de frete e o ID do pedido não podem ser nulos.");
+        }
         
-        // Exemplo simples: apenas retorna o DTO com os dados da opção selecionada
         Frete frete = new Frete();
         frete.setValor(opcaoFrete.getPrice());
         frete.setPrazoEntrega(opcaoFrete.getDeliveryTime());
         frete.setNome(opcaoFrete.getName());
 
-        freteRepository.save(frete);
+        Frete freteSalvo = freteRepository.save(frete);
+
+        eventPublisher.publishEvent(new FreteSelecionadoEvent(freteSalvo, pedidoId));
         
         return converterParaDTO(frete);
     }
 
-    private FreteDTO converterParaDTO(Frete frete) {
+    public FreteDTO converterParaDTO(Frete frete) {
         FreteDTO freteDTO = new FreteDTO();
         freteDTO.setValor(frete.getValor());
         freteDTO.setPrazoEntrega(frete.getPrazoEntrega());

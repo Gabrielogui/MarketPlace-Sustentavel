@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,15 +51,15 @@ public class FreteController {
         return ResponseEntity.ok(opcoes);
     }
 
-    @PostMapping("/selecionar")
+    @PostMapping("/selecionar/{pedidoId}")
     public ResponseEntity<FreteDTO> selecionarOpcao(
             
             @RequestBody OpcaoFreteResponse freteResponse,
-            Authentication authentication
+            Authentication authentication, 
+            @PathVariable Long pedidoId
             ) {
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        FreteDTO freteNovo = freteService.selecionarOpcaoFrete(freteResponse, (Cliente)userDetails.getUsuario());
+        FreteDTO freteNovo = freteService.selecionarOpcaoFrete(freteResponse, pedidoId);
         
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")

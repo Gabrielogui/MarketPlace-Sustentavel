@@ -16,6 +16,7 @@ import com.omarket.dto.pagamento.PagamentoResponseDTO;
 import com.omarket.entity.Pedido;
 import com.omarket.entity.Usuario;
 import com.omarket.security.CustomUserDetails;
+import com.omarket.service.PedidoService;
 
 import lombok.RequiredArgsConstructor;
 
