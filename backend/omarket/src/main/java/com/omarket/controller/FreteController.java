@@ -1,5 +1,6 @@
 package com.omarket.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -8,9 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.security.core.Authentication;
 
+import com.omarket.dto.frete.FreteDTO;
 import com.omarket.dto.frete.request.PacoteRequest;
 import com.omarket.dto.frete.response.OpcaoFreteResponse;
+import com.omarket.entity.Cliente;
+import com.omarket.security.CustomUserDetails;
 import com.omarket.service.FreteService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +34,8 @@ public class FreteController {
     @PostMapping("/calcular")
     public ResponseEntity<List<OpcaoFreteResponse>> calcular(
             @RequestParam String cepOrigem,
-            @RequestParam String cepDestino
+            @RequestParam String cepDestino,
+            Authentication authentication
             //, @RequestBody PacoteRequest pacote
             ) {
 
@@ -41,6 +48,24 @@ public class FreteController {
         }
         
         return ResponseEntity.ok(opcoes);
+    }
+
+    @PostMapping("/selecionar")
+    public ResponseEntity<FreteDTO> selecionarOpcao(
+            
+            @RequestBody OpcaoFreteResponse freteResponse,
+            Authentication authentication
+            ) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        FreteDTO freteNovo = freteService.selecionarOpcaoFrete(freteResponse, (Cliente)userDetails.getUsuario());
+        
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(freteNovo.getId())
+            .toUri();
+        
+        return ResponseEntity.created(location).body(freteNovo);
     }
     
 }
