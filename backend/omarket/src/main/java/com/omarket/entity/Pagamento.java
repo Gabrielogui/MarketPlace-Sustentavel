@@ -29,5 +29,7 @@ public class Pagamento {
     @Column(name="data_pagamento", nullable = false)
     private LocalDateTime dataPagamento;
 
+    @Column(name = "mercado_pago_id", unique = true)
+    private Long mercadoPagoId; // ID externo do Mercado Pago
 
 }

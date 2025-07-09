@@ -35,7 +35,7 @@ public class PedidoController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Usuario cliente = userDetails.getUsuario(); 
 
-        Pedido pedidoCriado = pedidoService.criarPedidoAPartirDoCarrinho(cliente, itensCarrinhoDTO);
+        PedidoDTO pedidoCriado = pedidoService.criarPedidoAPartirDoCarrinho(cliente, itensCarrinhoDTO);
         
         // Retorna 201 Created com a localização e os dados do novo pedido
         URI location = ServletUriComponentsBuilder
@@ -46,7 +46,7 @@ public class PedidoController {
 
         return ResponseEntity.created(location).body(pedidoCriado);
     }
-    
+    /* 
     @PostMapping("/{pedidoId}/pagamentos")
     public ResponseEntity<PagamentoResponseDTO> pagarPedido(
         @PathVariable Long pedidoId,
@@ -60,5 +60,5 @@ public class PedidoController {
         
         return ResponseEntity.ok(dadosPagamento);
         
-    }
+    }*/
 }
