@@ -1,4 +1,4 @@
-package com.omarket.controller;
+/* package com.omarket.controller;
 
 import org.springframework.security.core.Authentication;
 
@@ -62,3 +62,4 @@ public class PedidoController {
         
     }
 }
+*/
