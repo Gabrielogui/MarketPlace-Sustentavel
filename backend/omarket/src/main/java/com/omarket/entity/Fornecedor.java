@@ -41,5 +41,4 @@ public class Fornecedor extends Usuario {
         }
     }
 
-    
 }
