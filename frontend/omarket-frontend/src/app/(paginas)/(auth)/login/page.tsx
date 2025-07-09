@@ -1,17 +1,10 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import CadastroForm from "@/components/auth/CadastroForm";
+import LoginForm from "@/components/auth/LoginForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-
 
 export default function Login () {
-
-    const [tipoUsuario, setTipoUsuario] = useState<'Cliente' | 'Fornecedor'>('Cliente');
 
     return(
         <div className="flex flex-col items-center w-full gap-5">
@@ -24,91 +17,11 @@ export default function Login () {
                 </TabsList>
 
                     <TabsContent value="Login" className="space-y-4">
-                        <div className="">
-                            <h2 className="text-2xl font-bold text-center">Efetue o Login</h2>
-                        </div>
-                        <div className="flex flex-col gap-5">
-                            <div className="flex flex-col gap-2">
-                                <Label>E-mail</Label>
-                                <Input type="email" placeholder="email@exemplo.com"></Input>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label>Senha</Label>
-                                <Input type="password" placeholder="Insira a senha"></Input>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label>esqueci a senha</Label>
-                                <Button className="w-full">Fazer Login</Button>
-                            </div>
-                        </div>
+                        <LoginForm />
                     </TabsContent>
 
                     <TabsContent value="Cadastro" className="space-y-4">
-                        <div className="">
-                            <h2 className="text-2xl font-bold text-center">Cadastre-se</h2>
-                        </div>
-                        <div className="flex flex-col gap-5">
-                            {/* NOME E EMAIL */}
-                            <div className="flex flex-col gap-5">
-                                <div className="flex flex-col gap-2">
-                                    <Label>{tipoUsuario === 'Cliente' ? 'Nome Completo' : 'Nome Completo da Empresa'}</Label>
-                                    <Input placeholder="Digite seu Nome"></Input>
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                    <Label>E-mail</Label>
-                                    <Input placeholder="email@exemplo.com"></Input>
-                                </div>
-                            </div>
-                            {/* SENHA ; REPETIR ; CNPJ ; TELEFONE ; CLIENTE ; VENDEDOR */}
-                            <div className="flex flex-col gap-5">
-                                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                    <div className="flex flex-col gap-2">
-                                        <Label>Senha</Label>
-                                        <Input type="password" placeholder="Informe a senha"></Input>
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <Label>Repita a senha</Label>
-                                        <Input type="password" placeholder="Informe a senha"></Input>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                                    <div className="flex flex-col gap-2">
-                                        <Label>{tipoUsuario === 'Cliente' ? 'cpf' : 'cnpj'}</Label>
-                                        <Input placeholder={
-                                            tipoUsuario === 'Cliente' ? 'XXX.XXX.XXX-XX' : "XX.XXX.XXX/XXXX-XX"
-                                        }></Input>
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <Label>Telefone</Label>
-                                        <Input placeholder="(XX) X XXXX-XXXX"></Input>
-                                    </div>
-                                </div>
-                                <RadioGroup defaultValue="Fornecedor" 
-                                    value={tipoUsuario} 
-                                    onValueChange={(value) => setTipoUsuario(value as 'Cliente' | 'Fornecedor')}
-                                    className="flex flex-row gap-7 w-full justify-between">
-                                        <div className="flex flex-row gap-5">
-                                            <RadioGroupItem value="Cliente" id="r1" />
-                                            <Label>Cliente</Label>
-                                        </div>
-                                        <div className="flex flex-row gap-5">
-                                            <RadioGroupItem value="Fornecedor" id="r2" />
-                                            <Label>Fornecedor</Label>
-                                        </div>
-                                </RadioGroup>
-                            </div>
-                            {/* CARTA DE MOTIVAÇÃO */}
-                            { tipoUsuario === 'Fornecedor' &&
-                            <div className="flex flex-col gap-2">
-                                <Label>Carta de Motivação</Label>
-                                <Textarea className="h-24" placeholder="Informe sua motivação"/>
-                            </div>
-                            }
-                            {/* CADASTRAR */}
-                            <div>
-                                <Button className="w-full">Cadastrar</Button>
-                            </div>
-                        </div>
+                        <CadastroForm />
                     </TabsContent>
                 </Tabs>
             </div>
