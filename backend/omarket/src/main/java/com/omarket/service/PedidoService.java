@@ -17,6 +17,7 @@ import com.omarket.entity.Endereco;
 import com.omarket.entity.ItemCarrinho;
 import com.omarket.entity.ItemPedido;
 import com.omarket.entity.Pedido;
+import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusPedido;
 import com.omarket.repository.CarrinhoRepository;
 import com.omarket.repository.PedidoRepository;
@@ -30,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class PedidoService {
 
     private final FreteService freteService;
-
     private final PedidoRepository pedidoRepository;
     private final CarrinhoRepository carrinhoRepository;
     private final PagamentoService pagamentoService; // Manteremos injetado para a Etapa 2
@@ -38,12 +38,12 @@ public class PedidoService {
     private final CarrinhoService carrinhoService;
     private final ClienteService clienteService;
 
-    PedidoService(FreteService freteService) {
-        this.freteService = freteService;
-    }
-
     @Transactional
-    public PedidoDTO criarPedidoAPartirDoCarrinho(Cliente cliente, List<ItemCarrinhoDTO> itensCarrinhoDTO) {
+    public PedidoDTO criarPedidoAPartirDoCarrinho(Usuario cliente, List<ItemCarrinhoDTO> itensCarrinhoDTO) {
+
+        if (!(cliente instanceof Cliente)) {
+            throw new RuntimeException("Usuário não é um cliente válido.");
+        }
         // 1. Busca o carrinho do cliente
         Carrinho carrinho = carrinhoRepository.findById(cliente.getId())
             .orElseThrow(() -> new RuntimeException("Carrinho não encontrado"));
@@ -54,7 +54,7 @@ public class PedidoService {
 
         // 2. Cria um novo Pedido com os dados do carrinho
         Pedido novoPedido = new Pedido();
-        novoPedido.setCliente(cliente);
+        novoPedido.setCliente((Cliente)cliente);
         novoPedido.setDataPedido(LocalDateTime.now());
         novoPedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO); // <-- NOVO STATUS INICIAL
 
