@@ -47,7 +47,7 @@ public class UsuarioDTO {
     private LocalDate dataNascimento;
 
     // ======= CAMPOS ESPECÍFICOS PARA FORNECEDOR =======
-    @org.hibernate.validator.constraints.br.CNPJ(message = "CNPJ inválido!")
+    //@org.hibernate.validator.constraints.br.CNPJ(message = "CNPJ inválido!")
     private String cnpj;
 
     // ======= CAMPOS ESPECÍFICOS PARA ADM        =======
