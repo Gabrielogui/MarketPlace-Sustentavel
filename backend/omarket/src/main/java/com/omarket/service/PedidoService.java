@@ -1,4 +1,4 @@
-/*package com.omarket.service;
+package com.omarket.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -141,5 +141,3 @@ public class PedidoService {
         return pedidoDTO;
     }
 }
-
-*/
