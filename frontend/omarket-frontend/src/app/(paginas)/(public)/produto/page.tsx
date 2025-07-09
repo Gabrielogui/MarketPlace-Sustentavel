@@ -1,11 +1,17 @@
+'use client'
+
 import AvaliacaoCard from "@/components/cards/AvaliacaoCard";
 import ProdutoRelacionadoCard from "@/components/cards/ProdutoRelacionadoCard";
+import AvaliarProduto from "@/components/produto/AvaliarProduto";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Heart } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function Produto () {
+    const [isDialogAvaliarProdutoOpen, setIsDialogAvaliarProdutoOpen] = useState(false);
+
     return(
         <div className="flex flex-col gap-10 ">
             {/* PRODUTO */}
@@ -63,7 +69,12 @@ export default function Produto () {
             <div className="flex flex-col gap-5">
                 <div className="flex flex-row justify-between">
                     <h1 className="text-3xl font-bold">Avaliações</h1>
-                    <Button className="cursor-pointer">Avaliar Produto</Button>
+                    <Button onClick={(e) => {
+                        e.preventDefault();
+                        setIsDialogAvaliarProdutoOpen(true);
+                    }}
+                        className="cursor-pointer">Avaliar Produto
+                    </Button>
                 </div>
                 <div>
                     <Carousel
@@ -85,6 +96,7 @@ export default function Produto () {
                     </Carousel>
                 </div>
             </div>
+            <AvaliarProduto isOpen={isDialogAvaliarProdutoOpen} onOpenChange={setIsDialogAvaliarProdutoOpen}/>
         </div>
     );
 }
