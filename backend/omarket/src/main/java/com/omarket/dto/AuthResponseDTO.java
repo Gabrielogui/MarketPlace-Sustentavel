@@ -14,9 +14,4 @@ public class AuthResponseDTO {
     private String token;
     private TipoUsuario tipoUsuario;
 
-    public AuthResponseDTO(String token, TipoUsuario tipoUsuario) {
-        this.token = token;
-        this.tipoUsuario = tipoUsuario;
-    }
-
 }

@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-//import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { loginRequest } from "@/service/usuario/authService";
 import { toast } from "sonner";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function LoginForm () {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [loading, setLoading] = useState(false);
-    //const router = useRouter();
+    const router = useRouter();
+
+    const { login } = useContext(AuthContext);
 
     const handleLogin = async () => {
         setLoading(true);
@@ -19,11 +22,23 @@ export default function LoginForm () {
             console.log(senha)
             const response = await loginRequest({ email, senha });
 
-            const token = response.data.token;
+            const { token, tipoUsuario } = response.data;
+
+            console.log("Tipo usuário após login: ", tipoUsuario)
+        
+            login(token);
 
             localStorage.setItem("token", token);
 
             toast.success("Login realizado com sucesso!");
+
+            if(tipoUsuario === "CLIENTE"){
+                router.push("/");
+            }else if(tipoUsuario === "FORNECEDOR") {
+                router.push("/fornecedor");
+            }else{
+                router.push("/admin");
+            }
         } catch (error) {
             console.error("Erro ao fazer login:", error);
             toast.error("Email ou senha incorretos!");

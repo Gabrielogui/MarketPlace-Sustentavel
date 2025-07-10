@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser]     = useState<Usuario | null>(null);
   const [initialized, setInitialized] = useState(false); 
 
-  const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
+  const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'false';
 
   useEffect(() => {
     if (USE_MOCK) {
@@ -43,14 +43,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setInitialized(true);
       return;
     } 
-
+    console.log("tipo do usuário: ", role)
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const payload: any = jwtDecode(t);
       // COLOCAR TEMPO DE EXPIRAÇÃO PARA O FRONT SABER **
       const r: Role = payload.role || payload.tipoUsuario;
+      
       setToken(t);
       setRole(r);
+      console.log("tipo do usuário: ", role);
         // ADICIONAR UM LISTNER **
       // Monta um objeto mínimo de UsuarioBase
       const base: Usuario = {

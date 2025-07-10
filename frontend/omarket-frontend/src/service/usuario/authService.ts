@@ -2,7 +2,7 @@ import api from "../api";
 
 // |=======| INTERFACES DOS REQUESTS |=======|
 export interface LoginPayload  { email: string; senha: string; }
-export interface AuthResponse   { token: string; }
+export interface AuthResponse   { token: string; tipoUsuario: 'CLIENTE' | 'FORNECEDOR' | 'ADMINISTRADOR' }
 export interface CadastroPayload {
     nome: string;
     email: string;
