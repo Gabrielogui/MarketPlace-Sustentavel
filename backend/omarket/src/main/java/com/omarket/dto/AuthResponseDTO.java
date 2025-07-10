@@ -1,5 +1,7 @@
 package com.omarket.dto;
 
+import com.omarket.entity.enum_.TipoUsuario;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,5 +12,11 @@ import lombok.Setter;
 public class AuthResponseDTO {
 
     private String token;
+    private TipoUsuario tipoUsuario;
+
+    public AuthResponseDTO(String token, TipoUsuario tipoUsuario) {
+        this.token = token;
+        this.tipoUsuario = tipoUsuario;
+    }
 
 }
