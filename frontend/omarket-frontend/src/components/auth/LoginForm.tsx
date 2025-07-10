@@ -28,8 +28,6 @@ export default function LoginForm () {
         
             login(token);
 
-            localStorage.setItem("token", token);
-
             toast.success("Login realizado com sucesso!");
 
             if(tipoUsuario === "CLIENTE"){
