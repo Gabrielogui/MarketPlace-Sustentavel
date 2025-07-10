@@ -108,6 +108,8 @@ public class PagamentoService {
         } */
     }
 
+    
+
     private PagamentoDTO converterParaDTO(Pagamento pagamento) {
         PagamentoDTO dto = new PagamentoDTO();
         dto.setId(pagamento.getId());

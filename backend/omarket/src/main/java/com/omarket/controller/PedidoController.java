@@ -22,6 +22,9 @@ import com.omarket.security.CustomUserDetails;
 import com.omarket.service.PedidoService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/pedidos")
@@ -61,4 +64,16 @@ public class PedidoController {
         return ResponseEntity.ok(dadosPagamento);
         
     }*/
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PedidoDTO> buscar(Authentication authentication, 
+    @PathVariable Long id) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Usuario cliente = userDetails.getUsuario();
+
+        PedidoDTO PedidoDTO = pedidoService.buscar(cliente, id);
+
+        return ResponseEntity.ok(PedidoDTO);
+    }
+    
 }

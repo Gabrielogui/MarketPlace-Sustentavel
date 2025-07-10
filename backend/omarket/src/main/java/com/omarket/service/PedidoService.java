@@ -11,6 +11,7 @@ import com.omarket.dto.EnderecoDTO;
 import com.omarket.dto.ItemCarrinhoDTO;
 import com.omarket.dto.ItemPedidoDTO;
 import com.omarket.dto.PedidoDTO;
+import com.omarket.dto.pagamento.PagamentoDTO;
 import com.omarket.entity.Carrinho;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Endereco;
@@ -77,12 +78,27 @@ public class PedidoService {
         pedidoSalvo.getItens().stream()
             .anyMatch(itemPedido -> itemPedido.getProduto().getId().equals(item.getProduto().getId()))
         );
-        
+
         carrinho.setSubtotal(carrinhoService.calcularSubtotalComEntidades(carrinho.getItens()));
         carrinhoRepository.save(carrinho);
 
         // 5. Retorna a entidade Pedido completa
         return converterPedidoParaDto(pedidoSalvo);
+    }
+
+    @Transactional(readOnly = true)
+    public PedidoDTO buscar(Usuario usuario, Long id){
+        if (!(usuario instanceof Cliente)) {
+            throw new RuntimeException("Usuário não é um cliente válido.");
+        }
+        Pedido pedido = pedidoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+
+        if(!(pedido.getCliente().getId().equals(usuario.getId()))){
+            throw new RuntimeException("Pedido não pertence ao cliente.");
+        }
+
+        return converterPedidoParaDto(pedido);
     }
     
     // ... outros métodos que criaremos para a Etapa 2 ...
