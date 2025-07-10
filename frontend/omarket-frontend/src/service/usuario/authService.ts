@@ -17,4 +17,7 @@ export interface CadastroPayload {
 // |=======| MÉTODOS COM AS ROTAS |=======|
 export const loginRequest = (data: LoginPayload) => api.post<AuthResponse>('/auth/login', data);
 
-export const cadastrarRequest = (data: CadastroPayload) => api.post<AuthResponse>('/auth/cadastrar', data);
+export async function cadastrarRequest(data: CadastroPayload): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>('/auth/cadastrar', data);
+    return response.data;
+}
