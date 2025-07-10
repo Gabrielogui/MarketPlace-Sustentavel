@@ -73,15 +73,11 @@ public class PedidoService {
         Pedido pedidoSalvo = pedidoRepository.save(novoPedido);
 
         // 4. Limpa o carrinho do cliente, pois os itens agora estão no pedido
-        for (ItemCarrinho itemCarrinho : carrinho.getItens()) {
-            if(itemCarrinho.getProduto().getId() == pedidoSalvo.getItens().get(0).getProduto().getId()) {
-                carrinho.getItens().remove(itemCarrinho);
-            }
-        }
-        carrinho.getItens().removeIf(item -> 
-            pedidoSalvo.getItens().stream()
-                .anyMatch(itemPedido -> itemPedido.getProduto().getId().equals(item.getProduto().getId()))
+        carrinho.getItens().removeIf(item ->
+        pedidoSalvo.getItens().stream()
+            .anyMatch(itemPedido -> itemPedido.getProduto().getId().equals(item.getProduto().getId()))
         );
+        
         carrinho.setSubtotal(carrinhoService.calcularSubtotalComEntidades(carrinho.getItens()));
         carrinhoRepository.save(carrinho);
 

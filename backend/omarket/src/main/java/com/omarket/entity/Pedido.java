@@ -46,12 +46,12 @@ public class Pedido {
     @Column(name="sub_total", precision = 19, scale = 4, nullable = false)
     private BigDecimal subTotal;
 
-    @JoinColumn(name = "frete_id")
+    @JoinColumn(name = "frete_id", nullable = true)
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
     private Frete frete;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pagamento_id")
+    @JoinColumn(name = "pagamento_id", nullable = true)
     private Pagamento pagamento;
 
     @OneToMany(mappedBy = "id.pedido")

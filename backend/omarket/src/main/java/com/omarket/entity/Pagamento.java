@@ -21,6 +21,7 @@ public class Pagamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="metodo", nullable = false)
     private String metodo;
 
     @Column(name="valor_pago", precision = 19, scale = 4, nullable = false)

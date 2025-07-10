@@ -30,7 +30,7 @@ public class PedidoController {
 
     private final PedidoService pedidoService;
     
-    @PostMapping
+    @PostMapping("/criar")
     public ResponseEntity<PedidoDTO> criarPedido(Authentication authentication, @RequestBody List<ItemCarrinhoDTO> itensCarrinhoDTO) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Usuario cliente = userDetails.getUsuario(); 

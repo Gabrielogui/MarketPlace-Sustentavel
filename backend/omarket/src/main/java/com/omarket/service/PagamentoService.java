@@ -8,8 +8,10 @@ import com.mercadopago.client.payment.PaymentPayerRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.payment.Payment;
+import com.omarket.dto.pagamento.PagamentoDTO;
 import com.omarket.dto.pagamento.PagamentoResponseDTO;
 import com.omarket.entity.Cliente;
+import com.omarket.entity.Pagamento;
 import com.omarket.entity.Pedido;
 import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusPedido;
@@ -24,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -41,11 +44,16 @@ public class PagamentoService {
     }
 
     @Transactional
-    public PagamentoResponseDTO criarPagamento(Long pedidoId, Usuario usuario) {
+    public PagamentoDTO criarPagamento(Long pedidoId, Usuario usuario) {
         if (!(usuario instanceof Cliente)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Apenas clientes podem realizar pagamentos.");
         }
+
         Cliente cliente = (Cliente) usuario;
+
+        if (cliente.getCpf() == null || cliente.getCpf().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O CPF do cliente é obrigatório para realizar o pagamento.");
+        }
 
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado!"));
@@ -54,46 +62,60 @@ public class PagamentoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este pedido não está aguardando pagamento.");
         }
 
-        try {
-            PaymentClient client = new PaymentClient();
+        //try {
+           /*  PaymentClient client = new PaymentClient();
 
+            // --- Lógica CORRETA de pagamento com Token de Cartão de Teste ---
             PaymentCreateRequest createRequest = PaymentCreateRequest.builder()
                 .transactionAmount(pedido.getValorTotal())
-                .description("Pagamento para o pedido " + pedido.getId())
-                .paymentMethodId("pix") // ou outro método de pagamento
+                .token("6e32f14a3f53b5a97edda8c4d89bb8ae") // Token de cartão de teste que sempre aprova
+                .description("Pagamento para o pedido #" + pedido.getId())
+                .installments(1)
+                .paymentMethodId("visa")
                 .payer(PaymentPayerRequest.builder()
-                        .email(cliente.getEmail())
-                        .firstName(cliente.getNome())
-                        .identification(IdentificationRequest.builder()
-                            .type("CPF")
-                            .number(cliente.getCpf())
-                            .build())
+                        // E-mail de um comprador de teste genérico
+                        .email("test_user_12345678@testuser.com") 
                         .build())
                 .build();
 
             Payment payment = client.create(createRequest);
 
-            // Persistir os dados do pagamento no seu banco de dados
-            com.omarket.entity.Pagamento pagamentoEntity = new com.omarket.entity.Pagamento();
-            pagamentoEntity.setId(payment.getId()); // Usa o ID do Mercado Pago
-            pagamentoEntity.setMetodo(payment.getPaymentMethodId());
-            pagamentoEntity.setValorPago(payment.getTransactionAmount());
-            pagamentoEntity.setDataPagamento(payment.getDateCreated().toLocalDateTime());
-            pagamentoRepository.save(pagamentoEntity);
+            // Verifica se o pagamento foi aprovado
+            if (!"approved".equals(payment.getStatus())) {
+                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Pagamento não aprovado. Status: " + payment.getStatusDetail());
+            }
+                 */
 
-            // Atualiza o pedido
-            pedido.setPagamento(pagamentoEntity);
-            pedido.setStatus(StatusPedido.PAGAMENTO_APROVADO); // Ou o status retornado pelo MP
+            Pagamento pagamento = new Pagamento();
+            pagamento.setMercadoPagoId(-1L); // ID fictício, pois estamos usando um token de teste
+            pagamento.setMetodo("mock");
+            pagamento.setValorPago(pedido.getValorTotal());
+            pagamento.setDataPagamento(LocalDateTime.now());
+            pagamentoRepository.save(pagamento);
+
+            pedido.setPagamento(pagamento);
+            pedido.setStatus(StatusPedido.PAGAMENTO_APROVADO);
             pedidoRepository.save(pedido);
 
+            return converterParaDTO(pagamento);
 
-            return converterParaResponseDTO(payment);
-
-        } catch (MPApiException apiException) {
+        /* } catch (MPApiException apiException) {
+            // Tratamento de erro mais detalhado
+            System.err.println("Erro da API do Mercado Pago: " + apiException.getApiResponse().getContent());
             throw new ResponseStatusException(HttpStatus.valueOf(apiException.getApiResponse().getStatusCode()), "Erro da API do Mercado Pago: " + apiException.getApiResponse().getContent());
         } catch (MPException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao processar pagamento com Mercado Pago.", e);
-        }
+        } */
+    }
+
+    private PagamentoDTO converterParaDTO(Pagamento pagamento) {
+        PagamentoDTO dto = new PagamentoDTO();
+        dto.setId(pagamento.getId());
+        dto.setMetodo(pagamento.getMetodo());
+        dto.setValorPago(pagamento.getValorPago());
+        dto.setDataPagamento(pagamento.getDataPagamento());
+        dto.setMercadoPagoId(pagamento.getMercadoPagoId()); // ID do Mercado Pago
+        return dto;
     }
 
     private PagamentoResponseDTO converterParaResponseDTO(Payment payment) {
@@ -101,16 +123,6 @@ public class PagamentoService {
         dto.setId(payment.getId());
         dto.setStatus(payment.getStatus());
         dto.setStatusDetail(payment.getStatusDetail());
-
-        if (payment.getPointOfInteraction() != null && payment.getPointOfInteraction().getTransactionData() != null) {
-            PagamentoResponseDTO.PointOfInteractionDTO poiDTO = new PagamentoResponseDTO.PointOfInteractionDTO();
-            PagamentoResponseDTO.TransactionDataDTO transactionDataDTO = new PagamentoResponseDTO.TransactionDataDTO();
-            transactionDataDTO.setQrCode(payment.getPointOfInteraction().getTransactionData().getQrCode());
-            transactionDataDTO.setQrCodeBase64(payment.getPointOfInteraction().getTransactionData().getQrCodeBase64());
-            poiDTO.setTransactionData(transactionDataDTO);
-            dto.setPointOfInteraction(poiDTO);
-        }
-
         return dto;
     }
 }

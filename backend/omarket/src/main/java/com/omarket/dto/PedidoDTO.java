@@ -2,6 +2,7 @@ package com.omarket.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.omarket.dto.frete.FreteDTO;
@@ -40,7 +41,7 @@ public class PedidoDTO {
     private PagamentoResponseDTO pagamento;
 
     @NotNull(message = "A lista de itens do pedido é obrigatória!")
-    private List<ItemPedidoDTO> itens;
+    private List<ItemPedidoDTO> itens = new ArrayList<>();
 
     @NotNull(message = "O endereço do pedido é obrigatório!")
     private EnderecoDTO endereco;
