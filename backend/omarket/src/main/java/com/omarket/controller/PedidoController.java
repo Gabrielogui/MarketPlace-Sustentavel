@@ -87,5 +87,20 @@ public class PedidoController {
 
         return ResponseEntity.ok(pedidoCancelado);
     }
+
+    @GetMapping("/listar/cliente/{id}")
+    public ResponseEntity<List<PedidoDTO>> listarPedidosPorCliente(Authentication authentication, 
+    @PathVariable Long id) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Usuario cliente = userDetails.getUsuario();
+
+        if (!cliente.getId().equals(id)) {
+            return ResponseEntity.status(403).build(); // Acesso negado
+        }
+
+        List<PedidoDTO> pedidos = pedidoService.listarPedidosPorCliente(cliente);
+        
+        return ResponseEntity.ok(pedidos);
+    }
     
 }

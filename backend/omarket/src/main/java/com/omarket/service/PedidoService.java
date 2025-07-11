@@ -131,6 +131,23 @@ public class PedidoService {
         }
             
     }
+
+    @Transactional(readOnly = true)
+    public List<PedidoDTO> listarPedidosPorCliente(Usuario usuario) {
+        if (!(usuario instanceof Cliente)) {
+            throw new RuntimeException("Usuário não é um cliente válido.");
+        }
+        
+        List<Pedido> pedidos = pedidoRepository.findByClienteId(usuario.getId());
+        
+        if (pedidos.isEmpty()) {
+            throw new RuntimeException("Nenhum pedido encontrado para o cliente.");
+        }
+
+        return pedidos.stream()
+            .map(this::converterPedidoParaDto)
+            .toList();
+    }
     
     // ... outros métodos que criaremos para a Etapa 2 ...
 
