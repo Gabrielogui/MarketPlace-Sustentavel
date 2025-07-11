@@ -100,6 +100,37 @@ public class PedidoService {
 
         return converterPedidoParaDto(pedido);
     }
+
+    @Transactional
+    public PedidoDTO cancelarPedido(Usuario usuario, Long id) {
+        if (!(usuario instanceof Cliente)) {
+            throw new RuntimeException("Usuário não é um cliente válido.");
+        }
+        Pedido pedido = pedidoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+
+        if(!(pedido.getCliente().getId().equals(usuario.getId()))){
+            throw new RuntimeException("Pedido não pertence ao cliente.");
+        }
+
+        if (pedido.getStatus() == StatusPedido.CANCELADO) {
+            throw new RuntimeException("Pedido já está cancelado.");
+        }
+
+        if(pedido.getStatus() == StatusPedido.PAGAMENTO_APROVADO ||
+           pedido.getStatus() == StatusPedido.AGUARDANDO_PAGAMENTO ||
+           pedido.getStatus() == StatusPedido.EM_SEPARACAO) {
+
+            pedido.setStatus(StatusPedido.CANCELADO);
+            Pedido pedidoCancelado = pedidoRepository.save(pedido);
+            return converterPedidoParaDto(pedidoCancelado);
+
+        }
+        else {
+            throw new RuntimeException("Pedido não pode ser cancelado neste estado.");
+        }
+            
+    }
     
     // ... outros métodos que criaremos para a Etapa 2 ...
 

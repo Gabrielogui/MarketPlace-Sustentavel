@@ -23,6 +23,7 @@ import com.omarket.service.PedidoService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -74,6 +75,17 @@ public class PedidoController {
         PedidoDTO PedidoDTO = pedidoService.buscar(cliente, id);
 
         return ResponseEntity.ok(PedidoDTO);
+    }
+
+    @PatchMapping("/{id}/cancelar")
+    public ResponseEntity<PedidoDTO> cancelar(Authentication authentication, 
+    @PathVariable Long id) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Usuario cliente = userDetails.getUsuario();
+
+        PedidoDTO pedidoCancelado = pedidoService.cancelarPedido(cliente, id);
+
+        return ResponseEntity.ok(pedidoCancelado);
     }
     
 }
