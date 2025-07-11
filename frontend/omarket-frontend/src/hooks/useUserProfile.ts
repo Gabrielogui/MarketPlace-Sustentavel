@@ -1,7 +1,10 @@
 import { AuthContext } from "@/context/AuthContext";
 import { Administrador, Cliente, Fornecedor } from "@/core";
-import { getAdministrador, getCliente, getFornecedor } from "@/service/usuario/userService";
+import { Usuario } from "@/core/usuario/usuario";
+import api from "@/service/api";
+//import { getAdministrador, getCliente, getFornecedor } from "@/service/usuario/userService";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export type UserProfile = Cliente | Fornecedor | Administrador;
 
@@ -12,41 +15,45 @@ export function useUserProfile() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        console.log(user);
         // só dispara depois de inicializar o contexto
-        if (!initialized || !role || !user) return;
-        setLoading(true);
-        setError(null);
-
-        const id = user.id;
-        let call: Promise<{ data: UserProfile }>;
-
-        switch (role) {
-        case "CLIENTE":
-            call = getCliente(id);
-            break;
-        case "FORNECEDOR":
-            call = getFornecedor(id);
-            break;
-        case "ADMINISTRADOR":
-            call = getAdministrador(id);
-            break;
-        default:
-            setError("Role desconhecido");
-            setLoading(false);
+        if (!initialized || !user || user.id === 0 ) {
+            
+            if(initialized){
+                setLoading(false);
+            }
             return;
         }
+        const fetchProfile = async () => {
+            setLoading(true);
+            setError(null);
 
-        call
-        .then((res) => {
-            setProfile(res.data);
-        })
-        .catch((err) => {
-            console.error("Erro ao carregar perfil:", err);
-            setError(err.response?.data?.message || "Falha ao buscar perfil");
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+            // 4. Monta a rota dinamicamente a partir do 'role' do usuário
+            const userTypePath = role?.toLowerCase();
+            if (!userTypePath) {
+                setError("Tipo de usuário (role) não definido.");
+                setLoading(false);
+                return;
+            }
+
+            try {
+                // 5. Faz a chamada à API com a rota e ID corretos
+                console.log(`Buscando perfil para ${userTypePath} com ID: ${user.id}`); // Log para depuração
+                const response = await api.get<Usuario>(`/${userTypePath}/${user.id}`);
+                setProfile(response.data);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (err: any) {
+                console.error("Erro ao carregar perfil:", err);
+                const errorMessage = err.response?.data?.message || "Falha ao buscar perfil";
+                setError(errorMessage);
+                toast.error(errorMessage);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchProfile();
+        
     }, [initialized, role, user]);
 
     return { profile, loading, error };

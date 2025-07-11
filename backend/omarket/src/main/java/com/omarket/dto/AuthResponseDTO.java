@@ -13,5 +13,6 @@ public class AuthResponseDTO {
 
     private String token;
     private TipoUsuario tipoUsuario;
+    private Long id;
 
 }
