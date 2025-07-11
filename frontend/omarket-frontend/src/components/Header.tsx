@@ -21,7 +21,7 @@ COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU:
 
 export default function Header () {
 
-    const { role } = useContext(AuthContext)
+    const { role, logout } = useContext(AuthContext)
 
     // |======| SABER SE O DRAWER DO PERIFL E DE EDITAR E O ALERT DIALOG DE INATIVAR ESTÃO ABERTOS |======|
     // DROPDOWNMENU - SABER SE ESTÁ ABERTO  
@@ -163,7 +163,7 @@ export default function Header () {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator/>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem className="cursor-pointer">
+                        <DropdownMenuItem onClick={logout} className="cursor-pointer">
                             <LogOut/>
                             Logout
                             <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>

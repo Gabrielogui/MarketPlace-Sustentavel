@@ -35,12 +35,15 @@ export default function CadastroForm () {
         setForm({ ...form, [field]: e.target.value });
     };
 
-    // |=======| MÉTODO PARA CADASTRAR USUÁRIO QUANDO APERTAR O BOTÃO DE CADASTRAR 
+    // |=======| MÉTODO PARA CADASTRAR USUÁRIO QUANDO APERTAR O BOTÃO DE CADASTRAR |=======|
     const handleSubmit = async () => {
         setLoading(true);
         setError(null);
         try {
             let payload;
+
+            const dataNascimento = formatarParaLocalDate(date);
+            if (dataNascimento === undefined) return;
 
             if (form.tipoUsuario === 'CLIENTE') {
                 payload = {
@@ -49,7 +52,7 @@ export default function CadastroForm () {
                     senha: form.senha,
                     telefone: form.telefone,
                     cpf: form.cpf,
-                    dataNascimento: form.dataNascimento,
+                    dataNascimento: dataNascimento,
                     tipoUsuario: form.tipoUsuario,
                 };
             } else {
@@ -62,6 +65,8 @@ export default function CadastroForm () {
                     tipoUsuario: form.tipoUsuario,
                 };
             }
+            
+            console.log(form);
 
             const data = await cadastrarRequest(payload);
 
@@ -84,6 +89,17 @@ export default function CadastroForm () {
             setLoading(false);
         }
     };
+
+    // |=======| MÉTODO PARA CONVERTER A DATA |=======|
+    const formatarParaLocalDate = (data:Date | undefined) => {
+        if(data === undefined) return toast.error("Não escolheu a data de nascimento!");
+
+        const ano = data.getFullYear();
+        const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
+        const dia = String(data.getDate()).padStart(2, '0');
+        
+        return `${ano}-${mes}-${dia}`;
+    }
 
     return(
         <div>
@@ -116,6 +132,7 @@ export default function CadastroForm () {
                                         captionLayout="dropdown"
                                         onSelect={(date) => {
                                         setDate(date)
+                                        console.log(date);
                                         setIsOpenCalendarioPopover(false)
                                         }}
                                     />

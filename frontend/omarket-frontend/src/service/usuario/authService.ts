@@ -11,7 +11,7 @@ export interface CadastroPayload {
     tipoUsuario: 'CLIENTE' | 'FORNECEDOR';
     cpf?: string;
     cnpj?: string;
-    dataNascimento?: string;
+    dataNascimento?: string | number;
 }
 
 // |=======| MÉTODOS COM AS ROTAS |=======|
