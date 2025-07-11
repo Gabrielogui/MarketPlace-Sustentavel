@@ -14,6 +14,7 @@ import com.omarket.entity.Cliente;
 import com.omarket.entity.Pagamento;
 import com.omarket.entity.Pedido;
 import com.omarket.entity.Usuario;
+import com.omarket.entity.enum_.StatusPagamento;
 import com.omarket.entity.enum_.StatusPedido;
 import com.omarket.repository.PagamentoRepository;
 import com.omarket.repository.PedidoRepository;
@@ -91,6 +92,7 @@ public class PagamentoService {
             pagamento.setMetodo("mock");
             pagamento.setValorPago(pedido.getValorTotal());
             pagamento.setDataPagamento(LocalDateTime.now());
+            pagamento.setStatus(StatusPagamento.APROVADO); // Simulando pagamento aprovado
             pagamentoRepository.save(pagamento);
 
             pedido.setPagamento(pagamento);
