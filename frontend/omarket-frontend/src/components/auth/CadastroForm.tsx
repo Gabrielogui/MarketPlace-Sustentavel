@@ -7,6 +7,9 @@ import { Textarea } from "../ui/textarea";
 import { useRouter } from "next/navigation";
 import { cadastrarRequest, CadastroPayload } from "@/service/usuario/authService";
 import { toast } from "sonner";
+import { CalendarDays } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Calendar } from "../ui/calendar";
 
 export default function CadastroForm () {
 
@@ -22,6 +25,10 @@ export default function CadastroForm () {
 
     const [loading, setLoading] = useState(false);
     const [error, setError]     = useState<string | null>(null);
+
+    // |=======| ESTADOS DO CALENDÁRIO |=======|
+    const [isOpenCalendarioPopover, setIsOpenCalendarioPopover] = useState(false);
+    const [date, setDate] = useState<Date | undefined>(undefined);
 
     // |=======| MÉTODO PARA CAPTURAR MUDANÇA NOS INPUTS |=======|
     const handleChange = (field: keyof CadastroPayload) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -90,9 +97,31 @@ export default function CadastroForm () {
                         <Label>{tipoUsuario === 'Cliente' ? 'Nome Completo' : 'Nome Completo da Empresa'}</Label>
                         <Input onChange={handleChange('nome')} placeholder="Digite seu Nome"></Input>
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <Label>E-mail</Label>
-                        <Input onChange={handleChange('email')} placeholder="email@exemplo.com"></Input>
+                    <div className="flex gap-3 justify-end-safe items-baseline-last">
+                        <div className="flex flex-col gap-2 w-full">
+                            <Label>E-mail</Label>
+                            <Input onChange={handleChange('email')} placeholder="email@exemplo.com"></Input>
+                        </div>
+                        <div className="">
+                            <Popover open={isOpenCalendarioPopover} onOpenChange={setIsOpenCalendarioPopover}>
+                                <PopoverTrigger asChild>
+                                    <Button id="date" variant={"outline"} size={"icon"}>
+                                        <CalendarDays />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        captionLayout="dropdown"
+                                        onSelect={(date) => {
+                                        setDate(date)
+                                        setIsOpenCalendarioPopover(false)
+                                        }}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
                     </div>
                 </div>
                 {/* SENHA ; REPETIR ; CNPJ ; TELEFONE ; CLIENTE ; VENDEDOR */}
