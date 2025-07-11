@@ -19,8 +19,13 @@ export default function CadastroForm () {
     // |=======| ESTADO PARA SABER SE FOI SELECIONADO O CLIENTE OU FORNECEDOR NO RADIOGROUP |=======|
     const [tipoUsuario, setTipoUsuario] = useState<'Cliente' | 'Fornecedor'>('Cliente');
 
+    // |=======| MÉTODO PARA TRANSFORMAR O TIPO USUÁRIO EM UPPERCASE |=======|
+    const getTipoUsuarioMaiusculo = (): 'CLIENTE' | 'FORNECEDOR' => {
+        return tipoUsuario.toUpperCase() as 'CLIENTE' | 'FORNECEDOR';
+    };
+
     const [form, setForm] = useState<CadastroPayload>({
-        nome: '', email: '', senha: '', telefone: '', tipoUsuario: "FORNECEDOR", cpf: '', cnpj: '', dataNascimento: '',
+        nome: '', email: '', senha: '', telefone: '', tipoUsuario: getTipoUsuarioMaiusculo(), cpf: '', cnpj: '', dataNascimento: '',
     });
 
     const [loading, setLoading] = useState(false);
@@ -43,7 +48,10 @@ export default function CadastroForm () {
             let payload;
 
             const dataNascimento = formatarParaLocalDate(date);
-            if (dataNascimento === undefined) return;
+            if (dataNascimento === undefined){
+                setLoading(false);
+                return;
+            } 
 
             if (form.tipoUsuario === 'CLIENTE') {
                 payload = {
