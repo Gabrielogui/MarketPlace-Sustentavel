@@ -2,6 +2,7 @@ package com.omarket.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -144,7 +145,11 @@ public class PedidoService {
             throw new RuntimeException("Nenhum pedido encontrado para o cliente.");
         }
 
-        return pedidos.stream()
+        List<Pedido> pedidosOrdenados = pedidos.stream()
+            .sorted(Comparator.comparing(Pedido::getDataPedido).reversed())
+            .toList();
+
+        return pedidosOrdenados.stream()
             .map(this::converterPedidoParaDto)
             .toList();
     }
