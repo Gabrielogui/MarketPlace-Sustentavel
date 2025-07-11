@@ -110,6 +110,45 @@ public class PagamentoService {
         } */
     }
 
+    @Transactional
+    public PagamentoDTO cancelarPagamento(Long pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado para cancelar pagamento."));
+
+        Pagamento pagamento = pedido.getPagamento();
+        if (pagamento == null) {
+            // Se não há pagamento, não há o que cancelar.
+            // Isso pode acontecer se o pedido for cancelado antes mesmo de tentar pagar.
+            return null;
+        }
+
+        if (pagamento.getStatus() == StatusPagamento.REEMBOLSADO) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este pagamento já foi cancelado.");
+        }
+        
+        // --- Lógica de Cancelamento (MOCK) ---
+        // Em um cenário real, aqui você chamaria a API do Mercado Pago para estornar o pagamento.
+        // Exemplo (não funcional, apenas para ilustração):
+        /*
+        try {
+            PaymentClient client = new PaymentClient();
+            Payment cancelledPayment = client.cancel(pagamento.getMercadoPagoId());
+            if ("cancelled".equals(cancelledPayment.getStatus())) {
+                 pagamento.setStatus(StatusPagamento.CANCELADO);
+            }
+        } catch (MPException | MPApiException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao cancelar pagamento no gateway.", e);
+        }
+        */
+
+        // Para nosso mock, simplesmente atualizamos o status.
+        pagamento.setStatus(StatusPagamento.REEMBOLSADO);
+        pagamento.setDataPagamento(LocalDateTime.now()); // Atualiza a data do pagamento para o cancelamento
+        Pagamento pagamentoCancelado = pagamentoRepository.save(pagamento);
+
+        return converterParaDTO(pagamentoCancelado);
+    }
+
     
 
     private PagamentoDTO converterParaDTO(Pagamento pagamento) {

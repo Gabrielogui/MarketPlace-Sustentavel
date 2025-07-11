@@ -108,9 +108,9 @@ public class PedidoService {
             throw new RuntimeException("Usuário não é um cliente válido.");
         }
         Pedido pedido = pedidoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
 
-        if(!(pedido.getCliente().getId().equals(usuario.getId()))){
+        if (!pedido.getCliente().getId().equals(usuario.getId())) {
             throw new RuntimeException("Pedido não pertence ao cliente.");
         }
 
@@ -118,19 +118,26 @@ public class PedidoService {
             throw new RuntimeException("Pedido já está cancelado.");
         }
 
-        if(pedido.getStatus() == StatusPedido.PAGAMENTO_APROVADO ||
-           pedido.getStatus() == StatusPedido.AGUARDANDO_PAGAMENTO ||
-           pedido.getStatus() == StatusPedido.EM_SEPARACAO) {
+        // --- NOVA LÓGICA DE CANCELAMENTO ---
+        
+        // Se o pagamento foi aprovado, primeiro precisamos cancelar/estornar o pagamento.
+        if (pedido.getStatus() == StatusPedido.PAGAMENTO_APROVADO || pedido.getStatus() == StatusPedido.EM_SEPARACAO) {
+            pagamentoService.cancelarPagamento(id); // Chama o serviço de pagamento
+        }
+
+        // Se o pedido estiver em qualquer um desses estágios, ele pode ser cancelado.
+        if (pedido.getStatus() == StatusPedido.PAGAMENTO_APROVADO ||
+            pedido.getStatus() == StatusPedido.AGUARDANDO_PAGAMENTO ||
+            pedido.getStatus() == StatusPedido.EM_SEPARACAO) {
 
             pedido.setStatus(StatusPedido.CANCELADO);
             Pedido pedidoCancelado = pedidoRepository.save(pedido);
             return converterPedidoParaDto(pedidoCancelado);
 
+        } else {
+            // Se o pedido já foi enviado, por exemplo, não pode mais ser cancelado por esta rota.
+            throw new RuntimeException("Pedido não pode ser cancelado neste estado: " + pedido.getStatus());
         }
-        else {
-            throw new RuntimeException("Pedido não pode ser cancelado neste estado.");
-        }
-            
     }
 
     @Transactional(readOnly = true)

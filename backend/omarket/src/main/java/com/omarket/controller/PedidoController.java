@@ -51,6 +51,7 @@ public class PedidoController {
 
         return ResponseEntity.created(location).body(pedidoCriado);
     }
+    
     @PostMapping("/{pedidoId}/pagamentos")
     public ResponseEntity<PagamentoDTO> pagarPedido(
         @PathVariable Long pedidoId,
