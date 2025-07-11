@@ -11,7 +11,7 @@ type AuthContextType = {
   role: Role | null;
   user: Usuario | null;
   initialized: boolean;
-  login: (token: string) => void;
+  login: (token: string, id: number) => void;
   logout: () => void;
 };
 
@@ -49,6 +49,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const payload: any = jwtDecode(t);
       // COLOCAR TEMPO DE EXPIRAÇÃO PARA O FRONT SABER **
       const r: Role = payload.role || payload.tipoUsuario;
+      const id = Number(localStorage.getItem('id')) ?? 0;
+      console.log("id no useEffect: ", id);
       
       setToken(t);
       setRole(r);
@@ -56,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // ADICIONAR UM LISTNER **
       // Monta um objeto mínimo de UsuarioBase
       const base: Usuario = {
-        id: payload.id ?? 0,
+        id: id ?? 0,
         nome: payload.nome ?? '',
         email: payload.sub,
         telefone: payload.telefone ?? '',
@@ -73,8 +75,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  function login(t: string) {
+  function login(t: string, id: number) {
+    console.log("id no login: ", id)
     localStorage.setItem('token', t);
+    localStorage.setItem('id', id.toString());
     setToken(t);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const payload: any = jwtDecode(t);
@@ -87,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       // Modo real: monta apenas UsuarioBase
       const usuario: Usuario = {
-        id: payload.id ?? 0,
+        id: id,
         nome: payload.nome ?? '',
         email: payload.sub,
         telefone: payload.telefone ?? '',

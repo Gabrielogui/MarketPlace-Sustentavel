@@ -22,11 +22,11 @@ export default function LoginForm () {
             console.log(senha)
             const response = await loginRequest({ email, senha });
 
-            const { token, tipoUsuario } = response.data;
+            const { token, tipoUsuario, id } = response.data;
 
             console.log("Tipo usuário após login: ", tipoUsuario)
         
-            login(token);
+            login(token, id);
 
             toast.success("Login realizado com sucesso!");
 
