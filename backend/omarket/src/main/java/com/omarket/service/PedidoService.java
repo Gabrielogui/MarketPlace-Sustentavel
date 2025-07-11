@@ -153,6 +153,24 @@ public class PedidoService {
             .map(this::converterPedidoParaDto)
             .toList();
     }
+
+    @Transactional
+    public PagamentoDTO processarPagamentoDoPedido(Long pedidoId, Usuario cliente) {
+        // 1. Validação (garantir que o pedido pertence ao cliente, etc.)
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
+
+        if (!pedido.getCliente().getId().equals(cliente.getId())) {
+            throw new RuntimeException("Acesso negado. O pedido não pertence a este cliente.");
+        }
+
+        // 2. Chamar o seu PagamentoService, que contém a lógica do mock/gateway
+        PagamentoDTO pagamentoDTO = pagamentoService.criarPagamento(pedidoId, cliente);
+
+        // 3. O PagamentoService já atualiza o status do pedido, então aqui
+        // apenas retornamos o DTO do pagamento.
+        return pagamentoDTO;
+    }
     
     // ... outros métodos que criaremos para a Etapa 2 ...
 

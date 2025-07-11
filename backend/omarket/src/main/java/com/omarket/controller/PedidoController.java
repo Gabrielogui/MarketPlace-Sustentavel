@@ -15,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.omarket.dto.ItemCarrinhoDTO;
 import com.omarket.dto.PedidoDTO;
+import com.omarket.dto.pagamento.PagamentoDTO;
 import com.omarket.dto.pagamento.PagamentoResponseDTO;
 import com.omarket.entity.Pedido;
 import com.omarket.entity.Usuario;
@@ -50,21 +51,19 @@ public class PedidoController {
 
         return ResponseEntity.created(location).body(pedidoCriado);
     }
-    /* 
     @PostMapping("/{pedidoId}/pagamentos")
-    public ResponseEntity<PagamentoResponseDTO> pagarPedido(
+    public ResponseEntity<PagamentoDTO> pagarPedido(
         @PathVariable Long pedidoId,
         Authentication authentication) 
     {
-            
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Usuario cliente = userDetails.getUsuario();
 
-        PagamentoResponseDTO dadosPagamento = pedidoService.processarPagamentoDoPedido(pedidoId, cliente);
+        // Vamos chamar o serviço para processar o pagamento
+        PagamentoDTO dadosPagamento = pedidoService.processarPagamentoDoPedido(pedidoId, cliente);
         
         return ResponseEntity.ok(dadosPagamento);
-        
-    }*/
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<PedidoDTO> buscar(Authentication authentication, 
