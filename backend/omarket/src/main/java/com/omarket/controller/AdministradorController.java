@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.omarket.dto.UsuarioDTO;
+import com.omarket.dto.UsuarioEditarDTO;
 import com.omarket.entity.enum_.TipoUsuario;
 import com.omarket.service.UsuarioService;
 import com.omarket.service.UsuarioServiceFactory;
@@ -49,9 +50,9 @@ public class AdministradorController {
 
     // ======= EDITAR ADMINISTRADOR =======
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioEditarDTO usuarioEditarDTO){
         UsuarioService administradorService = usuarioServiceFactory.getUsuarioService(TipoUsuario.ADMINISTRADOR);
-        UsuarioDTO administradorEditado = administradorService.editar(id, usuarioDTO);
+        UsuarioDTO administradorEditado = administradorService.editar(id, usuarioEditarDTO);
 
         return ResponseEntity.ok(administradorEditado);
     }

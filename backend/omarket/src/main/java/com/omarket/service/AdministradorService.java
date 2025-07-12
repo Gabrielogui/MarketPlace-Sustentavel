@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.UsuarioDTO;
+import com.omarket.dto.UsuarioEditarDTO;
 import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
@@ -57,24 +58,26 @@ public class AdministradorService implements UsuarioService {
 
     @Override
     @Transactional
-    public UsuarioDTO editar(Long id, UsuarioDTO usuarioDTO){ 
+    public UsuarioDTO editar(Long id, UsuarioEditarDTO usuarioEditarDTO){ 
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
 
         // VERIFICAR SE O EMAIL JÁ ESTÁ CADASTRADO
-        if(!usuario.getEmail().equals(usuarioDTO.getEmail()) && 
-            usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){
+        if(!usuario.getEmail().equals(usuarioEditarDTO.getEmail()) && 
+            usuarioRepository.findByEmail(usuarioEditarDTO.getEmail()).isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
         }
 
         // ATUALIZANDO OS DADOS DO USUÁRIO
-        usuario.setNome(usuarioDTO.getNome());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setTelefone(usuarioDTO.getTelefone());
+        usuario.setNome(usuarioEditarDTO.getNome());
+        usuario.setEmail(usuarioEditarDTO.getEmail());
+        usuario.setTelefone(usuarioEditarDTO.getTelefone());
 
-        // ATUALIZANDO A SENHA SE FOR DIFERENTE
-        if (!passwordEncoder.matches(usuarioDTO.getSenha(), usuario.getSenha())) {
-            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        if (usuarioEditarDTO.getSenha() != null && !usuarioEditarDTO.getSenha().trim().isEmpty()) {
+            // Opcional: verificar se a nova senha é diferente da antiga
+            if (!passwordEncoder.matches(usuarioEditarDTO.getSenha(), usuario.getSenha())) {
+                usuario.setSenha(passwordEncoder.encode(usuarioEditarDTO.getSenha()));
+            }
         }
 
         return converterParaDTO(usuario);
