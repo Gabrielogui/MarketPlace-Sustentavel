@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -19,13 +19,8 @@ export default function CadastroForm () {
     // |=======| ESTADO PARA SABER SE FOI SELECIONADO O CLIENTE OU FORNECEDOR NO RADIOGROUP |=======|
     const [tipoUsuario, setTipoUsuario] = useState<'Cliente' | 'Fornecedor'>('Cliente');
 
-    // |=======| MÉTODO PARA TRANSFORMAR O TIPO USUÁRIO EM UPPERCASE |=======|
-    const getTipoUsuarioMaiusculo = (): 'CLIENTE' | 'FORNECEDOR' => {
-        return tipoUsuario.toUpperCase() as 'CLIENTE' | 'FORNECEDOR';
-    };
-
     const [form, setForm] = useState<CadastroPayload>({
-        nome: '', email: '', senha: '', telefone: '', tipoUsuario: getTipoUsuarioMaiusculo(), cpf: '', cnpj: '', dataNascimento: '',
+        nome: '', email: '', senha: '', telefone: '', tipoUsuario: 'CLIENTE', cpf: '', cnpj: '', dataNascimento: '',
     });
 
     const [loading, setLoading] = useState(false);
@@ -34,6 +29,14 @@ export default function CadastroForm () {
     // |=======| ESTADOS DO CALENDÁRIO |=======|
     const [isOpenCalendarioPopover, setIsOpenCalendarioPopover] = useState(false);
     const [date, setDate] = useState<Date | undefined>(undefined);
+
+    // |=======| EFEITO PARA ATUALIZAR O FORMS QUANDO O TIPO DE USUÁRIO MUDA |=======|
+    useEffect(() => {
+        setForm(prevForm => ({
+            ...prevForm,
+            tipoUsuario: tipoUsuario.toUpperCase() as 'CLIENTE' | 'FORNECEDOR'
+        }));
+    }, [tipoUsuario]);
 
     // |=======| MÉTODO PARA CAPTURAR MUDANÇA NOS INPUTS |=======|
     const handleChange = (field: keyof CadastroPayload) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -45,15 +48,14 @@ export default function CadastroForm () {
         setLoading(true);
         setError(null);
         try {
-            let payload;
-
-            const dataNascimento = formatarParaLocalDate(date);
-            if (dataNascimento === undefined){
-                setLoading(false);
-                return;
-            } 
+            let payload: CadastroPayload;
 
             if (form.tipoUsuario === 'CLIENTE') {
+                const dataNascimento = formatarParaLocalDate(date);
+                if (!dataNascimento){
+                    setLoading(false);
+                    return;
+                }
                 payload = {
                     nome: form.nome,
                     email: form.email,
@@ -61,38 +63,37 @@ export default function CadastroForm () {
                     telefone: form.telefone,
                     cpf: form.cpf,
                     dataNascimento: dataNascimento,
-                    tipoUsuario: form.tipoUsuario,
+                    tipoUsuario: 'CLIENTE',
                 };
-            } else {
+            } else { // FORNECEDOR
                 payload = {
                     nome: form.nome,
                     email: form.email,
                     senha: form.senha,
                     telefone: form.telefone,
                     cnpj: form.cnpj,
-                    tipoUsuario: form.tipoUsuario,
+                    tipoUsuario: 'FORNECEDOR',
                 };
             }
-            
-            console.log(form);
+
+            console.log("Enviando payload:", payload);
 
             const data = await cadastrarRequest(payload);
 
-            console.log("Resposta do backend:", data)
+            console.log("Resposta do backend:", data);
 
-            localStorage.setItem('token', data.token);
+            toast.success('Cadastro realizado com sucesso! Faça o login para continuar.');
 
-            toast.success('Cadastro realizado com sucesso!');
-
-            // Redireciona conforme a role
-            router.push(form.tipoUsuario === 'CLIENTE' ? '/cliente' : '/fornecedor');
+            // Idealmente, redirecionamos para a tela de login para que o usuário se autentique
+            // Você pode mudar para '/cliente' ou '/fornecedor' se o cadastro já fizer o login automático
+            router.push('/login');
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            const mensagemErro = err.response?.data?.message;
+            const mensagemErro = err.response?.data?.message || "Ocorreu um erro no cadastro.";
             console.error('Erro de cadastro (response):', err.response);
             setError(mensagemErro);
-            toast.error(error);
+            toast.error(mensagemErro);
         } finally {
             setLoading(false);
         }
@@ -100,7 +101,10 @@ export default function CadastroForm () {
 
     // |=======| MÉTODO PARA CONVERTER A DATA |=======|
     const formatarParaLocalDate = (data:Date | undefined) => {
-        if(data === undefined) return toast.error("Não escolheu a data de nascimento!");
+        if(!data) {
+             toast.error("Por favor, selecione a data de nascimento!");
+             return undefined;
+        }
 
         const ano = data.getFullYear();
         const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês começa em 0
@@ -118,7 +122,7 @@ export default function CadastroForm () {
                 {/* NOME E EMAIL */}
                 <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2">
-                        <Label>{tipoUsuario === 'Cliente' ? 'Nome Completo' : 'Nome Completo da Empresa'}</Label>
+                        <Label>{tipoUsuario === 'Cliente' ? 'Nome Completo' : 'Nome da Empresa'}</Label>
                         <Input onChange={handleChange('nome')} placeholder="Digite seu Nome"></Input>
                     </div>
                     <div className="flex gap-3 justify-end-safe items-baseline-last">
@@ -126,6 +130,7 @@ export default function CadastroForm () {
                             <Label>E-mail</Label>
                             <Input onChange={handleChange('email')} placeholder="email@exemplo.com"></Input>
                         </div>
+                        {tipoUsuario === 'Cliente' && (
                         <div className="">
                             <Popover open={isOpenCalendarioPopover} onOpenChange={setIsOpenCalendarioPopover}>
                                 <PopoverTrigger asChild>
@@ -138,15 +143,17 @@ export default function CadastroForm () {
                                         mode="single"
                                         selected={date}
                                         captionLayout="dropdown"
+                                        fromYear={1950}
+                                        toYear={new Date().getFullYear()}
                                         onSelect={(date) => {
                                         setDate(date)
-                                        console.log(date);
                                         setIsOpenCalendarioPopover(false)
                                         }}
                                     />
                                 </PopoverContent>
                             </Popover>
                         </div>
+                        )}
                     </div>
                 </div>
                 {/* SENHA ; REPETIR ; CNPJ ; TELEFONE ; CLIENTE ; VENDEDOR */}
@@ -163,8 +170,8 @@ export default function CadastroForm () {
                     </div>
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
-                            <Label>{tipoUsuario === 'Cliente' ? 'cpf' : 'cnpj'}</Label>
-                            <Input onChange={tipoUsuario === 'Cliente' ? handleChange('cpf') : handleChange('cnpj')} placeholder={
+                            <Label>{tipoUsuario === 'Cliente' ? 'CPF' : 'CNPJ'}</Label>
+                            <Input onChange={handleChange(tipoUsuario === 'Cliente' ? 'cpf' : 'cnpj')} placeholder={
                                 tipoUsuario === 'Cliente' ? 'XXX.XXX.XXX-XX' : "XX.XXX.XXX/XXXX-XX"
                             }></Input>
                         </div>
@@ -173,17 +180,17 @@ export default function CadastroForm () {
                             <Input onChange={handleChange('telefone')} placeholder="(XX) X XXXX-XXXX"></Input>
                         </div>
                     </div>
-                    <RadioGroup defaultValue="Fornecedor" 
-                        value={tipoUsuario} 
+                    <RadioGroup
+                        value={tipoUsuario}
                         onValueChange={(value) => setTipoUsuario(value as 'Cliente' | 'Fornecedor')}
                         className="flex flex-row gap-7 w-full justify-between">
-                            <div className="flex flex-row gap-5">
+                            <div className="flex flex-row gap-5 items-center">
                                 <RadioGroupItem value="Cliente" id="r1" />
-                                <Label>Cliente</Label>
+                                <Label htmlFor="r1" className="cursor-pointer">Cliente</Label>
                             </div>
-                            <div className="flex flex-row gap-5">
+                            <div className="flex flex-row gap-5 items-center">
                                 <RadioGroupItem value="Fornecedor" id="r2" />
-                                <Label>Fornecedor</Label>
+                                <Label htmlFor="r2" className="cursor-pointer">Fornecedor</Label>
                             </div>
                     </RadioGroup>
                 </div>
