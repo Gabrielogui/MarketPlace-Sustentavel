@@ -13,7 +13,7 @@ import Endereco from "./usuario/Endereco";
 import AdicionarProduto from "./produto/AdicionarProduto";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { inativarAdministrador, inativarCliente, inativarFornecedor } from "@/service/usuario/userService";
+import { EditarPayload, editarUsuario, inativarAdministrador, inativarCliente, inativarFornecedor } from "@/service/usuario/userService";
 
 export default function Header () {
 
@@ -61,6 +61,24 @@ export default function Header () {
             console.error("Erro ao inativar conta:", error);
         } finally {
             setIsAlertDialogInativarOpen(false); // Fecha o dialog independentemente do resultado
+        }
+    };
+
+
+    const handleEditar = async (data: Partial<EditarPayload>) => {
+        if (!user || !role) {
+            toast.error("Usuário não autenticado.");
+            return;
+        }
+
+        try {
+            await editarUsuario(user.id, role, data);
+            toast.success("Perfil atualizado com sucesso!");
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            const mensagemErro = error.response?.data?.message ||  "Falha ao atualizar o perfil.";
+            toast.error(mensagemErro);
+            console.error("Erro ao editar perfil:", error);
         }
     };
     
@@ -196,7 +214,7 @@ export default function Header () {
 
             {/* DRAWERS E DIALOGS */}
             <Perfil isOpen={isDrawerPerfilOpen} onOpenChange={setIsDrawerPerfilOpen}/>
-            <EditarPerfil isOpen={isDrawerEditarOpen} onOpenChange={setisDrawerEditarOpen}/>
+            <EditarPerfil isOpen={isDrawerEditarOpen} onOpenChange={setisDrawerEditarOpen} onSave={handleEditar}/>
             <InativarPerfil 
                 isOpen={isAlertDialogInativarOpen} 
                 onOpenChange={setIsAlertDialogInativarOpen}
