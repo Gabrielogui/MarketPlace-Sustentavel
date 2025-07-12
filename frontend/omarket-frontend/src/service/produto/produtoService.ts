@@ -5,3 +5,8 @@ import api from "../api";
 export async function getListaProduto() {
   return api.get<Produto[]>('/produto/listar');
 }
+
+// |=======| GET DE UM PRODUTO |=======|
+export function getProduto(id: number) {
+  return api.get<Produto>(`/produto/${id}`);
+}
