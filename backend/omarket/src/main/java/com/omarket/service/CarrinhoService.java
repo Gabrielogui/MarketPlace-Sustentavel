@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.omarket.dto.AdicionarItemRequestDTO;
 import com.omarket.dto.AtualizarQuantidadeDTO;
 import com.omarket.dto.CarrinhoDTO;
 import com.omarket.dto.ItemCarrinhoDTO;
@@ -29,45 +30,41 @@ public class CarrinhoService {
     private final ProdutoRepository produtoRepository;
 
     @Transactional
-    public CarrinhoDTO adicionarItemCarrinho(Cliente cliente, ItemCarrinhoDTO itemCarrinhoDTO) {
-        // 1. Validação de entrada (sugestão)
-        if (itemCarrinhoDTO.getQuantidade() <= 0) {
+    // Altere a assinatura do método para aceitar o novo DTO
+    public CarrinhoDTO adicionarItemCarrinho(Cliente cliente, AdicionarItemRequestDTO requestDTO) {
+        
+        // Validação de entrada
+        if (requestDTO.getQuantidade() <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A quantidade do item deve ser positiva.");
         }
         
-        // 2. Busca o carrinho e o produto necessários no início
         Carrinho carrinho = carrinhoRepository.findById(cliente.getId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Carrinho não encontrado!"));
         
-        Produto produto = produtoRepository.findById(itemCarrinhoDTO.getProdutoId())
+        // Use o produtoId do novo DTO
+        Produto produto = produtoRepository.findById(requestDTO.getProdutoId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
 
-        // 3. Verifica se o item já existe no carrinho de forma mais eficiente
         Optional<ItemCarrinho> itemExistenteOpt = carrinho.getItens().stream()
             .filter(item -> item.getProduto().getId().equals(produto.getId()))
             .findFirst();
 
-        // 4. Lógica de adicionar ou atualizar simplificada
         if (itemExistenteOpt.isPresent()) {
-            // Se o item existe, apenas atualiza a quantidade. JPA/Hibernate gerencia a atualização.
             ItemCarrinho itemExistente = itemExistenteOpt.get();
-            itemExistente.setQuantidade(itemExistente.getQuantidade() + itemCarrinhoDTO.getQuantidade());
+            // Use a quantidade do novo DTO
+            itemExistente.setQuantidade(itemExistente.getQuantidade() + requestDTO.getQuantidade());
         } else {
-            // Se é um item novo, cria a entidade e estabelece as relações
             ItemCarrinho novoItem = new ItemCarrinho();
             novoItem.setProduto(produto);
-            novoItem.setQuantidade(itemCarrinhoDTO.getQuantidade());
-            novoItem.setCarrinho(carrinho); // Essencial para a relação bidirecional
+            novoItem.setQuantidade(requestDTO.getQuantidade()); // Use a quantidade do novo DTO
+            novoItem.setCarrinho(carrinho);
             carrinho.getItens().add(novoItem);
         }
 
-        // 5. Recalcula o subtotal de forma otimizada, usando as entidades já carregadas
         BigDecimal subtotal = calcularSubtotalComEntidades(carrinho.getItens());
         carrinho.setSubtotal(subtotal);
         carrinho.setDataModificacao(LocalDateTime.now());
-
-        // 6. O save() é opcional aqui para atualizações, mas não prejudica.
-        // O @Transactional garante que as alterações em 'carrinho' serão persistidas.
+        
         carrinhoRepository.save(carrinho);
 
         return converterCarrinhoParaDto(carrinho);
