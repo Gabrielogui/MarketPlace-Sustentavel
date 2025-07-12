@@ -93,6 +93,7 @@ export default function CadastroForm () {
             const mensagemErro = err.response?.data?.message || "Ocorreu um erro no cadastro.";
             console.error('Erro de cadastro (response):', err.response);
             setError(mensagemErro);
+            console.log(error);
             toast.error(mensagemErro);
         } finally {
             setLoading(false);
