@@ -5,6 +5,8 @@ import { Label } from "../ui/label";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { Cliente, Fornecedor } from "@/core";
 import { toast } from "sonner";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 export interface PerfilProps{
     isOpen: boolean;
@@ -13,6 +15,7 @@ export interface PerfilProps{
 
 export default function Perfil ( {isOpen, onOpenChange}: PerfilProps ) {
 
+    const { logout } = useContext(AuthContext);
     const { profile, loading, error } = useUserProfile();
 
     // |=======| MÉTODO PARA FORMATAR A DATA DE NASCIMENTO |=======|
@@ -226,7 +229,7 @@ export default function Perfil ( {isOpen, onOpenChange}: PerfilProps ) {
                                         <span>Histórico de pedidos</span>
                                         <ChevronRight size={18} />
                                     </Button>
-                                    <Button variant="destructive" className="mt-4">
+                                    <Button onClick={logout}  variant="destructive" className="mt-4">
                                         <LogOut />
                                         Sair da conta
                                     </Button>
