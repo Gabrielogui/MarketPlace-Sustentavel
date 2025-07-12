@@ -53,7 +53,7 @@ public class PedidoController {
     }
     
     @PostMapping("/{pedidoId}/pagamentos")
-    public ResponseEntity<PagamentoDTO> pagarPedido(
+    public ResponseEntity<PedidoDTO> pagarPedido(
         @PathVariable Long pedidoId,
         Authentication authentication) 
     {
@@ -61,9 +61,9 @@ public class PedidoController {
         Usuario cliente = userDetails.getUsuario();
 
         // Vamos chamar o serviço para processar o pagamento
-        PagamentoDTO dadosPagamento = pedidoService.processarPagamentoDoPedido(pedidoId, cliente);
+        PedidoDTO pedidoAtualizado = pedidoService.processarPagamentoDoPedido(pedidoId, cliente);
         
-        return ResponseEntity.ok(dadosPagamento);
+        return ResponseEntity.ok(pedidoAtualizado);
     }
 
     @GetMapping("/{id}")

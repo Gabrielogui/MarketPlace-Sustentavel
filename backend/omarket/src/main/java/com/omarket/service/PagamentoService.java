@@ -28,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -88,7 +89,8 @@ public class PagamentoService {
                  */
 
             Pagamento pagamento = new Pagamento();
-            pagamento.setMercadoPagoId(-1L); // ID fictício, pois estamos usando um token de teste
+            long mockMercadoPagoId = ThreadLocalRandom.current().nextLong(-1_000_000L, -1L);
+            pagamento.setMercadoPagoId(mockMercadoPagoId);
             pagamento.setMetodo("mock");
             pagamento.setValorPago(pedido.getValorTotal());
             pagamento.setDataPagamento(LocalDateTime.now());
@@ -151,7 +153,7 @@ public class PagamentoService {
 
     
 
-    private PagamentoDTO converterParaDTO(Pagamento pagamento) {
+    public PagamentoDTO converterParaDTO(Pagamento pagamento) {
         PagamentoDTO dto = new PagamentoDTO();
         dto.setId(pagamento.getId());
         dto.setMetodo(pagamento.getMetodo());

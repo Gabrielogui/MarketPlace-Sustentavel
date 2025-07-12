@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.omarket.dto.frete.FreteDTO;
+import com.omarket.dto.pagamento.PagamentoDTO;
 import com.omarket.dto.pagamento.PagamentoResponseDTO;
 import com.omarket.entity.enum_.StatusPedido;
 
@@ -38,7 +39,7 @@ public class PedidoDTO {
 
     private FreteDTO frete; 
 
-    private PagamentoResponseDTO pagamento;
+    private PagamentoDTO pagamento;
 
     @NotNull(message = "A lista de itens do pedido é obrigatória!")
     private List<ItemPedidoDTO> itens = new ArrayList<>();

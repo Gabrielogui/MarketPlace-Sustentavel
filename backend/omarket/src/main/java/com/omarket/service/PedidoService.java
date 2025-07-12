@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.EnderecoDTO;
 import com.omarket.dto.ItemCarrinhoDTO;
@@ -162,21 +164,34 @@ public class PedidoService {
     }
 
     @Transactional
-    public PagamentoDTO processarPagamentoDoPedido(Long pedidoId, Usuario cliente) {
-        // 1. Validação (garantir que o pedido pertence ao cliente, etc.)
-        Pedido pedido = pedidoRepository.findById(pedidoId)
-            .orElseThrow(() -> new RuntimeException("Pedido não encontrado."));
-
-        if (!pedido.getCliente().getId().equals(cliente.getId())) {
-            throw new RuntimeException("Acesso negado. O pedido não pertence a este cliente.");
+    public PedidoDTO processarPagamentoDoPedido(Long pedidoId, Usuario cliente) {
+        if (!(cliente instanceof Cliente)) {
+            throw new RuntimeException("Usuário não é um cliente válido.");
         }
 
-        // 2. Chamar o seu PagamentoService, que contém a lógica do mock/gateway
-        PagamentoDTO pagamentoDTO = pagamentoService.criarPagamento(pedidoId, cliente);
+        // 1. Busca o pedido ANTES de qualquer outra operação.
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado."));
 
-        // 3. O PagamentoService já atualiza o status do pedido, então aqui
-        // apenas retornamos o DTO do pagamento.
-        return pagamentoDTO;
+        // 2. VERIFICAÇÃO DE AUTORIZAÇÃO: O pedido pertence ao cliente logado?
+        if (!pedido.getCliente().getId().equals(cliente.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado. Este pedido não pertence ao usuário autenticado.");
+        }
+
+        // 3. VERIFICAÇÃO DE STATUS: O pedido está no estado correto para ser pago?
+        if (pedido.getStatus() != StatusPedido.AGUARDANDO_PAGAMENTO) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este pedido não pode ser pago, pois seu status é: " + pedido.getStatus());
+        }
+
+        // 1. Chama o serviço para criar e persistir o pagamento.
+        pagamentoService.criarPagamento(pedidoId, (Cliente) cliente);
+
+        // 2. Após o pagamento, busca o estado mais recente do pedido no banco.
+        Pedido pedidoAtualizado = pedidoRepository.findById(pedidoId)
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado após processar pagamento."));
+
+        // 3. Converte a entidade atualizada para DTO e retorna.
+        return converterPedidoParaDto(pedidoAtualizado);
     }
     
     // ... outros métodos que criaremos para a Etapa 2 ...
@@ -202,11 +217,14 @@ public class PedidoService {
         pedidoDTO.setValorTotal(pedido.getValorTotal());
         pedidoDTO.setSubtotal(pedido.getSubTotal());
 
-        pedidoDTO.setFrete(pedido.getFrete() != null ? 
+        pedidoDTO.setFrete(pedido.getFrete() != null ?
             freteService.converterParaDTO(pedido.getFrete()) : null);
 
-        // PAGAMENTO PRECISA SER PERSISTIDO NO DB
-        // pedidoDTO.setPagamento();
+        // --- MUDANÇA AQUI: Converter o pagamento para DTO ---
+        if (pedido.getPagamento() != null) {
+            pedidoDTO.setPagamento(pagamentoService.converterParaDTO(pedido.getPagamento()));
+        }
+        // --------------------------------------------------
 
         if(pedido.getEndereco() != null){
             EnderecoDTO enderecoDTO = new EnderecoDTO();
@@ -216,17 +234,21 @@ public class PedidoService {
             enderecoDTO.setId(endereco.getId());
             enderecoDTO.setNumero(endereco.getNumero());
             pedidoDTO.setEndereco(enderecoDTO);
-        } 
- 
-        // Converte os itens do pedido para DTOs
-        for (ItemPedido item : pedido.getItens()) {
-            ItemPedidoDTO itemDTO = new ItemPedidoDTO();
-            itemDTO.setProdutoId(item.getProduto().getId());
-            itemDTO.setPedidoId(pedido.getId());
-            itemDTO.setQuantidade(item.getQuantidade());
-            itemDTO.setPrecoUnitario(item.getPrecoUnitario());
-            pedidoDTO.getItens().add(itemDTO);
         }
+
+        // --- MUDANÇA AQUI: Limpar a lista antes de adicionar ---
+        pedidoDTO.getItens().clear(); 
+        if (pedido.getItens() != null) {
+            for (ItemPedido item : pedido.getItens()) {
+                ItemPedidoDTO itemDTO = new ItemPedidoDTO();
+                itemDTO.setProdutoId(item.getProduto().getId());
+                itemDTO.setPedidoId(pedido.getId());
+                itemDTO.setQuantidade(item.getQuantidade());
+                itemDTO.setPrecoUnitario(item.getPrecoUnitario());
+                pedidoDTO.getItens().add(itemDTO);
+            }
+        }
+        // -------------------------------------------------------
         
         return pedidoDTO;
     }

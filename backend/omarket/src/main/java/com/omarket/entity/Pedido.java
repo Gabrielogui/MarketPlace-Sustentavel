@@ -54,7 +54,7 @@ public class Pedido {
     @JoinColumn(name = "pagamento_id", nullable = true)
     private Pagamento pagamento;
 
-    @OneToMany(mappedBy = "id.pedido")
+    @OneToMany(mappedBy = "id.pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedido> itens = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.PERSIST)    // só persiste um clone novo
