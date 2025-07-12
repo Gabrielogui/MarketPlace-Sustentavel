@@ -6,6 +6,7 @@ import AvaliarProduto from "@/components/produto/AvaliarProduto";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Produto } from "@/core/produto";
+import { adicionarItemAoCarrinho } from "@/service/carrinho/carrinhoService";
 import { getProduto } from "@/service/produto/produtoService";
 import { Heart, LoaderCircle } from "lucide-react";
 import Image from "next/image";
@@ -21,9 +22,10 @@ export default function ProdutoDetalhe() {
     const params = useParams();
     const id = Number(params.id);
 
+    
     useEffect(() => {
         if (!id) return;
-
+        
         async function fetchProduto() {
             try {
                 console.log("id do produto: ", id)
@@ -53,6 +55,20 @@ export default function ProdutoDetalhe() {
         return <div className="text-center">Produto não encontrado.</div>;
     }
 
+    const handleAdicionarAoCarrinho = async () => {
+        try {
+            const payload = {
+                produtoId: produto.id,
+                quantidade: 1
+            };
+            await adicionarItemAoCarrinho(payload);
+            toast.success(`${produto.nome} foi adicionado ao carrinho!`);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            console.error("Erro ao adicionar item:", error);
+            toast.error(error.response?.data?.message || "Não foi possível adicionar o produto.");
+        }
+    };
     return(
         <div className="flex flex-col gap-10 ">
             {/* PRODUTO */}
@@ -83,7 +99,7 @@ export default function ProdutoDetalhe() {
                             <p className="text-3xl font-extrabold text-green-700">R$ {produto.preco.toFixed(2)}</p>
                             <Heart size={30} className="cursor-pointer hover:scale-110 hover:text-red-500 transition-all duration-500"/>
                         </div> 
-                        <Button className="cursor-pointer mt-4 py-6 text-lg">Adicionar ao Carrinho</Button>
+                        <Button onClick={handleAdicionarAoCarrinho} className="cursor-pointer mt-4 py-6 text-lg">Adicionar ao Carrinho</Button>
                     </div>
                 </div>
             </div>
