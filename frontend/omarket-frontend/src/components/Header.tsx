@@ -2,7 +2,6 @@
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { CircleUser, Heart, LogOut, Logs, MapPin, Search, ShoppingCart, User, UserPen, UserX } from "lucide-react";
-//import Image from "next/image";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useContext, useState } from "react";
@@ -12,39 +11,62 @@ import EditarPerfil from "./usuario/EditarPerfil";
 import InativarPerfil from "./usuario/InativarPerfil";
 import Endereco from "./usuario/Endereco";
 import AdicionarProduto from "./produto/AdicionarProduto";
-
-/* 
-COMPONENTES PRONTOS QUE SERÃO UTILIZADOS NO MENU: 
- - DROPDOWNMENU = SERÁ USADO NO SÍMBOLO DE USUÁRIO PARA ABRIR AS OPÇÕES
- - INPUT = BUSCA
-*/
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { inativarAdministrador, inativarCliente, inativarFornecedor } from "@/service/usuario/userService";
 
 export default function Header () {
 
-    const { role, logout } = useContext(AuthContext)
+    const { role, user, logout } = useContext(AuthContext)
+    const router = useRouter();
 
-    // |======| SABER SE O DRAWER DO PERIFL E DE EDITAR E O ALERT DIALOG DE INATIVAR ESTÃO ABERTOS |======|
-    // DROPDOWNMENU - SABER SE ESTÁ ABERTO  
+    // |======| ESTADOS DOS DRAWERS E DIALOGS |======|
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    // PERFIL - DRAWER
     const [isDrawerPerfilOpen, setIsDrawerPerfilOpen] = useState(false);
-    // EDITAR - DRAWER
     const [isDrawerEditarOpen, setisDrawerEditarOpen] = useState(false);
-    // INATIVAR - ALERTDIALOG
     const [isAlertDialogInativarOpen, setIsAlertDialogInativarOpen] = useState(false);
-    // ENDEREÇO - DRAWER
     const [isDrawerEnderecoOpen, setIsDrawerEnderecoOpen] = useState(false);
-    // ADCIONAR PRODUTO - DRAWER
     const [isDrawerAddProdutoOpen, setIsDrawerAddProdutoOpen] = useState(false);
 
-    
+    // |=======| FUNÇÃO PARA INATIVAR O PERFIL |=======|
+    const handleInativar = async () => {
+        if (!user || !role) {
+            toast.error("Usuário não autenticado.");
+            return;
+        }
 
+        try {
+            switch (role) {
+                case 'CLIENTE':
+                    await inativarCliente(user.id);
+                    break;
+                case 'FORNECEDOR':
+                    await inativarFornecedor(user.id);
+                    break;
+                case 'ADMINISTRADOR':
+                    await inativarAdministrador(user.id);
+                    break;
+                default:
+                    throw new Error("Tipo de usuário desconhecido.");
+            }
+
+            toast.success("Conta inativada com sucesso. Você será desconectado.");
+            logout(); // Desloga o usuário
+            router.push("/"); // Redireciona para a home
+        
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            const mensagemErro = error.response?.data?.message || "Falha ao inativar a conta.";
+            toast.error(mensagemErro);
+            console.error("Erro ao inativar conta:", error);
+        } finally {
+            setIsAlertDialogInativarOpen(false); // Fecha o dialog independentemente do resultado
+        }
+    };
+    
     return(
-        <header className="flex flex-row items-center justify-center gap-12 w-full py-5 px-12 
-             shadow-sm
-        ">
+        <header className="flex flex-row items-center justify-center gap-12 w-full py-5 px-12 shadow-sm">
             <div>
-                {/*<Image src={"/logo_no_bg.png"} alt="omarket" width={100} height={100}></Image>*/}
                 <h1 className="text-2xl">omarket</h1>
             </div>
             { role === "CLIENTE" && (
@@ -170,18 +192,17 @@ export default function Header () {
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
-
-                {/* DRAWER DE PERFIL E DE EDITAR PERFIL E ALERTDIALOG DE INATIVAR */}
-                <Perfil isOpen={isDrawerPerfilOpen} onOpenChange={setIsDrawerPerfilOpen}/>
-                <EditarPerfil isOpen={isDrawerEditarOpen} onOpenChange={setisDrawerEditarOpen}/>
-                <InativarPerfil isOpen={isAlertDialogInativarOpen} onOpenChange={setIsAlertDialogInativarOpen} />
-
-                {/* DRAWER PARA VISUALIZAR E EDITAR ENDEREÇO */}
-                <Endereco isOpen={isDrawerEnderecoOpen} onOpenChange={setIsDrawerEnderecoOpen}/>
-
             </DropdownMenu>
-            
-            {/* DRAWER DE PRODUTO PARA FORNECEDOR */}
+
+            {/* DRAWERS E DIALOGS */}
+            <Perfil isOpen={isDrawerPerfilOpen} onOpenChange={setIsDrawerPerfilOpen}/>
+            <EditarPerfil isOpen={isDrawerEditarOpen} onOpenChange={setisDrawerEditarOpen}/>
+            <InativarPerfil 
+                isOpen={isAlertDialogInativarOpen} 
+                onOpenChange={setIsAlertDialogInativarOpen}
+                onConfirm={handleInativar} // Passando a função de inativação
+            />
+            <Endereco isOpen={isDrawerEnderecoOpen} onOpenChange={setIsDrawerEnderecoOpen}/>
             <AdicionarProduto isOpen={isDrawerAddProdutoOpen} onOpenChange={setIsDrawerAddProdutoOpen}/>
         </header>
     );

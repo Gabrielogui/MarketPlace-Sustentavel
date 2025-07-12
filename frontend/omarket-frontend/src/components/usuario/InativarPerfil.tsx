@@ -3,9 +3,10 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 export interface InativarPerfilProps{
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
+    onConfirm: () => void; // Prop para receber a função de inativação
 }
 
-export default function InativarPerfil ({ isOpen, onOpenChange } : InativarPerfilProps) {
+export default function InativarPerfil ({ isOpen, onOpenChange, onConfirm } : InativarPerfilProps) {
     return(
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
@@ -20,7 +21,8 @@ export default function InativarPerfil ({ isOpen, onOpenChange } : InativarPerfi
                     <AlertDialogCancel>
                         Cancelar
                     </AlertDialogCancel>
-                    <AlertDialogAction>
+                    {/* O botão de Ação agora chama a função recebida via props */}
+                    <AlertDialogAction onClick={onConfirm}>
                         Inativar
                     </AlertDialogAction>
                 </AlertDialogFooter>
