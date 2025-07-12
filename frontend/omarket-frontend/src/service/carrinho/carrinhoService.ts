@@ -11,3 +11,7 @@ export function adicionarItemAoCarrinho(payload: AdicionarItemPayload) {
   // O token de autenticação será adicionado automaticamente pelo interceptor do 'api.ts'.
   return api.post<Carrinho>('/carrinho/itens', payload);
 }
+
+export function getMeuCarrinho() {
+  return api.get<Carrinho>('/carrinho');
+}
