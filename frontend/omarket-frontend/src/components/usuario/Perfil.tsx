@@ -3,6 +3,8 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } f
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { Cliente, Fornecedor } from "@/core";
+import { toast } from "sonner";
 
 export interface PerfilProps{
     isOpen: boolean;
@@ -12,6 +14,13 @@ export interface PerfilProps{
 export default function Perfil ( {isOpen, onOpenChange}: PerfilProps ) {
 
     const { profile, loading, error } = useUserProfile();
+
+    // |=======| MÉTODO PARA FORMATAR A DATA DE NASCIMENTO |=======|
+    const formatDate = (data: string | undefined) => {
+        if(!data) return toast("Data Não informada!");
+        const dataFormatada = new Date(data);
+        return new Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(dataFormatada);
+    };
 
     if (loading) {
         return(
@@ -99,21 +108,21 @@ export default function Perfil ( {isOpen, onOpenChange}: PerfilProps ) {
                                                 <Mail size={16} className="text-xs"/>
                                                 <h4 className="text-sm">Email do Usuário</h4>
                                             </div>
-                                            <Label className="text-md">{UsuarioMock.email}</Label>
+                                            <Label className="text-md">{profile.email}</Label>
                                         </div>
                                         <div>
                                             <div className="flex flex-row gap-1 text-gray-500 items-center">
                                                 <Phone size={16} className="text-xs"/>
                                                 <h4 className="text-sm">Telefone</h4>
                                             </div>
-                                            <Label className="text-md">{UsuarioMock.telefone}</Label>
+                                            <Label className="text-md">{profile.telefone}</Label>
                                         </div>
                                         <div>
                                             <div className="flex flex-row gap-1 text-gray-500 items-center">
                                                 <BadgeCheck size={16} className="text-xs"/>
                                                 <h4 className="text-sm">Tipo de usuário</h4>
                                             </div>
-                                            <Label className="text-md">{UsuarioMock.tipoUsuario}</Label>
+                                            <Label className="text-md">{profile.tipoUsuario}</Label>
                                         </div>
                                     </div>
                                 </div>
@@ -125,20 +134,62 @@ export default function Perfil ( {isOpen, onOpenChange}: PerfilProps ) {
                                     </h3>
                                 
                                     <div className="grid grid-cols-2 gap-4 ml-2">
-                                        <div>
-                                            <div className="flex flex-row gap-1 text-gray-500 items-center">
-                                                <Key size={16} className="text-xs"/>
-                                                <h4 className="text-sm">CPF</h4>
+                                        { profile.tipoUsuario === "CLIENTE" && (
+                                        <>
+                                            <div>
+                                                <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                    <Key size={16} className="text-xs"/>
+                                                    <h4 className="text-sm">CPF</h4>
+                                                </div>
+                                                <Label className="text-md">{(profile as Cliente).cpf || "Não informado"}</Label>
                                             </div>
-                                            <Label className="text-md">{UsuarioMock.cpf}</Label>
-                                        </div>
-                                        <div>
-                                            <div className="flex flex-row gap-1 text-gray-500 items-center">
-                                                <Calendar size={16} className="text-xs"/>
-                                                <h4 className="text-sm">Data de Nascimento</h4>
+                                            <div>
+                                                <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                    <Calendar size={16} className="text-xs"/>
+                                                    <h4 className="text-sm">Data de Nascimento</h4>
+                                                </div>
+                                                <Label className="text-md">{formatDate((profile as Cliente).dataNascimento)}</Label>
                                             </div>
-                                            <Label className="text-md">{UsuarioMock.dataNascimento}</Label>
-                                        </div>
+                                        </>
+                                        )}
+
+                                        {profile.tipoUsuario === "FORNECEDOR" && (
+                                            <>
+                                                <div>
+                                                    <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                        <Key size={16} className="text-xs"/>
+                                                        <h4 className="text-sm">CNPJ</h4>
+                                                    </div>
+                                                    <Label className="text-md">{(profile as Fornecedor).cnpj || "Não informado"}</Label>
+                                                </div>
+                                                <div>
+                                                    <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                        <Calendar size={16} className="text-xs"/>
+                                                        <h4 className="text-sm">Data de Nascimento</h4>
+                                                    </div>
+                                                    <Label className="text-md">Não tem</Label>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        {profile.tipoUsuario === "ADMINISTRADOR" && (
+                                            <>
+                                                <div>
+                                                    <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                        <Key size={16} className="text-xs"/>
+                                                        <h4 className="text-sm">CPF</h4>
+                                                    </div>
+                                                    <Label className="text-md">Não tem</Label>
+                                                </div>
+                                                <div>
+                                                    <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                        <Calendar size={16} className="text-xs"/>
+                                                        <h4 className="text-sm">Data de Nascimento</h4>
+                                                    </div>
+                                                    <Label className="text-md">Não tem</Label>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                                 {/* |=======| SEÇÃO DE ENDEREÇO |=======| */}

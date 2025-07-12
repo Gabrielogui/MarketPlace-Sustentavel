@@ -1,7 +1,6 @@
 import { AuthContext } from "@/context/AuthContext";
 import { Administrador, Cliente, Fornecedor } from "@/core";
-import { Usuario } from "@/core/usuario/usuario";
-import api from "@/service/api";
+import { getAdministrador, getCliente, getFornecedor } from "@/service/usuario/userService";
 //import { getAdministrador, getCliente, getFornecedor } from "@/service/usuario/userService";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -37,10 +36,22 @@ export function useUserProfile() {
             }
 
             try {
-                // 5. Faz a chamada à API com a rota e ID corretos
-                console.log(`Buscando perfil para ${userTypePath} com ID: ${user.id}`); // Log para depuração
-                const response = await api.get<Usuario>(`/${userTypePath}/${user.id}`);
+                let response;
+                switch (role) {
+                    case "CLIENTE":
+                        response = await getCliente(user.id);
+                        break;
+                    case "FORNECEDOR":
+                        response = await getFornecedor(user.id);
+                        break;
+                    case "ADMINISTRADOR":
+                        response = await getAdministrador(user.id);
+                        break;
+                    default:
+                        throw new Error("Tipo de usuário desconhecido!");
+                }
                 setProfile(response.data);
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err: any) {
                 console.error("Erro ao carregar perfil:", err);
@@ -50,6 +61,7 @@ export function useUserProfile() {
             } finally {
                 setLoading(false);
             }
+
         };
     
         fetchProfile();
