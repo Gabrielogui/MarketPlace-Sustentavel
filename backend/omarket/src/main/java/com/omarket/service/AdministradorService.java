@@ -80,6 +80,22 @@ public class AdministradorService implements UsuarioService {
         return converterParaDTO(usuario);
     }
 
+    @Transactional
+    public UsuarioDTO ativar(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
+
+        // VERIFICAR SE O USUÁRIO JÁ ESTÁ ATIVO
+        if (usuario.getStatus() == StatusUsuario.ATIVO) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já está ativo!");
+        }
+
+        // SETANDO O STATUS COMO ATIVO
+        usuario.setStatus(StatusUsuario.ATIVO);
+
+        return converterParaDTO(usuario);
+    }
+
     @Override
     public UsuarioDTO converterParaDTO(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();

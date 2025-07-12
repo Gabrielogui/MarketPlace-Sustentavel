@@ -134,6 +134,12 @@ public class ClienteService implements UsuarioService {
         return converterParaDTO(usuario);
     }
 
+    @Override
+    public UsuarioDTO ativar(Long id) {
+        // CORRETO: Lança uma exceção para proibir esta operação.
+        throw new UnsupportedOperationException("A operação 'ativar' não é suportada para o serviço de Cliente.");
+    }
+
     // CONVERTER PARA DTO
     @Override
     public UsuarioDTO converterParaDTO(Usuario usuario){

@@ -130,6 +130,12 @@ public class FornecedorService implements UsuarioService {
     }
 
     @Override
+    public UsuarioDTO ativar(Long id) {
+        // CORRETO: Lança uma exceção para proibir esta operação.
+        throw new UnsupportedOperationException("A operação 'ativar' não é suportada para o serviço de Fornecedor.");
+    }
+
+    @Override
     public UsuarioDTO converterParaDTO(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setId(usuario.getId());

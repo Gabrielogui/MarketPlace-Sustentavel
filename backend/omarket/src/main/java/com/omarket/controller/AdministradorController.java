@@ -1,6 +1,7 @@
 package com.omarket.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/administrador")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMINISTRADOR')")
 public class AdministradorController {
     // |=======| ATRIBUTOS |=======|
     private final UsuarioServiceFactory usuarioServiceFactory;
@@ -52,6 +54,14 @@ public class AdministradorController {
         UsuarioDTO administradorEditado = administradorService.editar(id, usuarioDTO);
 
         return ResponseEntity.ok(administradorEditado);
+    }
+
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<UsuarioDTO> ativar(@PathVariable Long id) {
+        UsuarioService administradorService = usuarioServiceFactory.getUsuarioService(TipoUsuario.ADMINISTRADOR);
+        UsuarioDTO usuarioAtivado = administradorService.ativar(id);
+
+        return ResponseEntity.ok(usuarioAtivado);
     }
 
 }

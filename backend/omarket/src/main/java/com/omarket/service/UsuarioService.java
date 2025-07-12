@@ -8,6 +8,7 @@ public interface UsuarioService {
     UsuarioDTO buscar(Long id);
     UsuarioDTO inativar(Long id);
     UsuarioDTO editar(Long id, UsuarioDTO usuarioDTO);
+    UsuarioDTO ativar(Long id); // <-- CORRETO: Mantenha aqui
     UsuarioDTO converterParaDTO(Usuario usuario);
 
 }
