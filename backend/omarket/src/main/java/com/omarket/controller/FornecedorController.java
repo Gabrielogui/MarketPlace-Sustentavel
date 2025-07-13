@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.omarket.dto.UsuarioDTO;
+import com.omarket.dto.UsuarioEditarDTO;
 import com.omarket.entity.enum_.TipoUsuario;
 import com.omarket.service.UsuarioService;
 import com.omarket.service.UsuarioServiceFactory;
@@ -64,9 +65,9 @@ public class FornecedorController {
 
     // ======= EDITAR FORNECEDOR =======
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioEditarDTO usuarioEditarDTO){
         UsuarioService fornecedorService = usuarioServiceFactory.getUsuarioService(TipoUsuario.FORNECEDOR);
-        UsuarioDTO fornecedorEditado = fornecedorService.editar(id, usuarioDTO);
+        UsuarioDTO fornecedorEditado = fornecedorService.editar(id, usuarioEditarDTO);
 
         return ResponseEntity.ok(fornecedorEditado);
     }
