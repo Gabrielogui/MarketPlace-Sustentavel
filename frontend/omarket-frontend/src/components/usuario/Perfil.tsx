@@ -1,0 +1,244 @@
+import { BadgeCheck, Calendar, ChevronRight, Edit, Home, Key, LogOut, Mail, MapPin, Phone, User, X } from "lucide-react";
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "../ui/drawer";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { Cliente, Fornecedor } from "@/core";
+import { toast } from "sonner";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
+
+export interface PerfilProps{
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+export default function Perfil ( {isOpen, onOpenChange}: PerfilProps ) {
+
+    const { logout } = useContext(AuthContext);
+    const { profile, loading, error } = useUserProfile();
+
+    // |=======| MÉTODO PARA FORMATAR A DATA DE NASCIMENTO |=======|
+    const formatDate = (data: string | undefined) => {
+        if(!data) return toast("Data Não informada!");
+        const dataFormatada = new Date(data);
+        return new Intl.DateTimeFormat('pt-BR', {timeZone: 'UTC'}).format(dataFormatada);
+    };
+
+    if (loading) {
+        return(
+            <Drawer open={isOpen} onOpenChange={onOpenChange} direction="right">
+                <DrawerContent className="h-screen">
+                    <div className="mx-auto w-full max-w-md flex items-center justify-center h-full">
+                        <Label>Carregando perfil...</Label>
+                    </div>
+                </DrawerContent>
+            </Drawer>
+        );
+    }
+
+    //if(!profile) return null;
+
+    const UsuarioMock = {
+        nome: "Gabriel Rodrigues",
+        email: "email@exemplo.com",
+        telefone: "(99) 99999-9999",
+        tipoUsuario: "Cliente",
+        cpf: "123.456.789-00",
+        dataNascimento: "15/03/1985",
+        endereco: {
+            numero: "123",
+            complemento: "Avenida Silveira Martins",
+            cep: "12345-123"
+        }
+  };
+
+    return(
+        <Drawer open={isOpen} onOpenChange={onOpenChange} direction="right">
+            <DrawerContent className="h-screen">
+                <div className="mx-auto w-full max-w-md">
+                    {/* |=======| HEADER |=======| */}
+                    <DrawerHeader className="flex flex-row justify-between items-start border-b">
+                        <div>
+                            <DrawerTitle className="text-2xl flex flex-row items-center gap-2">
+                                <User className="text-primary" size={28} />
+                                Perfil do Usuário
+                            </DrawerTitle>
+                            <DrawerDescription>Gerencie suas informações pessoais</DrawerDescription>
+                        </div>
+                        <Button 
+                            variant="outline" 
+                            size="icon"
+                            onClick={() => onOpenChange(false)}
+                            className="mt-1"
+                        >
+                            <X size={20} />
+                        </Button>
+                    </DrawerHeader>
+                    
+                    <div className="p-4 pb-0 overflow-y-auto max-h-[calc(100vh-100px)]">
+                        {loading ? (
+                            <div>
+                                <Label>Carregando Perfil...</Label>
+                            </div>
+                        ) : error || !profile ? (
+                            <div>
+                                <Label>Erro ao carregar...</Label>
+                                <p>{error || "Não foi possível encontrar o usuário"}</p>
+                            </div>
+                        ) : (
+                            <>
+                                {/* |=======| SEÇÃO DAS INFORMAÇÕS PESSOAIS |=======| */}
+                                <div className="mb-5">
+                                    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                        <User size={20} className="text-primary" />
+                                        Informações Pessoais
+                                        <Button variant="ghost" size="icon" className="ml-auto">
+                                        <Edit size={16} />
+                                        </Button>
+                                    </h3>
+                                
+                                    <div className="grid grid-cols-2 space-y-3 ml-2">
+                                        <div className="flex flex-col">
+                                            <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                <User size={16} className="text-xs"/>
+                                                <h4 className="text-sm">Nome do Usuário</h4>
+                                            </div>
+                                            <Label className="text-md">{profile.nome}</Label>
+                                        </div>
+                                        <div>
+                                            <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                <Mail size={16} className="text-xs"/>
+                                                <h4 className="text-sm">Email do Usuário</h4>
+                                            </div>
+                                            <Label className="text-md">{profile.email}</Label>
+                                        </div>
+                                        <div>
+                                            <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                <Phone size={16} className="text-xs"/>
+                                                <h4 className="text-sm">Telefone</h4>
+                                            </div>
+                                            <Label className="text-md">{profile.telefone}</Label>
+                                        </div>
+                                        <div>
+                                            <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                <BadgeCheck size={16} className="text-xs"/>
+                                                <h4 className="text-sm">Tipo de usuário</h4>
+                                            </div>
+                                            <Label className="text-md">{profile.tipoUsuario}</Label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* |=======| SEÇÃO DE DOCUMENTOS |=======| */}
+                                <div className="mb-5">
+                                    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                        <Key size={20} className="text-primary" />
+                                        Documentos
+                                    </h3>
+                                
+                                    <div className="grid grid-cols-2 gap-4 ml-2">
+                                        { profile.tipoUsuario === "CLIENTE" && (
+                                        <>
+                                            <div>
+                                                <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                    <Key size={16} className="text-xs"/>
+                                                    <h4 className="text-sm">CPF</h4>
+                                                </div>
+                                                <Label className="text-md">{(profile as Cliente).cpf || "Não informado"}</Label>
+                                            </div>
+                                            <div>
+                                                <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                    <Calendar size={16} className="text-xs"/>
+                                                    <h4 className="text-sm">Data de Nascimento</h4>
+                                                </div>
+                                                <Label className="text-md">{formatDate((profile as Cliente).dataNascimento)}</Label>
+                                            </div>
+                                        </>
+                                        )}
+
+                                        {profile.tipoUsuario === "FORNECEDOR" && (
+                                            <>
+                                                <div>
+                                                    <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                        <Key size={16} className="text-xs"/>
+                                                        <h4 className="text-sm">CNPJ</h4>
+                                                    </div>
+                                                    <Label className="text-md">{(profile as Fornecedor).cnpj || "Não informado"}</Label>
+                                                </div>
+                                                <div>
+                                                    <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                        <Calendar size={16} className="text-xs"/>
+                                                        <h4 className="text-sm">Data de Nascimento</h4>
+                                                    </div>
+                                                    <Label className="text-md">Não tem</Label>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        {profile.tipoUsuario === "ADMINISTRADOR" && (
+                                            <>
+                                                <div>
+                                                    <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                        <Key size={16} className="text-xs"/>
+                                                        <h4 className="text-sm">CPF</h4>
+                                                    </div>
+                                                    <Label className="text-md">Não tem</Label>
+                                                </div>
+                                                <div>
+                                                    <div className="flex flex-row gap-1 text-gray-500 items-center">
+                                                        <Calendar size={16} className="text-xs"/>
+                                                        <h4 className="text-sm">Data de Nascimento</h4>
+                                                    </div>
+                                                    <Label className="text-md">Não tem</Label>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                                {/* |=======| SEÇÃO DE ENDEREÇO |=======| */}
+                                <div className="mb-8">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="font-semibold text-lg flex items-center gap-2">
+                                        <Home size={20} className="text-primary" />
+                                        Endereço Cadastrado
+                                    </h3>
+                                    <Button variant="ghost" className="flex items-center gap-1">
+                                        <Edit size={14} />
+                                        Alterar
+                                    </Button>
+                                </div>
+                                
+                                <div className="bg-gray-50 rounded-lg p-4 border ml-2">
+                                    <div className="flex items-start gap-3">
+                                        <MapPin size={20} className="text-primary mt-0.5 flex-shrink-0" />
+                                        <div className="flex flex-col gap-1">
+                                            <Label>CEP: {UsuarioMock.endereco.cep}</Label>
+                                            <Label>Nº: {UsuarioMock.endereco.numero}</Label>
+                                            <Label>{UsuarioMock.endereco.complemento}</Label>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                {/* |=======| BOTÕES DE AÇÃO |=======| */} {/* PODE SER QUE VIRE TABS */}
+                                <div className="flex flex-col gap-3 mt-6">
+                                    <Button variant="outline" className="flex justify-between">
+                                        <span>Visualizar Avaliações</span>
+                                        <ChevronRight size={18} />
+                                    </Button>
+                                    <Button variant="outline" className="flex justify-between">
+                                        <span>Histórico de pedidos</span>
+                                        <ChevronRight size={18} />
+                                    </Button>
+                                    <Button onClick={logout}  variant="destructive" className="mt-4">
+                                        <LogOut />
+                                        Sair da conta
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </DrawerContent>
+        </Drawer>
+    );
+}

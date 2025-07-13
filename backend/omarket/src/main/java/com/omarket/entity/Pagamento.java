@@ -3,8 +3,13 @@ package com.omarket.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.omarket.entity.enum_.StatusPagamento;
+import com.omarket.entity.enum_.StatusPedido;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,6 +26,7 @@ public class Pagamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="metodo", nullable = false)
     private String metodo;
 
     @Column(name="valor_pago", precision = 19, scale = 4, nullable = false)
@@ -29,5 +35,11 @@ public class Pagamento {
     @Column(name="data_pagamento", nullable = false)
     private LocalDateTime dataPagamento;
 
+    @Column(name = "mercado_pago_id", unique = true)
+    private Long mercadoPagoId; // ID externo do Mercado Pago
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="status", nullable = false)
+    private StatusPagamento status;
 
 }

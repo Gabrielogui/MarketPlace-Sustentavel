@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.omarket.dto.UsuarioDTO;
+import com.omarket.dto.UsuarioEditarDTO;
 import com.omarket.entity.enum_.TipoUsuario;
+import com.omarket.service.ClienteService;
 import com.omarket.service.UsuarioService;
 import com.omarket.service.UsuarioServiceFactory;
 
@@ -33,7 +35,7 @@ public class ClienteController {
     // ======= POST PARA CADASTRO DO CLIENTE ======= (PROVAVELMENTE FIQUE APENAS EM AUTHCONTROLLER)
     @PostMapping("/cadastrar")
     public ResponseEntity<UsuarioDTO> cadastrar(@RequestBody @Validated UsuarioDTO usuarioDTO){
-        UsuarioService clienteService = usuarioServiceFactory.getUsuarioService(TipoUsuario.CLIENTE);
+        UsuarioService clienteService = (ClienteService)usuarioServiceFactory.getUsuarioService(TipoUsuario.CLIENTE);
         UsuarioDTO clienteNovo = clienteService.cadastrar(usuarioDTO);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -64,9 +66,9 @@ public class ClienteController {
 
     // ======= EDITAR CLIENTE =======
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioDTO> editar(@PathVariable Long id, @RequestBody @Validated UsuarioEditarDTO usuarioEditarDTO){
         UsuarioService clienteService = usuarioServiceFactory.getUsuarioService(TipoUsuario.CLIENTE);
-        UsuarioDTO clienteEditado = clienteService.editar(id, usuarioDTO);
+        UsuarioDTO clienteEditado = clienteService.editar(id, usuarioEditarDTO);
 
         return ResponseEntity.ok(clienteEditado);
     }

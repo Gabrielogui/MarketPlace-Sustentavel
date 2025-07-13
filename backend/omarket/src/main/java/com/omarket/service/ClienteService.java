@@ -1,5 +1,6 @@
 package com.omarket.service;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,11 +9,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.EnderecoDTO;
 import com.omarket.dto.UsuarioDTO;
+import com.omarket.dto.UsuarioEditarDTO;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Endereco;
 import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
+import com.omarket.event.ClienteCriadoEvent;
 import com.omarket.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class ClienteService implements UsuarioService {
     // |=======| ATRIBUTOS |=======|
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher eventPublisher;
 
     // |=======| MÉTODOS |=======|
     
@@ -60,6 +64,8 @@ public class ClienteService implements UsuarioService {
         // SALVANDO USUÁRIO NO BANCO DE DADOS
         usuarioRepository.save(usuario);
 
+        eventPublisher.publishEvent(new ClienteCriadoEvent(usuario));
+        
         // PREPARAR RESPOSTA DTO PARA O CONTROLLER
         return converterParaDTO(usuario);
     }
@@ -95,38 +101,46 @@ public class ClienteService implements UsuarioService {
     // EDITAR:
     @Override
     @Transactional
-    public UsuarioDTO editar(Long id, UsuarioDTO usuarioDTO){
+    public UsuarioDTO editar(Long id, UsuarioEditarDTO usuarioEditarDTO){
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
 
         // VERIFICAR SE O EMAIL JÁ ESTÁ CADASTRADO
-        if(!usuario.getEmail().equals(usuarioDTO.getEmail()) && 
-            usuarioRepository.findByEmail(usuarioDTO.getEmail()).isPresent()){
+        if(!usuario.getEmail().equals(usuarioEditarDTO.getEmail()) && 
+            usuarioRepository.findByEmail(usuarioEditarDTO.getEmail()).isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
         }
 
         Cliente cliente = (Cliente) usuario;
         // ATUALIZANDO O ENDEREÇO SE EXISTIR
-        if (usuarioDTO.getEnderecoDTO() != null) {
+        if (usuarioEditarDTO.getEnderecoDTO() != null) {
             Endereco endereco = new Endereco();
-            endereco.setCep(usuarioDTO.getEnderecoDTO().getCep());
-            endereco.setComplemento(usuarioDTO.getEnderecoDTO().getComplemento());
-            endereco.setNumero(usuarioDTO.getEnderecoDTO().getNumero());
+            endereco.setCep(usuarioEditarDTO.getEnderecoDTO().getCep());
+            endereco.setComplemento(usuarioEditarDTO.getEnderecoDTO().getComplemento());
+            endereco.setNumero(usuarioEditarDTO.getEnderecoDTO().getNumero());
             cliente.setEndereco(endereco);
             usuario = cliente;
         }
 
         // ATUALIZANDO OS DADOS DO USUÁRIO
-        usuario.setNome(usuarioDTO.getNome());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setTelefone(usuarioDTO.getTelefone());
+        usuario.setNome(usuarioEditarDTO.getNome());
+        usuario.setEmail(usuarioEditarDTO.getEmail());
+        usuario.setTelefone(usuarioEditarDTO.getTelefone());
 
-        // ATUALIZANDO A SENHA SE FOR DIFERENTE
-        if (!passwordEncoder.matches(usuarioDTO.getSenha(), usuario.getSenha())) {
-            usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        if (usuarioEditarDTO.getSenha() != null && !usuarioEditarDTO.getSenha().trim().isEmpty()) {
+            // Opcional: verificar se a nova senha é diferente da antiga
+            if (!passwordEncoder.matches(usuarioEditarDTO.getSenha(), usuario.getSenha())) {
+                usuario.setSenha(passwordEncoder.encode(usuarioEditarDTO.getSenha()));
+            }
         }
 
         return converterParaDTO(usuario);
+    }
+
+    @Override
+    public UsuarioDTO ativar(Long id) {
+        // CORRETO: Lança uma exceção para proibir esta operação.
+        throw new UnsupportedOperationException("A operação 'ativar' não é suportada para o serviço de Cliente.");
     }
 
     // CONVERTER PARA DTO

@@ -24,6 +24,7 @@ public class TokenService {
             String token = JWT.create()
                     .withIssuer("Omarket API")
                     .withSubject(custonUserDetails.getUsername())
+                    .withClaim("tipoUsuario", custonUserDetails.getUsuario().getTipoUsuario().toString())
                     .withExpiresAt(this.getExpirationDate())
                     .sign(algorithm);
             return token;

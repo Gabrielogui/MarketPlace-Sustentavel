@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 public class ItemCarrinhoDTO {
 
-    @NotNull(message = "O ID do carrinho é obrigatório!")
     private Long carrinhoId;
 
     @NotNull(message = "O ID do produto é obrigatório!")

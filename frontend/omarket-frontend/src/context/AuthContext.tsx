@@ -1,0 +1,117 @@
+'use client'
+
+import { Role } from "@/core/types";
+import { Usuario } from "@/core/usuario/usuario";
+import { fakeUsers, getMockToken } from "@/service/authMock";
+import { jwtDecode } from "jwt-decode";
+import { createContext, ReactNode, useEffect, useState } from "react";
+
+type AuthContextType = {
+  token: string | null;
+  role: Role | null;
+  user: Usuario | null;
+  initialized: boolean;
+  login: (token: string, id: number) => void;
+  logout: () => void;
+};
+
+export const AuthContext = createContext<AuthContextType>(null!);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [token, setToken]   = useState<string | null>(null);
+  const [role, setRole]     = useState<Role | null>(null);
+  const [user, setUser]     = useState<Usuario | null>(null);
+  const [initialized, setInitialized] = useState(false); 
+
+  const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'false';
+
+  useEffect(() => {
+    if (USE_MOCK) {
+      // Protótipo: já logado como CLIENTE
+      const t = getMockToken('CLIENTE');
+      setToken(t);
+      setRole('CLIENTE');
+      // fakeUsers.CLIENTE é um Cliente, que extende UsuarioBase
+      setUser(fakeUsers.CLIENTE);
+      setInitialized(true);
+      return;
+    }
+
+    // Modo real: tenta carregar do localStorage
+    const t = localStorage.getItem('token');
+    if (!t){
+      setInitialized(true);
+      return;
+    } 
+    console.log("tipo do usuário: ", role)
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const payload: any = jwtDecode(t);
+      // COLOCAR TEMPO DE EXPIRAÇÃO PARA O FRONT SABER **
+      const r: Role = payload.role || payload.tipoUsuario;
+      const id = Number(localStorage.getItem('id')) ?? 0;
+      console.log("id no useEffect: ", id);
+      
+      setToken(t);
+      setRole(r);
+      console.log("tipo do usuário: ", role);
+        // ADICIONAR UM LISTNER **
+      // Monta um objeto mínimo de UsuarioBase
+      const base: Usuario = {
+        id: id ?? 0,
+        nome: payload.nome ?? '',
+        email: payload.sub,
+        telefone: payload.telefone ?? '',
+        tipoUsuario: r,
+        status: payload.status ?? 'ATIVO',
+      };
+      setUser(base);
+
+    } catch {
+      // token inválido
+      logout();
+    }finally{
+      setInitialized(true);
+    }
+  }, []);
+
+  function login(t: string, id: number) {
+    console.log("id no login: ", id)
+    localStorage.setItem('token', t);
+    localStorage.setItem('id', id.toString());
+    setToken(t);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload: any = jwtDecode(t);
+    const r: Role = payload.role || payload.tipoUsuario;
+    setRole(r);
+
+    if (USE_MOCK) {
+      // Se mock, pega o usuário completo
+      setUser(fakeUsers[r]);
+    } else {
+      // Modo real: monta apenas UsuarioBase
+      const usuario: Usuario = {
+        id: id,
+        nome: payload.nome ?? '',
+        email: payload.sub,
+        telefone: payload.telefone ?? '',
+        tipoUsuario: r,
+        status: payload.status ?? 'ATIVO',
+      };
+      setUser(usuario);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    setToken(null);
+    setRole(null);
+    setUser(null);
+  }
+
+  return (
+    <AuthContext.Provider value={{ token, role, user, initialized, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}

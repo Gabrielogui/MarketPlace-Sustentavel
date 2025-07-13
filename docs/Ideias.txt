@@ -111,7 +111,7 @@ Métodos:
 	* carrinho
 	* testar imagemproduto
 	* favorito
-	* autenticação
+	* autenticação --CHECK--
 	* filtro produto (rever)
 	* imagemfornecedor
 	* pagamento

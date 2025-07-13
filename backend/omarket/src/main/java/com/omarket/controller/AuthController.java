@@ -40,9 +40,10 @@ public class AuthController {
         );
         var auth = authenticationManager.authenticate(usernamePassword);
 
+        var userDetails = (CustomUserDetails) auth.getPrincipal();
         var token = tokenService.generateToken((CustomUserDetails) auth.getPrincipal());
 
-        return ResponseEntity.ok(new AuthResponseDTO(token));
+        return ResponseEntity.ok(new AuthResponseDTO(token, userDetails.getUsuario().getTipoUsuario(), userDetails.getUsuario().getId()));
     }
 
     @PostMapping("/cadastrar")
