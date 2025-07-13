@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
+import com.omarket.dto.AdicionarItemRequestDTO;
 import com.omarket.dto.AtualizarQuantidadeDTO;
 import com.omarket.dto.CarrinhoDTO;
 import com.omarket.dto.ItemCarrinhoDTO;
@@ -29,13 +30,18 @@ public class CarrinhoController {
     private final CarrinhoService carrinhoService;
 
     @PostMapping("/itens")
-    public ResponseEntity<CarrinhoDTO> adicionarItemCarrinho(@RequestBody @Validated ItemCarrinhoDTO itemCarrinhoDTO, Authentication authentication) {
-        
+    public ResponseEntity<CarrinhoDTO> adicionarItemCarrinho(
+        // Altere o tipo do parâmetro para o novo DTO
+        @RequestBody @Validated AdicionarItemRequestDTO requestDTO, 
+        Authentication authentication
+    ) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CarrinhoDTO carrinhoAtualizado = carrinhoService.adicionarItemCarrinho((Cliente)userDetails.getUsuario(), itemCarrinhoDTO);
+        // O serviço também será ajustado para receber o novo DTO
+        CarrinhoDTO carrinhoAtualizado = carrinhoService.adicionarItemCarrinho((Cliente) userDetails.getUsuario(), requestDTO);
         
         return ResponseEntity.ok(carrinhoAtualizado);
     }
+
 
     @DeleteMapping("/itens/{produtoId}")
     public ResponseEntity<?> removerItemCarrinho(Authentication authentication, @PathVariable Long produtoId) {
