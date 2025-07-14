@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { CircleUser, Heart, LogOut, Logs, MapPin, Search, ShoppingCart, User, UserPen, UserX } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Perfil from "./usuario/Perfil";
 import EditarPerfil from "./usuario/EditarPerfil";
@@ -14,6 +14,8 @@ import AdicionarProduto from "./produto/AdicionarProduto";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { EditarPayload, editarUsuario, inativarAdministrador, inativarCliente, inativarFornecedor } from "@/service/usuario/userService";
+import { Categoria } from "@/core";
+import { getListaCategoria } from "@/service/categoria/categoria";
 
 export default function Header () {
 
@@ -27,6 +29,29 @@ export default function Header () {
     const [isAlertDialogInativarOpen, setIsAlertDialogInativarOpen] = useState(false);
     const [isDrawerEnderecoOpen, setIsDrawerEnderecoOpen] = useState(false);
     const [isDrawerAddProdutoOpen, setIsDrawerAddProdutoOpen] = useState(false);
+
+    // |=======| ESTADO DAS CATEGORIAS DO DROPDOWN |=======|
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [categoriaLoading, setCategoriaLoading] = useState(true);
+
+    // |=======| USEEFFECT DO HEADER |=======|
+    useEffect(() => {
+        async function fetchCategorias() {
+            try {
+                const categoriaResponse = await getListaCategoria();
+                setCategorias(categoriaResponse.data);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any){
+                console.error("Erro ao buscar categorias:", error);
+                toast.error(error.categoriaResponse?.data?.message || "Não foi possível carregar as categorias.");
+            } finally {
+                setCategoriaLoading(false);
+            }
+        }
+
+        fetchCategorias();
+
+    }, [])
 
     // |=======| FUNÇÃO PARA INATIVAR O PERFIL |=======|
     const handleInativar = async () => {
@@ -95,11 +120,13 @@ export default function Header () {
                             <Logs className="cursor-pointer hover:scale-110 transition-all"/>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="center" className="w-48 bg-amber-50 border-green-200 text-emerald-900 ">
-                            <DropdownMenuItem className="cursor-pointer">Frutas Orgânicas</DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">Verduras Frescas</DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">Grãos e Cereais</DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">Produtos Lácteos</DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">Mel e Derivados</DropdownMenuItem>
+                            {categoriaLoading ? (
+                                <p>Carregando...</p>
+                            ) : (
+                                categorias.map((categoria) => (
+                                    <DropdownMenuItem key={categoria.id} className="cursor-pointer">{categoria.nome}</DropdownMenuItem>
+                                ))
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "../ui/drawer";
 import { Button } from "../ui/button";
 //import Image from "next/image";
@@ -7,16 +7,13 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Categoria } from "@/core";
+import { getListaCategoria } from "@/service/categoria/categoria";
+import { toast } from "sonner";
 
 export interface AdicionarProdutoProps{
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
-}
-
-interface Categoria{
-    id:number,
-    nome:string,
-    descricao:string
 }
 
 export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdutoProps) {
@@ -30,22 +27,28 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
     const [imagemPreview, setImagemPreview] = useState<string | null>(null);
     const [imagemFile, setImagemFile] = useState<File | null>(null);
 
+    // |=======| USESTATES DE CATEGORIA |=======|
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [categoriaLoading, setCategoriaLoading] = useState(true);
+
     // |=======| REFERÊNCIA PARA O INPUT DO ARQUIVO |=======|
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // |=======| CATEGORIAS MOCK (SIMULAÇÃO) |=======|
-    const categorias: Categoria[] = [
-        { id: 1, nome: "Frutas Orgânicas", descricao: "Frutas frescas cultivadas sem agrotóxicos" },
-        { id: 2, nome: "Veganais e Vegetais", descricao: "Legumes e verduras orgânicos da estação" },
-        { id: 3, nome: "Grãos e Cereais", descricao: "Grãos integrais e cereais cultivados organicamente" },
-        { id: 4, nome: "Lácteos Orgânicos", descricao: "Leite, queijos e derivados de animais criados livremente" },
-        { id: 5, nome: "Vinhos Naturais", descricao: "Vinhos produzidos com uvas orgânicas e processos naturais" },
-        { id: 6, nome: "Mel e Derivados", descricao: "Produtos apícolas 100% naturais e orgânicos" },
-        { id: 7, nome: "Panificados Orgânicos", descricao: "Pães, bolos e massas feitos com ingredientes orgânicos" },
-        { id: 8, nome: "Bebidas Vegetais", descricao: "Leites vegetais e sucos naturais sem conservantes" },
-        { id: 9, nome: "Produtos de Higiene", descricao: "Cosméticos e produtos de higiene pessoal naturais" },
-        { id: 10, nome: "Temperos e Especiarias", descricao: "Ervas frescas e secas cultivadas organicamente" }
-    ];
+    // |=======| USEEFFECT |=======|
+    useEffect(() => {
+        async function fetchCategorias() {
+            try {
+                const categoriaResponse = await getListaCategoria();
+                setCategorias(categoriaResponse.data);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any){
+                console.error("Erro ao buscar categorias:", error);
+                toast.error(error.categoriaResponse?.data?.message || "Não foi possível carregar as categorias.");
+            } finally {
+                setCategoriaLoading(false);
+            }
+        }
+    }, [])
 
     // |=======| FUNCÇÃO PARA UPLOAD DA IMAGEM |=======|
     const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -226,11 +229,11 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
                                         <SelectValue placeholder="Selecione uma categoria" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {categorias.map((cat) => (
-                                            <SelectItem key={cat.id} value={cat.nome}>
+                                        {categorias.map((categoria) => (
+                                            <SelectItem key={categoria.id} value={categoria.nome}>
                                                 <div className="flex flex-col">
-                                                    <span>{cat.nome}</span>
-                                                    <span className="text-xs text-gray-500">{cat.descricao}</span>
+                                                    <span>{categoria.nome}</span>
+                                                    <span className="text-xs text-gray-500">{categoria.descricao}</span>
                                                 </div>
                                             </SelectItem>
                                         ))}
