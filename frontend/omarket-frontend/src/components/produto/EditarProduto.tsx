@@ -6,15 +6,9 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Textarea } from "../ui/textarea";
-
-interface Produto {
-    id: number;
-    nome: string;
-    descricao: string;
-    preco: number;
-    estoque: number;
-    categoria: string;
-}
+import { Produto } from "@/core";
+import { editarProduto } from "@/service/produto/produtoService";
+import { toast } from "sonner";
 
 export interface EditarProdutoProps{
     isOpen: boolean;
@@ -28,6 +22,7 @@ export default function EditarProduto ({isOpen, onOpenChange, produto}:EditarPro
     const [descricao, setDescricao] = useState("");
     const [preco, setPreco] = useState(0);
     const [estoque, setEstoque] = useState(0);
+    const [loading, setLoading] = useState(false);
     
     // |=======| USESTATE DE VALIDAÇÃO DE ERRO |=======|
     const [erros, setErros] = useState({
@@ -59,20 +54,31 @@ export default function EditarProduto ({isOpen, onOpenChange, produto}:EditarPro
     };
     
     // |=======| FUNÇÃO PARA SALVAR AS ALTERAÇÕES |=======|
-    const handleSalvar = () => {
-        if (validarCampos() && produto) {
-            // Criar objeto com as alterações
-            const produtoAtualizado: Produto = {
-                ...produto,
-                nome,
-                descricao,
-                preco,
-                estoque
-            };
-            
-            console.log("Produto atualizado:", produtoAtualizado); // O BACKEND SERÁ CHAMADO AQUI (MÉTODO PARA EDITAR O PRODUTO)
-            // Aqui é a futura chamada do backend
+    const handleSalvar = async () => {
+        if (!validarCampos() || !produto) return;
+
+        setLoading(true);
+        const produtoAtualizado: Produto = {
+            ...produto,
+            nome,
+            descricao,
+            preco,
+            estoque
+        };
+
+        try {
+            const response = await editarProduto(produtoAtualizado, produto.id);
+            console.log("Produto atualizado no backend:", response.data);
+            toast.success("Produto atualizado com sucesso!");
             onOpenChange(false);
+        
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            const mensagemErro = err.response?.data?.message || "Erro ao atualizar o produto.";
+            console.error('Erro ao editar produto:', err.response);
+            toast.error(mensagemErro);
+        } finally {
+            setLoading(false);
         }
     };
     
@@ -121,8 +127,8 @@ export default function EditarProduto ({isOpen, onOpenChange, produto}:EditarPro
                                     </h3>
                                     <p className="text-sm text-gray-500">Valores atuais antes das alterações</p>
                                 </div>
-                                <div className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                                    Ativo
+                                <div className={`bg-${produto?.status === 'ATIVO' ? 'green' : 'gray'}-100 text-${produto?.status === 'ATIVO' ? 'green' : 'gray'}-800 text-xs px-2 py-1 rounded-full`}>
+                                    {produto?.status}
                                 </div>
                             </div>
                             
@@ -253,14 +259,16 @@ export default function EditarProduto ({isOpen, onOpenChange, produto}:EditarPro
                         <Button 
                             variant="outline" 
                             onClick={handleClose}
+                            disabled={loading}
                         >
                             Cancelar
                         </Button>
                         <Button 
                             onClick={handleSalvar}
+                            disabled={loading}
                             className="bg-green-600 hover:bg-green-700"
                         >
-                            Salvar Alterações
+                            {loading ? 'Salvando...' : 'Salvar Alterações'}
                         </Button>
                     </div>
                 </div>
