@@ -25,3 +25,8 @@ export async function editarProduto(produto: Produto, id: number) {
 export async function getListaProdutoPorFornecedor(fornecedorId: number) {
   return api.get<Produto[]>(`/produto/listar/fornecedor/${fornecedorId}`);
 }
+
+// |=======| PATCH PARA DESATIVAR O PRODUTO |=======|
+export async function desativarProduto(id: number){
+  return api.patch<Produto>(`/produto/${id}/desativar`);
+}
