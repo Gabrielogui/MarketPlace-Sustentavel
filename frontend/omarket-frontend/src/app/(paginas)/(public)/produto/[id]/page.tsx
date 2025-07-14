@@ -134,7 +134,7 @@ export default function ProdutoDetalhe() {
                     </Carousel>
                 </div>
             </div>
-            <AvaliarProduto isOpen={isDialogAvaliarProdutoOpen} onOpenChange={setIsDialogAvaliarProdutoOpen}/>
+            <AvaliarProduto isOpen={isDialogAvaliarProdutoOpen} onOpenChange={setIsDialogAvaliarProdutoOpen} produtoId={produto.id}/>
         </div>
     );
 }
