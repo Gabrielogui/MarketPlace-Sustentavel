@@ -4,6 +4,7 @@ import { Role } from "@/core/types";
 import { Usuario } from "@/core/usuario/usuario";
 import { fakeUsers, getMockToken } from "@/service/authMock";
 import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 type AuthContextType = {
@@ -22,6 +23,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [role, setRole]     = useState<Role | null>(null);
   const [user, setUser]     = useState<Usuario | null>(null);
   const [initialized, setInitialized] = useState(false); 
+
+  const router = useRouter();
 
   const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'false';
 
@@ -107,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setRole(null);
     setUser(null);
+    router.push("/login");
   }
 
   return (

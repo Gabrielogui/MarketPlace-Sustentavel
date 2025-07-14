@@ -127,7 +127,7 @@ export default function EditarProduto ({isOpen, onOpenChange, produto}:EditarPro
                                     </h3>
                                     <p className="text-sm text-gray-500">Valores atuais antes das alterações</p>
                                 </div>
-                                <div className={`bg-${produto?.status === 'ATIVO' ? 'green' : 'gray'}-100 text-${produto?.status === 'ATIVO' ? 'green' : 'gray'}-800 text-xs px-2 py-1 rounded-full`}>
+                                <div className={`bg-${produto?.status === 'ATIVO' ? 'lime' : 'red'}-500 text-${produto?.status === 'ATIVO' ? 'white' : 'black'}-800 text-xs px-2 py-1 rounded-full`}>
                                     {produto?.status}
                                 </div>
                             </div>

@@ -32,7 +32,7 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
     const [imagemPreview, setImagemPreview] = useState<string | null>(null);
     const [imagemFile, setImagemFile] = useState<File | null>(null);
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     // |=======| USESTATES DE CATEGORIA |=======|
     const [categorias, setCategorias] = useState<Categoria[]>([]);
