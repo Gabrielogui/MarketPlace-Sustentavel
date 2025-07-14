@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "../ui/drawer";
 import { Button } from "../ui/button";
 //import Image from "next/image";
@@ -7,9 +7,11 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Categoria } from "@/core";
+import { Categoria, Produto } from "@/core";
 import { getListaCategoria } from "@/service/categoria/categoria";
 import { toast } from "sonner";
+import { cadastrarProduto } from "@/service/produto/produtoService";
+import { AuthContext } from "@/context/AuthContext";
 
 export interface AdicionarProdutoProps{
     isOpen: boolean;
@@ -18,14 +20,19 @@ export interface AdicionarProdutoProps{
 
 export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdutoProps) {
 
+    // |=======| USECONTEXT |=======|
+    const { user } = useContext(AuthContext);
+
     // |=======| USESTATES DO PRODUTO |=======|
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
     const [estoque, setEstoque] = useState(0);
     const [preco, setPreco] = useState(0);
-    const [categoria, setCategoria] = useState("");
+    const [categoria, setCategoria] = useState(0);
     const [imagemPreview, setImagemPreview] = useState<string | null>(null);
     const [imagemFile, setImagemFile] = useState<File | null>(null);
+
+    const [loading, setLoading] = useState(true);
 
     // |=======| USESTATES DE CATEGORIA |=======|
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -50,7 +57,7 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
         }
 
         fetchCategorias();
-    }, [])
+    }, []);
 
     // |=======| FUNCÇÃO PARA UPLOAD DA IMAGEM |=======|
     const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -75,17 +82,45 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
     };
 
     // |=======| FUNÇÃO PARA SALVAR PRODUTO MOCK |=======|
-    const handleSaveProduct = () => {
-        const produto = {
-            nome,
-            descricao,
-            estoque,
-            preco,
-            categoria,
-            imagem: imagemFile
-        };
-        console.log("Produto salvo:", produto); // FUTURA CHAMADA PARA O BACKEND
-        // Aqui você faria a chamada para o backend
+    const handleSaveProduct = async () => {
+        try {
+            let produto: Produto;
+            if(user){
+                produto = {
+                    nome: nome,
+                    descricao: descricao,
+                    estoque: estoque,
+                    preco: preco,
+                    categoriaId: categoria,
+                    fornecedorId: user.id,
+                    //imagem: imagemFile
+                    id: 0, // PODE SER QUALQUER UM, POIS O BACK LIDA
+                    status:"INATIVO" // O BACKEND LIFA
+                };
+            }else{
+                toast.error("Você não está logado como fornecedor!");
+                return
+            }
+            console.log("imagem file: ", imagemFile);
+            console.log("Produto a ser salvo:", produto);
+
+            const response = await cadastrarProduto(produto);
+
+            console.log("Resposta do backend: ", response.data);
+            
+
+            toast.success("Produto cadastrado com sucesso!");
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            const mensagemErro = err.response?.data?.message || "Ocorreu um erro no cadastro do produto.";
+            console.error('Erro de cadastro do produto:', err.response);
+            console.log(mensagemErro);
+            toast.error(mensagemErro);
+        } finally {
+            setLoading(false);
+        }
+        
         onOpenChange(false);
     };
 
@@ -226,7 +261,7 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
                                     Categoria
                                 </Label>
                                 
-                                <Select value={categoria} onValueChange={setCategoria}>
+                                <Select value={categoria.toString()} onValueChange={(value) => setCategoria(Number(value))}>
                                     <SelectTrigger className="w-full" id="categoria">
                                         <SelectValue placeholder="Selecione uma categoria" />
                                     </SelectTrigger>
@@ -235,7 +270,7 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
                                             <p>Carregando...</p>
                                         ) : (
                                             categorias.map((categoria) => (
-                                                <SelectItem key={categoria.id} value={categoria.nome}>
+                                                <SelectItem key={categoria.id} value={categoria.id.toString()}>
                                                     <div className="flex flex-col">
                                                         <span>{categoria.nome}</span>
                                                         <span className="text-xs text-gray-500">{categoria.descricao}</span>
@@ -261,7 +296,7 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
                             onClick={handleSaveProduct}
                             className="bg-green-600 hover:bg-green-700"
                         >
-                            Adicionar Produto
+                            {loading ? "Carregando..." : "Adicionar Produto"}
                         </Button>
                     </div>
                 </div>

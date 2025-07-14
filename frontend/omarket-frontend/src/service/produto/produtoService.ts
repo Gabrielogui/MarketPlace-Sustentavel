@@ -12,6 +12,6 @@ export function getProduto(id: number) {
 }
 
 // |=======| POST DE UM PRODUTO |=======|
-export function cadastrarProduto(produto: Produto) {
+export async function cadastrarProduto(produto: Produto) {
   return api.post<Produto>('/produto/cadastrar', produto);
 }
