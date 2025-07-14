@@ -10,3 +10,8 @@ export async function getListaProduto() {
 export function getProduto(id: number) {
   return api.get<Produto>(`/produto/${id}`);
 }
+
+// |=======| POST DE UM PRODUTO |=======|
+export function cadastrarProduto(produto: Produto) {
+  return api.post<Produto>('/produto/cadastrar', produto);
+}
