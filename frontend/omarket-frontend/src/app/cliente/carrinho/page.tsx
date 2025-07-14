@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { LoaderCircle, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { getMeuCarrinho } from "@/service/carrinho/carrinhoService";
+import { getMeuCarrinho, removerItemCarrinho } from "@/service/carrinho/carrinhoService";
 import { toast } from "sonner";
 import { getProduto } from "@/service/produto/produtoService";
 
@@ -26,6 +26,7 @@ export default function CarrinhoPage() {
     const [itensDetalhados, setItensDetalhados] = useState<ProdutoNoCarrinho[]>([]);
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState<Set<number>>(new Set());
+    const [removendoId, setRemovendoId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchCarrinhoEProdutos = async () => {
@@ -74,6 +75,32 @@ export default function CarrinhoPage() {
         fetchCarrinhoEProdutos();
     }, []);
     
+    const handleRemoverItem = async (produtoId: number) => {
+        if (removendoId !== null) return; // evita duplo clique
+        try {
+            setRemovendoId(produtoId);
+            await removerItemCarrinho(produtoId);
+            toast.success("Item removido do carrinho!");
+            // Filtra o array para retirar o item removido
+            setItensDetalhados(prev =>
+                prev.filter(item => item.id !== produtoId)
+            );
+            // Também atualiza seleção, caso estivesse marcado
+            setSelected(prev => {
+                const next = new Set(prev);
+                next.delete(produtoId);
+                return next;
+            });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.error("Erro ao remover item:", err);
+            toast.error(err.response?.data?.message || "Falha ao remover o item.");
+        } finally {
+            setRemovendoId(null);
+        }
+    };
+
+
     // Agrupa os produtos por fornecedor usando 'useMemo' para otimização
     const grouped = useMemo(() => {
         return itensDetalhados.reduce<Record<string, ProdutoNoCarrinho[]>>((acc, p) => {
@@ -162,7 +189,13 @@ export default function CarrinhoPage() {
                                             <TableCell>R$ {produto.precoUnitario.toFixed(2)}</TableCell>
                                             <TableCell>{produto.quantidade}</TableCell>
                                             <TableCell>R$ {(produto.precoUnitario * produto.quantidade).toFixed(2)}</TableCell>
-                                            <TableCell><Button variant="ghost" size={"icon"}><Trash2 className="hover:text-red-500 transition-colors"/></Button></TableCell>
+                                            <TableCell><Button variant="ghost" size={"icon"}
+                                                onClick={() => handleRemoverItem(produto.id)}
+                                                disabled={removendoId === produto.id}>
+                                                {removendoId === produto.id
+                                                ? <LoaderCircle className="animate-spin h-5 w-5"/>
+                                                : <Trash2 className="hover:text-red-500 transition-colors"/>}
+                                            </Button></TableCell>
                                         </TableRow>
                                     ))}
                                 </Fragment>

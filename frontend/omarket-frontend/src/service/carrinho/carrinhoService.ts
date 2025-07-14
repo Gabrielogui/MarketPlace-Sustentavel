@@ -1,17 +1,19 @@
 import { Carrinho, AdicionarItemPayload } from "@/core/carrinho";
 import api from "../api";
 
-/**
- 
-Adiciona um item ao carrinho do usuário autenticado.
-@param payload - O objeto contendo o ID do produto e a quantidade.
-@returns A promise com o carrinho atualizado.*/
+// |=======| ADICIONAR ITEM AO CARRINHO |=======|
 export function adicionarItemAoCarrinho(payload: AdicionarItemPayload) {
   // A rota é /carrinho/itens e o método é POST, conforme o backend.
   // O token de autenticação será adicionado automaticamente pelo interceptor do 'api.ts'.
   return api.post<Carrinho>('/carrinho/itens', payload);
 }
 
+// |=======| GET O CARRINHO DO USUÁRIO |=======|
 export function getMeuCarrinho() {
   return api.get<Carrinho>('/carrinho');
+}
+
+// |=======| REMOVER ITEM DO CARRINHO |=======|
+export function removerItemCarrinho(produtoId: number){
+  return api.delete<void>(`carrinho/itens/${produtoId}`);
 }
