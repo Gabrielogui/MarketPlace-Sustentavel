@@ -30,3 +30,8 @@ export async function getListaProdutoPorFornecedor(fornecedorId: number) {
 export async function desativarProduto(id: number){
   return api.patch<Produto>(`/produto/${id}/desativar`);
 }
+
+// |=======| GET PARA BUSCA DE PRODUTO |=======|
+export async function buscaProduto(nome: string){
+  return api.get<Produto[]>(`/produto/buscar/${nome}`);
+}

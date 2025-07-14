@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/produto/listar").permitAll()   // Regra específica para listar
                 .requestMatchers(HttpMethod.GET, "/produto/{id}").permitAll()    // Regra específica para ver um produto
+                .requestMatchers(HttpMethod.GET, "/produto/buscar/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/categoria/**").permitAll()    // Regra específica para ver uma ou mais categoria
                 .requestMatchers(HttpMethod.POST, "/categoria/**").permitAll()    // Regra específica para cadastrar categoria
                 .requestMatchers("/error").permitAll()

@@ -24,7 +24,10 @@ export default function Header () {
     const { role, user, logout } = useContext(AuthContext)
     const router = useRouter();
 
-    // |======| ESTADOS DOS DRAWERS E DIALOGS |======|
+    // |=======| ESTADO DA BUSCA |=======|
+    const [termoBusca, setTermoBusca] = useState("");
+
+    // |+======| ESTADOS DOS DRAWERS E DIALOGS |=======|
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isDrawerPerfilOpen, setIsDrawerPerfilOpen] = useState(false);
     const [isDrawerEditarOpen, setisDrawerEditarOpen] = useState(false);
@@ -109,6 +112,11 @@ export default function Header () {
         }
     };
     
+    const handleBusca = () => {
+        if(!termoBusca.trim()) return;
+        router.push(`/busca?nome=${encodeURIComponent(termoBusca.trim())}`);
+    }
+
     return(
         <header className="flex flex-row items-center justify-center gap-12 w-full py-5 px-12 shadow-sm">
             <div>
@@ -135,8 +143,14 @@ export default function Header () {
                     </DropdownMenu>
                 </div>
                 <div className="relative flex-grow w-full">
-                    <Input type={"search"} placeholder="Busca" className="pl-4 pr-10 py-2 w-full rounded-lg"/>
-                    <Button variant={"ghost"} size={"icon"} className="absolute right-0 top-1/2 transform -translate-y-1/2 h-8 w-8 cursor-pointer">
+                    <Input type={"search"} placeholder="Busca" 
+                        value={termoBusca} onChange={(e) => setTermoBusca(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") handleBusca();
+                        }}
+                        className="pl-4 pr-10 py-2 w-full rounded-lg"/>
+                    <Button variant={"ghost"} size={"icon"} onClick={handleBusca}
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 h-8 w-8 cursor-pointer">
                         <Search/>
                     </Button>
                 </div>

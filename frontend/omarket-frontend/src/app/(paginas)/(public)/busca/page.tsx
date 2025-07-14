@@ -1,11 +1,49 @@
+'use client'
+
 import ProdutoCard from "@/components/cards/ProdutoCard";
 import Navigation from "@/components/Navigation";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Produto } from "@/core";
+import { buscaProduto } from "@/service/produto/produtoService";
 import { SliderThumb } from "@radix-ui/react-slider";
 import { Star } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-export default function busca () {
+export default function Busca () {
+    const params = useSearchParams();
+    const nome = params.get("nome") || "";
+    const [produtos, setProdutos] = useState<Produto[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!nome) {
+            setProdutos([]);
+            setLoading(false);
+            return;
+        }
+
+            async function fetchProduto() {
+                setLoading(true);
+                try {
+                    const response = await buscaProduto(nome);
+                    setProdutos(response.data);
+
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                } catch (err: any) {
+                    console.error("Erro na busca:", err);
+                    toast.error(err.response?.data?.message || "Falha na busca de produtos.");
+                } finally {
+                    setLoading(false);
+                }
+            }
+
+        fetchProduto();
+        
+    }, [nome]);
+
     return(
         <div>
             {/* FILTROS */}
@@ -45,18 +83,16 @@ export default function busca () {
 
             </div>
             {/* PRODUTOS */}
-            <div className="grid grid-cols-1 md:grid-cols-2 pt-10 justify-items-center gap-7">
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-            </div>
+            {loading ? (
+                <p>Carregando a busca...</p>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 pt-10 justify-items-center gap-7">
+                        {produtos.map((produto) => (
+                            <ProdutoCard key={produto.id} produto={produto}/>
+                        ))}
+                    </div>  
+                )}
+                
             <div>
                 <Navigation currentPage={1} totalPages={5}/>
             </div>
