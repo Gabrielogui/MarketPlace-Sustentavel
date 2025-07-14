@@ -48,6 +48,8 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
                 setCategoriaLoading(false);
             }
         }
+
+        fetchCategorias();
     }, [])
 
     // |=======| FUNCÇÃO PARA UPLOAD DA IMAGEM |=======|
@@ -229,14 +231,18 @@ export default function AdicionarProduto ({isOpen, onOpenChange}:AdicionarProdut
                                         <SelectValue placeholder="Selecione uma categoria" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {categorias.map((categoria) => (
-                                            <SelectItem key={categoria.id} value={categoria.nome}>
-                                                <div className="flex flex-col">
-                                                    <span>{categoria.nome}</span>
-                                                    <span className="text-xs text-gray-500">{categoria.descricao}</span>
-                                                </div>
-                                            </SelectItem>
-                                        ))}
+                                        {categoriaLoading ? (
+                                            <p>Carregando...</p>
+                                        ) : (
+                                            categorias.map((categoria) => (
+                                                <SelectItem key={categoria.id} value={categoria.nome}>
+                                                    <div className="flex flex-col">
+                                                        <span>{categoria.nome}</span>
+                                                        <span className="text-xs text-gray-500">{categoria.descricao}</span>
+                                                    </div>
+                                                </SelectItem>
+                                            ))
+                                        )}
                                     </SelectContent>
                                 </Select>
                             </div>
