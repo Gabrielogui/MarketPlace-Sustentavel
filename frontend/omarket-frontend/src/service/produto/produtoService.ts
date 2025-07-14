@@ -20,3 +20,8 @@ export async function cadastrarProduto(produto: Produto) {
 export async function editarProduto(produto: Produto, id: number) {
   return api.put<Produto>(`/produto/${id}`, produto);
 }
+
+// |=======| GET PARA LISTAR PRODUTOS  DE UM FORNECEDOR |=======|
+export async function getListaProdutoPorFornecedor(fornecedorId: number) {
+  return api.get<Produto[]>(`/produto/listar/fornecedor/${fornecedorId}`);
+}
