@@ -17,3 +17,8 @@ export function getMeuCarrinho() {
 export function removerItemCarrinho(produtoId: number){
   return api.delete<void>(`carrinho/itens/${produtoId}`);
 }
+
+// |=======| ATUALIZA A QUANTIDA DO ITEM DO CARRINHO |=======|
+export function atualizarQuantidadeItemCarrinho(produtoId: number, quantidade: number) {
+  return api.patch<Carrinho>(`/carrinho/itens/${produtoId}`, { quantidade });
+}

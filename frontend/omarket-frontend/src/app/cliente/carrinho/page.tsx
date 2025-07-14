@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { LoaderCircle, Trash2 } from "lucide-react";
+import { LoaderCircle, Minus, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { getMeuCarrinho, removerItemCarrinho } from "@/service/carrinho/carrinhoService";
+import { atualizarQuantidadeItemCarrinho, getMeuCarrinho, removerItemCarrinho } from "@/service/carrinho/carrinhoService";
 import { toast } from "sonner";
 import { getProduto } from "@/service/produto/produtoService";
 
@@ -27,6 +27,7 @@ export default function CarrinhoPage() {
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState<Set<number>>(new Set());
     const [removendoId, setRemovendoId] = useState<number | null>(null);
+    const [updatingId, setUpdatingId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchCarrinhoEProdutos = async () => {
@@ -100,6 +101,31 @@ export default function CarrinhoPage() {
         }
     };
 
+    const handleAtualizarQuantidade = async (produtoId: number, delta: number) => {
+        const item = itensDetalhados.find(i => i.id === produtoId);
+        if (!item) return;
+        const novaQtd = item.quantidade + delta;
+        if (novaQtd < 0) return;
+        try {
+            setUpdatingId(produtoId);
+            
+            await atualizarQuantidadeItemCarrinho(produtoId, novaQtd);
+            
+            setItensDetalhados(prev =>
+                prev
+                .map(i => i.id === produtoId ? { ...i, quantidade: novaQtd } : i)
+                // se zerou, remove do array
+                .filter(i => i.quantidade > 0)
+        );
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.error("Erro ao atualizar quantidade:", err);
+            toast.error(err.response?.data?.message || "Falha ao atualizar quantidade.");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
 
     // Agrupa os produtos por fornecedor usando 'useMemo' para otimização
     const grouped = useMemo(() => {
@@ -187,7 +213,24 @@ export default function CarrinhoPage() {
                                                 </div>  
                                             </TableCell>
                                             <TableCell>R$ {produto.precoUnitario.toFixed(2)}</TableCell>
-                                            <TableCell>{produto.quantidade}</TableCell>
+                                            <TableCell>
+                                                <Button size={"icon"} variant={"ghost"}
+                                                    onClick={() => handleAtualizarQuantidade(produto.id, -1)}
+                                                    disabled={updatingId === produto.id}
+                                                    > {updatingId === produto.id
+                                                        ? <LoaderCircle className="animate-spin h-5 w-5" />
+                                                        : <Minus />}
+                                                </Button>
+                                                {produto.quantidade}
+                                                <Button size={"icon"} variant={"ghost"}
+                                                    onClick={() => handleAtualizarQuantidade(produto.id, +1)}
+                                                    disabled={updatingId === produto.id}
+                                                    > {updatingId === produto.id 
+                                                        ? <LoaderCircle className="animate-spin h-5 w-5" />
+                                                        : <Plus /> 
+                                                    }
+                                                </Button>
+                                            </TableCell>
                                             <TableCell>R$ {(produto.precoUnitario * produto.quantidade).toFixed(2)}</TableCell>
                                             <TableCell><Button variant="ghost" size={"icon"}
                                                 onClick={() => handleRemoverItem(produto.id)}
