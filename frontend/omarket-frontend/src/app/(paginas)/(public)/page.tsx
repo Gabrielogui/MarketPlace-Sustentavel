@@ -4,7 +4,9 @@ import CategoriaCard from "@/components/cards/CategoriaCard";
 import ProdutoCard from "@/components/cards/ProdutoCard";
 import Navegation from "@/components/Navigation";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Categoria } from "@/core";
 import { Produto } from "@/core/produto";
+import { getListaCategoria } from "@/service/categoria/categoria";
 import { getListaProduto } from "@/service/produto/produtoService";
 
 import { useEffect, useState } from "react";
@@ -12,6 +14,7 @@ import { toast } from "sonner";
 
 export default function Home() {
     const [produtos, setProdutos] = useState<Produto[]>([]);
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -28,6 +31,20 @@ export default function Home() {
             }
         }
 
+        async function fetchCategorias() {
+            try {
+                const categoriaResponse = await getListaCategoria();
+                setCategorias(categoriaResponse.data);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any){
+                console.error("Erro ao buscar categorias:", error);
+                toast.error(error.categoriaResponse?.data?.message || "Não foi possível carregar as categorias.");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchCategorias();
         fetchProdutos();
     }, []);
 
@@ -43,9 +60,9 @@ export default function Home() {
                     className="w-full"
                 >
                     <CarouselContent>
-                        {Array.from({ length: 5 }).map((_, index) => (
-                            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                                <CategoriaCard/>
+                        {categorias.map((categoria) => (
+                            <CarouselItem key={categoria.id} className="md:basis-1/2 lg:basis-1/3">
+                                <CategoriaCard key={categoria.id} categoria={categoria}/>
                             </CarouselItem>
                         ))}
                     </CarouselContent>

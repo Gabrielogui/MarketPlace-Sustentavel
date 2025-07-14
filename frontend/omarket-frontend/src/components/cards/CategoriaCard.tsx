@@ -1,6 +1,11 @@
+import { Categoria } from "@/core";
 import Image from "next/image";
 
-export default function CategoriaCard () {
+interface CategoriaCardProps {
+    categoria: Categoria;
+}
+
+export default function CategoriaCard ({ categoria }: CategoriaCardProps) {
     return(
         <div className="hover:cursor-pointer hover:shadow-md rounded-md transition-all">
             {/* IMAGEM */}
@@ -11,7 +16,7 @@ export default function CategoriaCard () {
             </div>
             {/* NOME DA CATEGORIA */}
             <div>
-                <h2 className="text-2xl font-semibold text-green-800">Nome da Categoria</h2>
+                <h2 className="text-2xl font-semibold text-green-800">{categoria.nome}</h2>
             </div>
         </div>
     );
