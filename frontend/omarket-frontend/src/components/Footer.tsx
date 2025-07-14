@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer () {
     return(
@@ -27,8 +28,10 @@ export default function Footer () {
                     </div>
                 </div>
             </div>
-            <div>
-                <h1>omarket</h1>
+            <div className="mb-2">
+                <Link href={"/"}>
+                    <Image src={"/logo_no_bg-icon_only.svg"} alt="omarket" width={35} height={35}></Image>
+                </Link>
             </div>
         </footer>
     );

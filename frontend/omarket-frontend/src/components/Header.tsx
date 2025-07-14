@@ -14,6 +14,8 @@ import AdicionarProduto from "./produto/AdicionarProduto";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { EditarPayload, editarUsuario, inativarAdministrador, inativarCliente, inativarFornecedor } from "@/service/usuario/userService";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Header () {
 
@@ -85,7 +87,9 @@ export default function Header () {
     return(
         <header className="flex flex-row items-center justify-center gap-12 w-full py-5 px-12 shadow-sm">
             <div>
-                <h1 className="text-2xl">omarket</h1>
+                <Link href={"/"}>
+                    <Image src={"/logo_no_bg-full.svg"} alt="omarket" width={100} height={100}></Image>
+                </Link>
             </div>
             { role === "CLIENTE" && (
             <div className="flex flex-row gap-2 items-center justify-items-center">
