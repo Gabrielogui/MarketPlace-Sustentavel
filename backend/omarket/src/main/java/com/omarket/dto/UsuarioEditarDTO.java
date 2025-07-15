@@ -16,19 +16,15 @@ import lombok.Setter;
 @Setter
 public class UsuarioEditarDTO {
     private Long id;
-    
-    @NotBlank(message = "Nome é obrigatório!")
+
     @Size(min = 3, max = 70, message = "O nome deve ter entre 3 e 70 caracteres")
     private String nome;
 
-    @NotBlank(message = "Email é obrigatório")
     @Email(message = "O email deve ser válido")
     private String email;
 
-    @Size(min = 6, message = "Senha deve ter no mínimo 6 caracteres")
     private String senha;
 
-    @NotBlank(message = "Telefone é obrigatório!")
     private String telefone;
 
     private StatusUsuario status;
@@ -39,7 +35,7 @@ public class UsuarioEditarDTO {
     private EnderecoDTO enderecoDTO;
 
     // ======= CAMPOS ESPECÍFICOS PARA CLIENTE    =======
-    @org.hibernate.validator.constraints.br.CPF(message = "CPF inválido!")
+    //@org.hibernate.validator.constraints.br.CPF(message = "CPF inválido!")
     private String cpf;
     private LocalDate dataNascimento;
 
