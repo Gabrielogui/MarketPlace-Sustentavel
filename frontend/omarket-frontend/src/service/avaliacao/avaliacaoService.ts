@@ -5,3 +5,8 @@ import api from "../api";
 export function adicionarAvaliacao (avaliacao: Avaliacao) {
     return api.post<Avaliacao>("/avaliacao/adicionar", avaliacao);
 }
+
+// |=======| LISTAR AVALIAÇÕES POR PRODUTO |=======|
+export function getListaAvaliacaoPorProduto (produtoId: number) {
+    return api.get<Avaliacao[]>(`/avaliacao/listar/produto/${produtoId}`);
+}
