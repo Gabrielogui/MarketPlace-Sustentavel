@@ -1,6 +1,7 @@
 import { Administrador, Cliente, Fornecedor } from "@/core";
 import api from "../api";
 import { Usuario } from "@/core/usuario/usuario";
+import { Endereco } from "@/core/endereco";
 
 // |=======| INTERFACE |=======|
 export interface EditarPayload {
@@ -13,6 +14,7 @@ export interface EditarPayload {
     cpf?: string;
     cnpj?: string;
     dataNascimento?: string | number;
+    endereco?: Endereco;
 }
 
 // |=======| GET DE UM USUÁRIO |=======|
