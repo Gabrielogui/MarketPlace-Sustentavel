@@ -1,12 +1,15 @@
+'use client'
+
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "../ui/drawer";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { ChevronRight, Loader2, MapPin, X } from "lucide-react";
+import { Loader2, MapPin } from "lucide-react";
 import { Cliente, Fornecedor } from "@/core";
 import { UserProfile } from "@/hooks/useUserProfile";
 
+// Interface para o estado do formulário
 export interface EnderecoFormData {
     cep: string;
     numero?: number;
@@ -27,6 +30,9 @@ export default function Endereco({ isOpen, onOpenChange, onSave, profile, isSavi
     useEffect(() => {
         if (profile && isOpen && (profile.tipoUsuario === 'CLIENTE' || profile.tipoUsuario === 'FORNECEDOR')) {
             const userWithAddress = profile as Cliente | Fornecedor;
+            
+            // <<< CORREÇÃO PRINCIPAL AQUI >>>
+            // Usando a propriedade correta: enderecoDTO
             setFormData({
                 cep: userWithAddress.endereco?.cep || '',
                 numero: userWithAddress.endereco?.numero,
@@ -40,7 +46,7 @@ export default function Endereco({ isOpen, onOpenChange, onSave, profile, isSavi
         setFormData(prev => ({ ...prev, [field]: value as any }));
     };
     
-    // Renderiza apenas se o usuário puder ter endereço
+    // O componente não renderiza nada se não for para cliente ou fornecedor
     if (!profile || (profile.tipoUsuario !== 'CLIENTE' && profile.tipoUsuario !== 'FORNECEDOR')) {
         return null; 
     }

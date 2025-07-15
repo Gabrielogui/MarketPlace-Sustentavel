@@ -132,6 +132,20 @@ public class FornecedorService implements UsuarioService {
             fornecedor.setEndereco(endereco);
         }
 
+        if (usuario instanceof Fornecedor && usuarioEditarDTO.getEnderecoDTO() != null) {
+            Fornecedor fornecedor = (Fornecedor) usuario;
+            Long enderecoId = usuarioEditarDTO.getEnderecoDTO().getId();
+            
+            if (enderecoId != null) {
+                // Busca a entidade Endereco para garantir que ela exista e esteja gerenciada pelo JPA
+                Endereco endereco = enderecoRepository.findById(enderecoId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço com ID " + enderecoId + " não encontrado."));
+                
+                // Associa a entidade completa e gerenciada
+                fornecedor.setEndereco(endereco);
+            }
+        }
+
         return converterParaDTO(usuario);
     }
 

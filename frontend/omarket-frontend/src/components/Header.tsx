@@ -90,20 +90,26 @@ export default function Header() {
         try {
             const addressPayload = { cep: data.cep, numero: Number(data.numero), complemento: data.complemento || '' };
             const userWithAddress = profile as Cliente | Fornecedor;
-            const existingAddressId = userWithAddress?.endereco?.id; // <<< CORREÇÃO AQUI
+            const existingAddressId = userWithAddress?.endereco?.id;
 
+            // 1. Salva ou atualiza o endereço primeiro
             const enderecoSalvo = existingAddressId
                 ? await editarEndereco(existingAddressId, addressPayload)
                 : await cadastrarEndereco(addressPayload);
 
+            // 2. Associa o endereço ao usuário, se necessário
+            // Se o endereço já existia e foi apenas editado, não precisamos re-associar.
             if (!existingAddressId) {
-                // <<< CORREÇÃO AQUI: o payload deve ter a chave 'enderecoDTO'
-                await editarUsuario(user.id, role, { endereco: { id: enderecoSalvo.data.id } as any });
+                // Criamos um payload que contém APENAS o enderecoDTO
+                const payloadAssociacao = { 
+                    enderecoDTO: { id: enderecoSalvo.data.id } 
+                };
+                await editarUsuario(user.id, role, payloadAssociacao as any);
             }
 
             toast.success("Endereço salvo com sucesso!");
             setIsDrawerEnderecoOpen(false);
-            // refreshProfile();
+            // refreshProfile(); // Futuramente, adicione uma função para recarregar os dados do perfil
         } catch (error: any) {
             toast.error(error.response?.data?.message || "Falha ao salvar o endereço.");
         } finally {

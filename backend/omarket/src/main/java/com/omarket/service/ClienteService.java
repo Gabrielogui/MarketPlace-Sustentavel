@@ -125,16 +125,18 @@ public class ClienteService implements UsuarioService {
         }
 
         // Lógica para associar/atualizar endereço
-        if (usuario instanceof Cliente && usuarioEditarDTO.getEnderecoDTO() != null && usuarioEditarDTO.getEnderecoDTO().getId() != null) {
+        if (usuario instanceof Cliente && usuarioEditarDTO.getEnderecoDTO() != null) {
             Cliente cliente = (Cliente) usuario;
             Long enderecoId = usuarioEditarDTO.getEnderecoDTO().getId();
             
-            // Busca a entidade Endereco gerenciada pelo JPA
-            Endereco endereco = enderecoRepository.findById(enderecoId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço com ID " + enderecoId + " não encontrado."));
-            
-            // Associa a entidade correta
-            cliente.setEndereco(endereco);
+            if (enderecoId != null) {
+                // Busca a entidade Endereco para garantir que ela exista e esteja gerenciada pelo JPA
+                Endereco endereco = enderecoRepository.findById(enderecoId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço com ID " + enderecoId + " não encontrado."));
+                
+                // Associa a entidade completa e gerenciada
+                cliente.setEndereco(endereco);
+            }
         }
         
         // O Spring/JPA salvará as alterações na entidade 'usuario' ao final da transação.
