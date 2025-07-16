@@ -10,6 +10,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { atualizarQuantidadeItemCarrinho, getMeuCarrinho, removerItemCarrinho } from "@/service/carrinho/carrinhoService";
 import { toast } from "sonner";
 import { getProduto } from "@/service/produto/produtoService";
+import { criarPedido } from "@/service/pedido/pedidoService";
 
 // Interface para combinar dados do carrinho e do produto para exibição
 export interface ProdutoNoCarrinho {
@@ -28,6 +29,8 @@ export default function CarrinhoPage() {
     const [selected, setSelected] = useState<Set<number>>(new Set());
     const [removendoId, setRemovendoId] = useState<number | null>(null);
     const [updatingId, setUpdatingId] = useState<number | null>(null);
+
+    const [finalizando, setFinalizando] = useState(false);
 
     useEffect(() => {
         const fetchCarrinhoEProdutos = async () => {
@@ -76,6 +79,41 @@ export default function CarrinhoPage() {
         fetchCarrinhoEProdutos();
     }, []);
     
+    const handleFinalizarCompra = async () => {
+        const selecionados = itensDetalhados.filter(item => selected.has(item.id));
+        
+        // Verifica se todos os itens selecionados são do mesmo fornecedor
+        const fornecedores = new Set(selecionados.map(item => item.fornecedor));
+        if (fornecedores.size > 1) {
+            toast.error("Só é possível finalizar a compra com produtos do mesmo fornecedor.");
+            return;
+        }
+
+        const payload = selecionados.map(item => ({
+            produtoId: item.id,
+            quantidade: item.quantidade
+        }));
+
+        try {
+            setFinalizando(true);
+            const { data } = await criarPedido(payload);
+            toast.success(`Pedido #${data.id} criado com sucesso!`);
+
+            // Remove os itens criados do carrinho
+            setItensDetalhados(prev =>
+                prev.filter(item => !selected.has(item.id))
+            );
+            setSelected(new Set());
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.error("Erro ao criar pedido:", err);
+            toast.error(err.response?.data?.message || "Erro ao criar pedido.");
+        } finally {
+            setFinalizando(false);
+        }
+    };
+
     const handleRemoverItem = async (produtoId: number) => {
         if (removendoId !== null) return; // evita duplo clique
         try {
@@ -179,7 +217,13 @@ export default function CarrinhoPage() {
         <div className="flex flex-col gap-10">
             <div className="flex flex-row justify-between">
                 <h1 className="text-3xl font-bold">Carrinho</h1> 
-                <Button disabled={selected.size === 0}>Finalizar Compra ({selected.size})</Button>
+                <Button disabled={selected.size === 0 || finalizando} onClick={handleFinalizarCompra}>
+                    { finalizando ? (
+                        <LoaderCircle className="animate-spin h-5 w-5" />
+                    ) : (
+                        `Finalizar Compra (${selected.size})`
+                    )}
+                </Button>
             </div>
             <div>
                 <Table>
