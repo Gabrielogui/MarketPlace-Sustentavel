@@ -6,3 +6,9 @@ import { AdicionarItemPayload } from '@/core/carrinho';
 export async function criarPedido(itens: AdicionarItemPayload[]) {
     return api.post<Pedido>('/pedidos/criar', itens);
 }
+
+// |=======| GET DA LISTA DE PEDIDOS POR CLIENTE |=======|
+export function getListaPedidoPorCliente(clienteId: number) {
+    const id = clienteId;
+    return api.get<Pedido[]>(`/pedidos/listar/cliente/${id}`);
+}

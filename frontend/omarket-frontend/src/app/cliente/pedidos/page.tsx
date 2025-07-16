@@ -1,40 +1,99 @@
-import ProdutoCard from "@/components/cards/ProdutoCard";
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { AuthContext } from "@/context/AuthContext";
+import { Pedido, Produto } from "@/core";
+import { getListaPedidoPorCliente } from "@/service/pedido/pedidoService";
+import { getProduto } from "@/service/produto/produtoService";
 import { Trash2 } from "lucide-react";
+import Image from "next/image";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function MeusPedidos () {
+
+    const { user } = useContext(AuthContext);
+
+    const [pedidos, setPedidos] = useState<Pedido[]>([]);
+    const [produtosMap, setProdutosMap] = useState<Record<number, Produto>>({});
+
+    useEffect(() => {
+        const fetchPedidos = async () => {
+            try {
+                if(!user) return;
+                const clienteId = user?.id;
+                const { data } = await getListaPedidoPorCliente(clienteId);
+                setPedidos(data);
+
+                // Carrega os produtos únicos
+                const produtoIds = Array.from(new Set(data.flatMap(p => p.itens.map(i => i.produtoId))));
+                const promessas = produtoIds.map(id => getProduto(id).then(res => [id, res.data]));
+                const produtos = await Promise.all(promessas);
+                const produtoMap = Object.fromEntries(produtos);
+                setProdutosMap(produtoMap);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+                console.error("Erro ao buscar pedidos:", error);
+                toast.error("Erro ao carregar pedidos.");
+            }
+        };
+
+        fetchPedidos();
+    }, []);
+
     return(
         <div className="flex flex-col gap-10">
-            {/* TÍTULO DOS MEUS PEDIDOS */}
-            <div>
-                <Label className="text-3xl font-bold">Meus Pedidos</Label>
-            </div>
-            {/* MOSTRANDO O PEDIDO */}
-            <div className="flex flex-col gap-8">
-                {/* INFORMAÇÃO GERAL DO PEDIDO */}
-                <div className="flex flex-row justify-between">
-                    <div className="flex flex-row gap-12">
-                        <Label>XX/XX/XXXX</Label>
-                        <Label>R$ XXX,XX</Label>
-                        <Label>Status: Em entrega</Label>
-                        <Label>Id do Pedido: XXX</Label>
+            <Label className="text-3xl font-bold">Meus Pedidos</Label>
+
+            {pedidos.length === 0 ? (
+                <p className="text-lg text-gray-500">Você ainda não fez nenhum pedido.</p>
+            ) : (
+                pedidos.map(pedido => (
+                    <div key={pedido.id} className="flex flex-col gap-8 border rounded-lg p-4">
+                        {/* Info do Pedido */}
+                        <div className="flex flex-row justify-between">
+                            <div className="flex flex-col md:flex-row gap-4 md:gap-12">
+                                <Label>{new Date(pedido.dataPedido).toLocaleDateString()}</Label>
+                                <Label>R$ {pedido.valorTotal.toFixed(2)}</Label>
+                                <Label>Status: {pedido.status}</Label>
+                                <Label>ID: {pedido.id}</Label>
+                            </div>
+                            <Button variant="outline">
+                                <Trash2 className="mr-2" />
+                                Excluir Pedido
+                            </Button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center gap-5">
+                            {pedido.itens.map(item => {
+                                const produto = produtosMap[item.produtoId];
+                                return produto ? (
+                                    <div
+                                        key={item.produtoId + '-' + pedido.id}
+                                        className="flex flex-col justify-between hover:shadow-md transition-shadow p-4 border rounded-lg w-full max-w-sm group"
+                                    >
+                                        <div className="flex flex-row gap-4">
+                                            <Image 
+                                                src="https://picsum.photos/150/150"
+                                                alt={produto.nome}
+                                                width={150}
+                                                height={150}
+                                                className="rounded-md"
+                                            />
+                                            <div className="flex flex-col justify-between gap-2">
+                                                <h3 className="text-xl font-semibold">{produto.nome}</h3>
+                                                <p className="text-sm text-gray-600">Categoria: (Categoria)</p>
+                                                <p className="text-sm text-gray-500">Quantidade: {item.quantidade}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : null;
+                            })}
+                        </div>
                     </div>
-                    <div>
-                        <Button>
-                            <Trash2></Trash2>
-                            Excluir Pedido
-                        </Button>
-                    </div>
-                </div>
-                {/* TODOS OS PRODUTOS DO PEDIDO */}
-                <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center gap-5">
-                    <ProdutoCard/>
-                    <ProdutoCard/>
-                    <ProdutoCard/>
-                    <ProdutoCard/>
-                </div>
-            </div>
+                ))
+            )}
         </div>
     );
 }
