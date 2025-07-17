@@ -204,15 +204,19 @@ export default function Header() {
             )}
                   
              { (role === "CLIENTE" || !token) &&
-               <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
-                   <p>Meus Pedidos</p>
-               </div>
+               <Link href={"/cliente/pedidos"}>
+                   <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
+                       <p>Meus Pedidos</p>
+                   </div>
+               </Link>
              } 
              { role === "FORNECEDOR" &&
                   <div className="flex flex-row gap-12">
-                      <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
-                          <p>Meus Produtos</p>
-                      </div>
+                      <Link href={"/fornecedor/produtos"}>
+                          <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
+                              <p>Meus Produtos</p>
+                          </div>
+                      </Link>
                       <div onClick={(e) => {
                           e.preventDefault()
                           setIsDrawerAddProdutoOpen(true);
@@ -225,8 +229,10 @@ export default function Header() {
               
              { (role === "CLIENTE" || !token) &&
              <div className="flex flex-row gap-12">
-                 <Heart className="cursor-pointer hover:scale-110 transition-all" />
-                  <ShoppingCart className="cursor-pointer hover:scale-110 transition-all" />
+                <Heart className="cursor-pointer hover:scale-110 transition-all" />
+                <Link href={"/cliente/carrinho"}>
+                    <ShoppingCart className="cursor-pointer hover:scale-110 transition-all" />
+                </Link>
              </div>
              }
 

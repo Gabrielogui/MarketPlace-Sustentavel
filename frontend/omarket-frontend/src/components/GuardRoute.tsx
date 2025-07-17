@@ -21,7 +21,7 @@ export function GuardRoute({ role: allowedRole, children }: GuardRouteProps) {
         if(!initialized) return;
         console.log("GuardRoute token: ", token);
         if (!token) {
-            // MANDAR PARA UMA FUTURA ROTA DE LOGIN -> router.replace('/auth/login'); 
+            // MANDAR PARA UMA FUTURA ROTA DE LOGIN
             router.replace('/login');
         } else if (role !== allowedRole) {
             router.replace('/') // DEFINIR PARA QUAL ROTA ELE VAI QUANDO NÃO TIVER AUTORIZADO -> router.replace('/unauthorized') ou '/' ou qualquer outra
