@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { AuthContext } from "@/context/AuthContext";
 import { Pedido, Produto } from "@/core";
-import { getListaPedidoPorCliente } from "@/service/pedido/pedidoService";
+import { cancelarPedido, getListaPedidoPorCliente } from "@/service/pedido/pedidoService";
 import { getProduto } from "@/service/produto/produtoService";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -17,6 +17,7 @@ export default function MeusPedidos () {
 
     const [pedidos, setPedidos] = useState<Pedido[]>([]);
     const [produtosMap, setProdutosMap] = useState<Record<number, Produto>>({});
+    const [cancelando, setCancelando] = useState(false);
 
     useEffect(() => {
         const fetchPedidos = async () => {
@@ -41,6 +42,20 @@ export default function MeusPedidos () {
 
         fetchPedidos();
     }, []);
+    
+    // |=======| MÉTODO PARA CANCELAR PEDIDO |=======|
+    const handleCancelar = async (pedidoId: number) => {
+        setCancelando(true);
+        try{
+            await cancelarPedido(pedidoId);
+            toast.success("Pedido cancelado com sucesso. Agora o status dele é de Cancelado");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Falha ao cancelar pedido!");
+        } finally {
+            setCancelando(false);
+        }
+    }
 
     return(
         <div className="flex flex-col gap-10">
@@ -59,9 +74,13 @@ export default function MeusPedidos () {
                                 <Label>Status: {pedido.status}</Label>
                                 <Label>ID: {pedido.id}</Label>
                             </div>
-                            <Button variant="outline">
+                            <Button variant="outline" 
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleCancelar(pedido.id);
+                                }}>
                                 <Trash2 className="mr-2" />
-                                Cancelar Pedido
+                                {cancelando ? "Cancelando..." : "Cancelar Pedido"}
                             </Button>
                         </div>
 
