@@ -57,7 +57,7 @@ public class FreteController {
             @RequestBody OpcaoFreteResponse freteResponse,
             Authentication authentication, 
             @PathVariable Long pedidoId
-            ) {
+        ){
 
         FreteDTO freteNovo = freteService.selecionarOpcaoFrete(freteResponse, pedidoId);
         

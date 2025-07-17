@@ -1,5 +1,6 @@
 package com.omarket.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -164,7 +165,8 @@ public class ClienteService implements UsuarioService {
         usuarioDTO.setDataNascimento(cliente.getDataNascimento());
         usuarioDTO.setTipoUsuario(TipoUsuario.CLIENTE);
 
-        if(cliente.getEndereco() != null){
+        // Verifique se o endereço NÃO é um proxy não inicializado antes de tentar acessar
+        if(cliente.getEndereco() != null && Hibernate.isInitialized(cliente.getEndereco())) {
             EnderecoDTO enderecoDTO = new EnderecoDTO();
             Endereco endereco = cliente.getEndereco();
             enderecoDTO.setCep(endereco.getCep());
