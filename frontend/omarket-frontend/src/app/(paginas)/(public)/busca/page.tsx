@@ -51,11 +51,11 @@ export default function Busca () {
                 <div className="flex flex-col gap-1">
                     <div className="flex flex-row justify-between">
                         <p>Faixa de Preço</p>
-                        <p>R$0-100</p> {/* DECIDIR QUAL VAI SER A FAIXA DE PREÇO */}
+                        <p>R$0-1000</p> {/* DECIDIR QUAL VAI SER A FAIXA DE PREÇO */}
                     </div>
                     <Slider
-                        defaultValue={[0, 50]}
-                        max={100}
+                        defaultValue={[0, 500]}
+                        max={1000}
                         step={1}
                     >
                         <SliderThumb/>
