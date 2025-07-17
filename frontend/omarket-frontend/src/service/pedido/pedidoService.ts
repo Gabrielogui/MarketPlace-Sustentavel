@@ -17,3 +17,8 @@ export function getListaPedidoPorCliente(clienteId: number) {
 export function cancelarPedido (idPedido: number) {
     return api.patch<Pedido>(`/pedidos/${idPedido}/cancelar`);
 }
+
+// |=======| GET EM UM PEDIDO |=======|
+export function getPedido (idPedido: number) {
+    return api.get<Pedido>(`/pedidos/${idPedido}`);
+}

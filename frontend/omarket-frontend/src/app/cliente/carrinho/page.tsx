@@ -11,6 +11,7 @@ import { atualizarQuantidadeItemCarrinho, getMeuCarrinho, removerItemCarrinho } 
 import { toast } from "sonner";
 import { getProduto } from "@/service/produto/produtoService";
 import { criarPedido } from "@/service/pedido/pedidoService";
+import { useRouter } from "next/navigation";
 
 // Interface para combinar dados do carrinho e do produto para exibição
 export interface ProdutoNoCarrinho {
@@ -31,6 +32,7 @@ export default function CarrinhoPage() {
     const [updatingId, setUpdatingId] = useState<number | null>(null);
 
     const [finalizando, setFinalizando] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchCarrinhoEProdutos = async () => {
@@ -98,12 +100,14 @@ export default function CarrinhoPage() {
             setFinalizando(true);
             const { data } = await criarPedido(payload);
             toast.success(`Pedido #${data.id} criado com sucesso!`);
+            router.push(`/cliente/pagamento/${data.id}`);
 
             // Remove os itens criados do carrinho
             setItensDetalhados(prev =>
                 prev.filter(item => !selected.has(item.id))
             );
             setSelected(new Set());
+            
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {

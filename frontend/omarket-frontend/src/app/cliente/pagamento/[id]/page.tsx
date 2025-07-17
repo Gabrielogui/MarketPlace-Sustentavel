@@ -1,8 +1,15 @@
+'use client'
+
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Pedido, Produto } from "@/core";
+import { getPedido } from "@/service/pedido/pedidoService";
+import { getProduto } from "@/service/produto/produtoService";
 import { BanknoteIcon, BarcodeIcon, CreditCardIcon, LockIcon, PencilIcon, QrCodeIcon, TruckIcon } from "lucide-react";
 import Image from "next/image";
-import { Fragment } from "react";
+import { useParams } from "next/navigation";
+import { Fragment, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export interface ProdutoNoPagamento {
     id: number;
@@ -16,10 +23,34 @@ export interface ProdutoNoPagamento {
 
 export default function Pagamento () {
 
-    const listaItensPagamento: ProdutoNoPagamento[] = [
-        {id: 1, nome: 'Maçã', categoria: 'Frutas', precoUnitario: 3.5, quantidade: 2, fornecedor: 'Fornecedor A', imagemUrl: 'https://picsum.photos/100/100'},
-        {id: 2, nome: 'Vinho tinto', categoria: 'Vinho', precoUnitario: 3.5, quantidade: 2, fornecedor: 'Fornecedor A', imagemUrl: 'https://picsum.photos/100/100'}
-    ]
+    const { id } = useParams();
+    const [pedido, setPedido] = useState<Pedido | null>(null);
+    const [produtosMap, setProdutosMap] = useState<Record<number, Produto>>({});
+
+    useEffect(() => {
+        if (!id) return;
+
+        const fetchPedido = async () => {
+            try {
+                const { data } = await getPedido(Number(id));
+                setPedido(data);
+
+                const produtoIds = Array.from(new Set(data.itens.map(item => item.produtoId)));
+                const promessas = produtoIds.map(id => getProduto(id).then(res => [id, res.data]));
+                const produtos = await Promise.all(promessas);
+                const produtoMap = Object.fromEntries(produtos);
+                setProdutosMap(produtoMap);
+            
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+                toast.error(error.response?.data?.message || "Erro ao carregar o pedido.");
+            }
+        };
+
+        fetchPedido();
+    }, [id]);
+
+    if (!pedido) return <div>Carregando pedido...</div>;
 
     return(
         <div className="flex flex-col gap-10">
@@ -40,29 +71,31 @@ export default function Pagamento () {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            { listaItensPagamento.map((produto) => {
-                                return(
-                                    <TableRow key={produto.id}>
+                            {pedido.itens.map(item => {
+                                const produto = produtosMap[item.produtoId];
+                                if (!produto) return null;
+
+                                return (
+                                    <TableRow key={item.produtoId}>
                                         <TableCell className="flex flex-row gap-5">
-                                            <Image src={produto.imagemUrl} alt={produto.nome} height={100} width={100} /> 
+                                            <Image
+                                                src="https://picsum.photos/100/100"
+                                                alt={produto.nome}
+                                                height={100}
+                                                width={100}
+                                                className="rounded-md"
+                                            />
                                             <div className="flex flex-col gap-2">
-                                                <Label>{produto.nome}</Label>
-                                                <Label>{produto.categoria}</Label>
+                                                <Label className="font-semibold">{produto.nome}</Label>
+                                                <Label className="text-gray-500 text-sm">Categoria: (Categoria)</Label>
                                             </div>
                                         </TableCell>
-                                        <TableCell>
-                                            <Label className="">{produto.precoUnitario}</Label>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Label className="">{produto.quantidade}</Label>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Label className="">{produto.precoUnitario * produto.quantidade}</Label>
-                                        </TableCell>
+                                        <TableCell>R$ {item.precoUnitario.toFixed(2)}</TableCell>
+                                        <TableCell>{item.quantidade}</TableCell>
+                                        <TableCell>R$ {(item.precoUnitario * item.quantidade).toFixed(2)}</TableCell>
                                     </TableRow>
-                                )    
-                                })
-                            }
+                                );
+                            })}
                         </TableBody>
                     </Fragment>
                 </Table>
