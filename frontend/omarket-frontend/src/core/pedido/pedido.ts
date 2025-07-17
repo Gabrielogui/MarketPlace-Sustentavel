@@ -1,4 +1,5 @@
 import { Endereco } from "../endereco";
+import { Frete } from "../frete";
 import { Usuario } from "../usuario/usuario";
 import { ItemPedido } from "./itemPedido";
 
@@ -9,7 +10,7 @@ export interface Pedido {
     valorTotal: number;
     subtotal: number;
     itens: ItemPedido[];
-    frete: null;
+    frete: Frete | null;
     pagamento: null;
     endereco: Endereco | null;
     cliente: Usuario;

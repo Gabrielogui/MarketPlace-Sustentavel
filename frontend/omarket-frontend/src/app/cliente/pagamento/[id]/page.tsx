@@ -1,11 +1,13 @@
 'use client'
 
+import SelecaoFrete from "@/components/pedido/SelecaoFrete";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Pedido, Produto } from "@/core";
+import { Pedido, Produto } from "@/core"; // Certifique-se que esses tipos existem em seu core
+import { OpcaoFreteResponse } from "@/core/frete";
 import { getPedido } from "@/service/pedido/pedidoService";
 import { getProduto } from "@/service/produto/produtoService";
-import { BanknoteIcon, BarcodeIcon, CreditCardIcon, LockIcon, PencilIcon, QrCodeIcon, TruckIcon } from "lucide-react";
+import { BanknoteIcon, BarcodeIcon, CreditCardIcon, LockIcon, PencilIcon, QrCodeIcon } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
@@ -21,45 +23,61 @@ export interface ProdutoNoPagamento {
     imagemUrl: string;
 }
 
-export default function Pagamento () {
+export default function Pagamento() {
+    const params = useParams();
+    const id = params.id as string;
 
-    const { id } = useParams();
     const [pedido, setPedido] = useState<Pedido | null>(null);
     const [produtosMap, setProdutosMap] = useState<Record<number, Produto>>({});
+    const [valorFrete, setValorFrete] = useState<number | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    
 
     useEffect(() => {
         if (!id) return;
 
-        const fetchPedido = async () => {
+        const fetchPedidoData = async () => {
+            setLoading(true);
             try {
-                const { data } = await getPedido(Number(id));
-                setPedido(data);
+                const { data: pedidoData } = await getPedido(Number(id));
+                setPedido(pedidoData);
+                
+                if (pedidoData.frete) {
+                    setValorFrete(pedidoData.frete.valor);
+                }
 
-                const produtoIds = Array.from(new Set(data.itens.map(item => item.produtoId)));
+                const produtoIds = Array.from(new Set(pedidoData.itens.map(item => item.produtoId)));
                 const promessas = produtoIds.map(id => getProduto(id).then(res => [id, res.data]));
-                const produtos = await Promise.all(promessas);
-                const produtoMap = Object.fromEntries(produtos);
-                setProdutosMap(produtoMap);
-            
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const produtosArray = await Promise.all(promessas);
+                setProdutosMap(Object.fromEntries(produtosArray));
             } catch (error: any) {
-                toast.error(error.response?.data?.message || "Erro ao carregar o pedido.");
+                toast.error(error.response?.data?.message || "Erro ao carregar os dados do pedido.");
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchPedido();
+        fetchPedidoData();
     }, [id]);
 
-    if (!pedido) return <div>Carregando pedido...</div>;
+    const handleFreteUpdate = (frete: OpcaoFreteResponse) => {
+        setValorFrete(frete.price);
+        // Opcional: Recarregar os dados do pedido para ter certeza que o total no backend está atualizado
+        getPedido(Number(id)).then(({ data }) => setPedido(data));
+    };
 
-    const { subtotal, frete, valorTotal } = pedido;
+    if (loading || !pedido) return <div>Carregando informações do pagamento...</div>;
 
-    return(
+    const subtotal = pedido.subtotal;
+    const total = subtotal + (valorFrete ?? 0);
+
+    return (
         <div className="flex flex-col gap-10">
-            {/* PAGAMENTO */}
             <div>
-                <Label className="text-3xl font-bold">Pagamento</Label> 
+                <Label className="text-3xl font-bold">Pagamento do Pedido #{pedido.id}</Label> 
             </div>
+            
             {/* TABELA COM PRODUTOS PARA O PAGAMENTO + PREÇOS */}
             <div>
                 <Table>
@@ -105,35 +123,31 @@ export default function Pagamento () {
             {/* INFORMÇÃO DO PREÇO TOTAL OU ALTERAÇÃO DO ENDEREÇO */}
             <div className="flex flex-row gap-2 justify-end">
                 <Label>Preço Total:</Label>
-                <Label>R$ {valorTotal.toFixed(2)}</Label>
+                <Label>R$ {total.toFixed(2)}</Label>
             </div>
             {/* FINALIZAÇÃO DO PAGAMENTO */}
             <div className="border rounded-xl p-6 bg-white shadow-lg">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Resumo do Pedido */}
-                    <div>
-                        <h2 className="text-xl font-bold mb-4">Resumo do Pedido</h2>
-                        <div className="space-y-3">
-                            <div className="flex justify-between">
-                                <span>Subtotal:</span>
-                                <span className="font-medium">R$ {subtotal.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Frete:</span>
-                                <span className="font-medium">R$ {(frete ?? 0).toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between pt-3 border-t">
-                                <span className="font-bold">Total:</span>
-                                <span className="font-bold text-lg">R$ {(subtotal + (frete ?? 0)).toFixed(2)}</span>
-                            </div>
-                            <div className="flex items-center mt-4 text-green-600">
-                                <TruckIcon className="w-5 h-5 mr-2" />
-                                <span>Chegará em 5 dias úteis</span>
+                    {/* Coluna da Esquerda: Resumo e Frete */}
+                    <div className="flex flex-col gap-6">
+                        <div className="border rounded-lg p-4 bg-gray-50">
+                            <h2 className="text-xl font-bold mb-4">Resumo do Pedido</h2>
+                            <div className="space-y-3">
+                                <div className="flex justify-between"><span>Subtotal:</span><span className="font-medium">R$ {subtotal.toFixed(2)}</span></div>
+                                <div className="flex justify-between"><span>Frete:</span><span className="font-medium">R$ {(valorFrete ?? 0).toFixed(2)}</span></div>
+                                <div className="flex justify-between pt-3 border-t"><span className="font-bold text-lg">Total:</span><span className="font-bold text-xl text-green-600">R$ {total.toFixed(2)}</span></div>
                             </div>
                         </div>
+
+                        {/* ===== COMPONENTE DE FRETE INTEGRADO AQUI ===== */}
+                        <SelecaoFrete 
+                            pedido={pedido} 
+                            cepOrigemMock="41253280" // CEP do vendedor. No futuro, virá do pedido/fornecedor.
+                            onFreteSelecionado={handleFreteUpdate}
+                        />
                     </div>
 
-                    {/* Informações de Entrega e Pagamento */}
+                    {/* Coluna da Direita: Entrega e Pagamento */}
                     <div>
                         {/* Endereço de Entrega */}
                         <div className="mb-6">
