@@ -12,3 +12,8 @@ export function getListaPedidoPorCliente(clienteId: number) {
     const id = clienteId;
     return api.get<Pedido[]>(`/pedidos/listar/cliente/${id}`);
 }
+
+// |=======| CANCELAR PEDIDO |=======|
+export function cancelarPedido (idPedido: number) {
+    return api.patch<Pedido>(`/pedidos/${idPedido}/cancelar`);
+}

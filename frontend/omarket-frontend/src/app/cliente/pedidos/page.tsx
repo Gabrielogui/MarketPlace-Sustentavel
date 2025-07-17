@@ -61,7 +61,7 @@ export default function MeusPedidos () {
                             </div>
                             <Button variant="outline">
                                 <Trash2 className="mr-2" />
-                                Excluir Pedido
+                                Cancelar Pedido
                             </Button>
                         </div>
 

@@ -16,7 +16,7 @@ import Endereco, { EnderecoFormData } from "./usuario/Endereco";
 import AdicionarProduto from "./produto/AdicionarProduto";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { EditarPayload, editarUsuario, inativarAdministrador, inativarCliente, inativarFornecedor } from "@/service/usuario/userService";
+import { editarUsuario, inativarAdministrador, inativarCliente, inativarFornecedor } from "@/service/usuario/userService";
 import Image from "next/image";
 import Link from "next/link";
 import { Categoria } from "@/core";
