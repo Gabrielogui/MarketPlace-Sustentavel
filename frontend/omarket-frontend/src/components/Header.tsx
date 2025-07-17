@@ -4,7 +4,7 @@ import {
     DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
     DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger
 } from "./ui/dropdown-menu";
-import { CircleUser, Heart, LogOut, Logs, MapPin, Search, ShoppingCart, User, UserPen, UserX } from "lucide-react";
+import { CircleUser, Heart, LogOut, Logs, MapPin, Search, ShoppingCart, User, UserPen, UserPlus, UserX } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useContext, useEffect, useState } from "react";
@@ -26,7 +26,7 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import { Cliente, Fornecedor } from "@/core";
 
 export default function Header() {
-    const { role, user, logout } = useContext(AuthContext);
+    const { role, user, token, logout } = useContext(AuthContext);
     const { profile, loading: loadingProfile } = useUserProfile();
     const router = useRouter();
 
@@ -163,13 +163,13 @@ export default function Header() {
 
     return(
         <header className="flex flex-row items-center justify-center gap-12 w-full py-5 px-12 shadow-sm">
-            {/* ... (resto do seu JSX do header, logo, etc.) ... */}
+            
             <div>
                 <Link href={"/"}>
                     <Image src={"/logo_no_bg-full.svg"} alt="omarket" width={100} height={100}></Image>
                 </Link>
             </div>
-            { role === "CLIENTE" && (
+            { (role === "CLIENTE" || !token) && (
             <div className="flex flex-row gap-2 items-center justify-items-center">
                 <div>
                     <DropdownMenu>
@@ -203,7 +203,7 @@ export default function Header() {
 
             )}
                   
-             { role === "CLIENTE" &&
+             { (role === "CLIENTE" || !token) &&
                <div className="cursor-pointer hover:bg-gray-300 transition-all rounded-md p-1">
                    <p>Meus Pedidos</p>
                </div>
@@ -223,86 +223,107 @@ export default function Header() {
                   </div>
              }
               
-             { role === "CLIENTE" &&
+             { (role === "CLIENTE" || !token) &&
              <div className="flex flex-row gap-12">
                  <Heart className="cursor-pointer hover:scale-110 transition-all" />
                   <ShoppingCart className="cursor-pointer hover:scale-110 transition-all" />
              </div>
              }
 
+                <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+                    <DropdownMenuTrigger asChild>
+                        <CircleUser className="cursor-pointer hover:scale-110 transition-all" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent  align="start" className="max-w-40">
+                    { token ? (
+                        <>
+                            <DropdownMenuLabel className="flex flex-col">
+                                <span className="text-foreground truncate text-sm font-medium">
+                                    Nome Sobrenome
+                                </span>
+                                <span className="text-muted-foreground truncate text-xs font-normal">
+                                    email@exemplo.com
+                                </span>
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuGroup>
+                            
+                                <DropdownMenuItem className="cursor-pointer"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsDrawerPerfilOpen(true);
+                                        setIsDropdownOpen(false);
+                                    }}>
+                                    <User/>
+                                    Perfil
+                                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            
+                                <DropdownMenuItem className="cursor-pointer"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setisDrawerEditarOpen(true);
+                                        setIsDropdownOpen(false);
+                                    }}>
+                                    <UserPen/>
+                                    Editar
+                                    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsAlertDialogInativarOpen(true);
+                                        setIsDropdownOpen(false);
+                                    }}>
+                                    <UserX/>
+                                    Inativar
+                                    <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuGroup>
+                                { (role === "FORNECEDOR" || role === "CLIENTE") && (
+                                <DropdownMenuItem onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsDrawerEnderecoOpen(true);
+                                        setIsDropdownOpen(false);
+                                    }}>
+                                    <MapPin />
+                                    Endereço
+                                    <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                                )}
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem onClick={logout} className="cursor-pointer">
+                                    <LogOut/>
+                                    Logout
+                                    <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                        </>
+                    ) : (
+                        <>
+                            <DropdownMenuItem
+                                onClick={() => router.push("/login")}
+                                className="cursor-pointer"
+                            >
+                                <User />
+                                Login
+                            </DropdownMenuItem>
 
-            <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-                <DropdownMenuTrigger asChild>
-                    <CircleUser className="cursor-pointer hover:scale-110 transition-all" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent  align="start" className="max-w-40">
-                    <DropdownMenuLabel className="flex flex-col">
-                        <span className="text-foreground truncate text-sm font-medium">
-                            Nome Sobrenome
-                        </span>
-                        <span className="text-muted-foreground truncate text-xs font-normal">
-                            email@exemplo.com
-                        </span>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuGroup>
-                        
-                        <DropdownMenuItem className="cursor-pointer"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setIsDrawerPerfilOpen(true);
-                                setIsDropdownOpen(false);
-                            }}>
-                            <User/>
-                            Perfil
-                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                        
-                        <DropdownMenuItem className="cursor-pointer"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setisDrawerEditarOpen(true);
-                                setIsDropdownOpen(false);
-                            }}>
-                            <UserPen/>
-                            Editar
-                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setIsAlertDialogInativarOpen(true);
-                                setIsDropdownOpen(false);
-                            }}>
-                            <UserX/>
-                            Inativar
-                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuGroup>
-                        { (role === "FORNECEDOR" || role === "CLIENTE") && (
-                        <DropdownMenuItem onClick={(e) => {
-                                e.preventDefault();
-                                setIsDrawerEnderecoOpen(true);
-                                setIsDropdownOpen(false);
-                            }}>
-                            <MapPin />
-                            Endereço
-                            <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                        )}
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={logout} className="cursor-pointer">
-                            <LogOut/>
-                            Logout
-                            <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                </DropdownMenuContent>
-            </DropdownMenu>
+                            <DropdownMenuItem
+                                onClick={() => router.push("/login")}
+                                className="cursor-pointer"
+                            >
+                                <UserPlus />
+                                Cadastrar
+                            </DropdownMenuItem>
+                        </>
+                    ) }
+                    </DropdownMenuContent>
+                </DropdownMenu>
 
             {/* Componentes de Drawer/Dialog recebem as props necessárias */}
             <Perfil isOpen={isDrawerPerfilOpen} onOpenChange={setIsDrawerPerfilOpen} />
