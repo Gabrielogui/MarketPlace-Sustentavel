@@ -165,8 +165,7 @@ public class ClienteService implements UsuarioService {
         usuarioDTO.setDataNascimento(cliente.getDataNascimento());
         usuarioDTO.setTipoUsuario(TipoUsuario.CLIENTE);
 
-        // Verifique se o endereço NÃO é um proxy não inicializado antes de tentar acessar
-        if(cliente.getEndereco() != null && Hibernate.isInitialized(cliente.getEndereco())) {
+        if(cliente.getEndereco() != null) {
             EnderecoDTO enderecoDTO = new EnderecoDTO();
             Endereco endereco = cliente.getEndereco();
             enderecoDTO.setCep(endereco.getCep());
