@@ -80,6 +80,8 @@ export default function Header() {
             toast.success("Conta inativada com sucesso. Você será desconectado.");
             logout();
             router.push("/");
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             toast.error(error.response?.data?.message || "Falha ao inativar a conta.");
         } finally {
@@ -94,6 +96,7 @@ export default function Header() {
         
         setIsSaving(true);
         try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const payload: any = { nome: data.nome, email: data.email, telefone: data.telefone };
             if (data.senha) {
                 payload.senha = data.senha;
@@ -102,6 +105,7 @@ export default function Header() {
             toast.success("Perfil atualizado com sucesso!");
             setisDrawerEditarOpen(false);
             // refreshProfile(); // Futuramente, chame a função para recarregar os dados do perfil
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             toast.error(error.response?.data?.message || "Falha ao atualizar o perfil.");
         } finally {
@@ -136,12 +140,15 @@ export default function Header() {
                 const payloadAssociacao = { 
                     enderecoDTO: { id: enderecoSalvo.data.id } 
                 };
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 await editarUsuario(user.id, role, payloadAssociacao as any);
             }
 
             toast.success("Endereço salvo com sucesso!");
             setIsDrawerEnderecoOpen(false);
+            console.log(loadingProfile)
             // refreshProfile(); // Futuramente, adicione uma função para recarregar os dados do perfil
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             toast.error(error.response?.data?.message || "Falha ao salvar o endereço.");
         } finally {
