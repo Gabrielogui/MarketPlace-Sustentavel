@@ -52,6 +52,8 @@ export default function Pagamento () {
 
     if (!pedido) return <div>Carregando pedido...</div>;
 
+    const { subtotal, frete, valorTotal } = pedido;
+
     return(
         <div className="flex flex-col gap-10">
             {/* PAGAMENTO */}
@@ -103,7 +105,7 @@ export default function Pagamento () {
             {/* INFORMÇÃO DO PREÇO TOTAL OU ALTERAÇÃO DO ENDEREÇO */}
             <div className="flex flex-row gap-2 justify-end">
                 <Label>Preço Total:</Label>
-                <Label>R$ XXX,XX</Label>
+                <Label>R$ {valorTotal.toFixed(2)}</Label>
             </div>
             {/* FINALIZAÇÃO DO PAGAMENTO */}
             <div className="border rounded-xl p-6 bg-white shadow-lg">
@@ -114,15 +116,15 @@ export default function Pagamento () {
                         <div className="space-y-3">
                             <div className="flex justify-between">
                                 <span>Subtotal:</span>
-                                <span className="font-medium">R$ 145,00</span>
+                                <span className="font-medium">R$ {subtotal.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between">
                                 <span>Frete:</span>
-                                <span className="font-medium">R$ 15,90</span>
+                                <span className="font-medium">R$ {(frete ?? 0).toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between pt-3 border-t">
                                 <span className="font-bold">Total:</span>
-                                <span className="font-bold text-lg">R$ 160,90</span>
+                                <span className="font-bold text-lg">R$ {(subtotal + (frete ?? 0)).toFixed(2)}</span>
                             </div>
                             <div className="flex items-center mt-4 text-green-600">
                                 <TruckIcon className="w-5 h-5 mr-2" />
