@@ -22,3 +22,7 @@ export function cancelarPedido (idPedido: number) {
 export function getPedido (idPedido: number) {
     return api.get<Pedido>(`/pedidos/${idPedido}`);
 }
+
+export function pagarPedido(idPedido: number) {
+    return api.post<Pedido>(`/pedidos/${idPedido}/pagamentos`);
+}

@@ -244,11 +244,11 @@ export default function Header() {
                     { token ? (
                         <>
                             <DropdownMenuLabel className="flex flex-col">
+                                {/*<span className="text-muted-foreground truncate text-xs font-normal">
+                                    {user?.nome || "Nome não disponível"}
+                                </span> */}
                                 <span className="text-foreground truncate text-sm font-medium">
-                                    Nome Sobrenome
-                                </span>
-                                <span className="text-muted-foreground truncate text-xs font-normal">
-                                    email@exemplo.com
+                                    {user?.email || "Email não disponível"}
                                 </span>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator/>

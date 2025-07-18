@@ -3,14 +3,15 @@
 import SelecaoFrete from "@/components/pedido/SelecaoFrete";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import Endereco from "@/components/usuario/Endereco";
 import { Fornecedor, Pedido, Produto } from "@/core"; // Certifique-se que esses tipos existem em seu core
 import { OpcaoFreteResponse } from "@/core/frete";
-import { getPedido } from "@/service/pedido/pedidoService";
+import { getPedido, pagarPedido } from "@/service/pedido/pedidoService";
 import { getProduto } from "@/service/produto/produtoService";
 import { getFornecedor } from "@/service/usuario/userService";
 import { BanknoteIcon, BarcodeIcon, CreditCardIcon, LockIcon, PencilIcon, QrCodeIcon } from "lucide-react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -27,12 +28,14 @@ export interface ProdutoNoPagamento {
 export default function Pagamento() {
     const params = useParams();
     const id = params.id as string;
+    const router = useRouter();
 
     const [pedido, setPedido] = useState<Pedido | null>(null);
     const [produtosMap, setProdutosMap] = useState<Record<number, Produto>>({});
     const [valorFrete, setValorFrete] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
     const [fornecedor, setFornecedor] = useState<Fornecedor | null>(null);
+    const [isDrawerEnderecoOpen, setIsDrawerEnderecoOpen] = useState(false);
     
     useEffect(() => {
         if (!id) return;
@@ -85,6 +88,21 @@ export default function Pagamento() {
         // Opcional: Recarregar os dados do pedido para ter certeza que o total no backend está atualizado
         getPedido(Number(id)).then(({ data }) => setPedido(data));
     };
+
+    const handlePagarPedido = async () => {
+        if(!pedido) {
+            toast.error("Pedido não encontrado.");
+            return;
+        }
+        try {
+            await pagarPedido(pedido.id);
+            toast.success("Pagamento realizado com sucesso!");
+            router.push("/");
+        } catch (error: any) {
+            console.error("Erro ao pagar o pedido:", error);
+            toast.error(error.response?.data?.message || "Erro ao processar o pagamento.");
+        }
+    }
 
     if (loading || !pedido) return <div>Carregando informações do pagamento...</div>;
 
@@ -179,10 +197,13 @@ export default function Pagamento() {
                         <div className="mb-6">
                             <div className="flex justify-between items-start mb-2">
                                 <h2 className="text-xl font-bold">Endereço de Entrega</h2>
-                                <button className="text-blue-500 hover:text-blue-700 flex items-center cursor-pointer">
+                                <button onClick={(e) => {
+                                    e.preventDefault()
+                                    setIsDrawerEnderecoOpen(true)
+                                }}> {/* className="text-blue-500 hover:text-blue-700 flex items-center cursor-pointer">
                                     <PencilIcon className="w-4 h-4 mr-1" />
-                                    Alterar
-                                </button>
+                                    Alterar */}
+                                </button> 
                             </div>
                             <div className="bg-gray-50 p-4 rounded-lg">
                                 <p className="font-medium">{pedido.cliente.nome}</p>
@@ -216,7 +237,7 @@ export default function Pagamento() {
                         </div>
 
                         {/* Botão de Pagamento */}
-                        <button className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-bold text-lg transition duration-200 flex items-center justify-center cursor-pointer">
+                        <button onClick={handlePagarPedido} className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-bold text-lg transition duration-200 flex items-center justify-center cursor-pointer">
                             <LockIcon className="w-5 h-5 mr-2" />
                             Finalizar Compra
                         </button>
