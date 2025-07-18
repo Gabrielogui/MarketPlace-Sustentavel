@@ -11,12 +11,12 @@ import lombok.Setter;
 public class EnderecoDTO {
     private Long id;
 
-    @Pattern(regexp="^\\d{5}-?\\d{3}$", message="CEP inválido")
-    @NotBlank(message = "CEP é obrigatório!")
+   // @Pattern(regexp="^\\d{5}-?\\d{3}$", message="CEP inválido")
+    //@NotBlank(message = "CEP é obrigatório!")
     private String cep;
 
     private String complemento;
 
-    @NotNull(message = "Número é obrigatório!")
+   // @NotNull(message = "Número é obrigatório!")
     private Integer numero;
 }

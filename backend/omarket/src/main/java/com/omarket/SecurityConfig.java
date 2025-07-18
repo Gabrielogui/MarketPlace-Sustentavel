@@ -42,13 +42,18 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/produto/listar").permitAll()   // Regra específica para listar
                 .requestMatchers(HttpMethod.GET, "/produto/{id}").permitAll()    // Regra específica para ver um produto
+                .requestMatchers(HttpMethod.GET, "/produto/buscar/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/categoria/**").permitAll()    // Regra específica para ver uma ou mais categoria
+                .requestMatchers(HttpMethod.POST, "/categoria/**").permitAll()    // Regra específica para cadastrar categoria
+                .requestMatchers(HttpMethod.GET, "/avaliacao/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/fornecedor/**").permitAll()
                 .requestMatchers("/error").permitAll()
                 
                 // =================================================================
                 // 2) Endpoints do Administrador
                 // =================================================================
                 .requestMatchers("/administrador/**").hasRole("ADMINISTRADOR")
-                .requestMatchers("/categoria/**").hasRole("ADMINISTRADOR") // Corrigido para ser acessível apenas por ADMIN
+                //.requestMatchers("/categoria/**").hasRole("ADMINISTRADOR") // Corrigido para ser acessível apenas por ADMIN
                 
                 // =================================================================
                 // 3) Endpoints do Fornecedor (Regra geral para produto vem DEPOIS das públicas)

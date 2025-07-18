@@ -1,107 +1,74 @@
-import { ChevronRight, MapPin, X } from "lucide-react";
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "../ui/drawer";
-import { Button } from "../ui/button";
-import { useState } from "react";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+'use client'
 
-export interface EnderecoProps{
-    isOpen: boolean;
-    onOpenChange: (open: boolean) => void;
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "../ui/drawer";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Loader2, MapPin } from "lucide-react";
+import { Cliente, Fornecedor } from "@/core";
+import { UserProfile } from "@/hooks/useUserProfile";
+
+// Interface para o estado do formulário
+export interface EnderecoFormData {
+    cep: string;
+    numero?: number;
+    complemento: string;
 }
 
-export default function Endereco ({ isOpen, onOpenChange } : EnderecoProps) {
+export interface EnderecoProps {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSave: (data: EnderecoFormData) => void;
+    profile: UserProfile | null;
+    isSaving: boolean;
+}
 
-     const [endereco, setEndereco] = useState({
-        cep: '12345-678',
-        numero: '123',
-        complemento: 'Apto 101',
-    });
+export default function Endereco({ isOpen, onOpenChange, onSave, profile, isSaving }: EnderecoProps) {
+    const [formData, setFormData] = useState<EnderecoFormData>({ cep: '', numero: undefined, complemento: '' });
 
-    // Função para atualizar os campos
-    const handleChange = (field: string, value: string) => {
-        setEndereco(prev => ({ ...prev, [field]: value }));
+    useEffect(() => {
+        if (profile && isOpen && (profile.tipoUsuario === 'CLIENTE' || profile.tipoUsuario === 'FORNECEDOR')) {
+            const userWithAddress = profile as Cliente | Fornecedor;
+            
+            // <<< CORREÇÃO PRINCIPAL AQUI >>>
+            // Usando a propriedade correta: enderecoDTO
+            setFormData({
+                cep: userWithAddress.enderecoDTO?.cep || '',
+                numero: userWithAddress.enderecoDTO?.numero,
+                complemento: userWithAddress.enderecoDTO?.complemento || ''
+            });
+        }
+    }, [profile, isOpen]);
+
+    const handleChange = (field: keyof EnderecoFormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.type === 'number' ? parseInt(e.target.value) || undefined : e.target.value;
+        setFormData(prev => ({ ...prev, [field]: value as any }));
     };
+    
+    // O componente não renderiza nada se não for para cliente ou fornecedor
+    if (!profile || (profile.tipoUsuario !== 'CLIENTE' && profile.tipoUsuario !== 'FORNECEDOR')) {
+        return null; 
+    }
 
-    return(
+    return (
         <Drawer open={isOpen} onOpenChange={onOpenChange} direction="right">
-            <DrawerContent>
-                <div className="mx-auto w-full max-w-md">
-                    <DrawerHeader className="flex flex-row justify-between items-start border-b">
-                        <div>
-                            <DrawerTitle className="text-2xl flex flex-row items-center gap-2">
-                                <MapPin />
-                                Endereço
-                            </DrawerTitle>
-                            <DrawerDescription>Gerencie seu endereço</DrawerDescription>
-                        </div>
-                        <Button size={"icon"} variant={"outline"} onClick={() => onOpenChange(false)}
-                            className="mt-1">
-                            <X />
-                        </Button>
+            <DrawerContent className="h-screen">
+                <div className="mx-auto w-full max-w-md flex flex-col h-full">
+                    <DrawerHeader>
+                         <DrawerTitle className="text-2xl flex items-center gap-2"><MapPin /> Endereço</DrawerTitle>
+                         <DrawerDescription>Gerencie seu endereço de entrega</DrawerDescription>
                     </DrawerHeader>
-
-                    {/* CORPO DO ENDEREÇO */}
-                    <div className="p-4 pb-0 overflow-y-auto max-h-[calc(100vh-100px)]">
-                        {/* INFORMAÇÕES DE ENDEREÇO */}
-                        <div className="flex flex-col gap-2">
-                            <Label className="text-2xl">Endereço do usuário</Label>
-                            <div className="bg-gray-50 rounded-lg p-4 border ml-2 mb-5">
-                                <div className="flex items-start gap-3">
-                                    <MapPin size={20} className="text-primary mt-0.5 flex-shrink-0" />
-                                    <div className="flex flex-col gap-1">
-                                        <Label>CEP: {endereco.cep}</Label>
-                                        <Label>Nº: {endereco.numero}</Label>
-                                        <Label>{endereco.complemento}</Label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* INFORMAÇÕES EDITÁVEIS */}
-                        <div className="grid grid-cols-1 gap-4">
-                            {/* Linha 1: CEP */}
-                            <div className="flex flex-col gap-2">
-                                <Label htmlFor="cep">CEP</Label>
-                                <Input
-                                    id="cep"
-                                    value={endereco.cep}
-                                    onChange={(e) => handleChange('cep', e.target.value)}
-                                />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label htmlFor="numero">Número</Label>
-                                <Input
-                                    id="numero"
-                                    value={endereco.numero}
-                                    onChange={(e) => handleChange('numero', e.target.value)}
-                                />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <Label htmlFor="complemento">Complemento</Label>
-                                <Input
-                                    id="complemento"
-                                    value={endereco.complemento}
-                                    onChange={(e) => handleChange('complemento', e.target.value)}
-                                />
-                            </div>
+                    <div className="p-4 flex-1">
+                        <div className="flex flex-col gap-4">
+                           <div className="flex flex-col gap-2"><Label>CEP</Label><Input value={formData.cep} onChange={handleChange('cep')} placeholder="00000-000" /></div>
+                           <div className="flex flex-col gap-2"><Label>Número</Label><Input value={formData.numero || ''} onChange={handleChange('numero')} type="number" placeholder="123" /></div>
+                           <div className="flex flex-col gap-2"><Label>Complemento</Label><Input value={formData.complemento} onChange={handleChange('complemento')} placeholder="Apto, casa, etc." /></div>
                         </div>
                     </div>
-
-                    {/* RODAPÉ COM BOTÕES */}
-                    <div className="border-t p-4 flex flex-col gap-3">
-                        <Button 
-                            variant="outline" onClick={() => onOpenChange(false)}
-                            className="flex justify-between bg-red-500 hover:bg-red-700 text-white hover:text-white cursor-pointer"
-                        >
-                            Cancelar
-                            <ChevronRight size={18} />
-                        </Button>
-                        <Button 
-                            variant={"outline"} onClick={() => onOpenChange(false)}
-                            className="flex justify-between bg-green-600 hover:bg-green-700 text-white hover:text-white cursor-pointer"
-                        >
-                            Salvar Alterações
-                            <ChevronRight size={18} />
+                    <div className="border-t p-4">
+                        <Button onClick={() => onSave(formData)} disabled={isSaving} className="w-full bg-green-600 hover:bg-green-700">
+                            {isSaving ? <Loader2 className="animate-spin" /> : 'Salvar Endereço'}
                         </Button>
                     </div>
                 </div>

@@ -5,7 +5,9 @@ import ProdutoRelacionadoCard from "@/components/cards/ProdutoRelacionadoCard";
 import AvaliarProduto from "@/components/produto/AvaliarProduto";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Avaliacao } from "@/core";
 import { Produto } from "@/core/produto";
+import { getListaAvaliacaoPorProduto } from "@/service/avaliacao/avaliacaoService";
 import { adicionarItemAoCarrinho } from "@/service/carrinho/carrinhoService";
 import { getProduto } from "@/service/produto/produtoService";
 import { Heart, LoaderCircle } from "lucide-react";
@@ -17,7 +19,9 @@ import { toast } from "sonner";
 export default function ProdutoDetalhe() {
     const [isDialogAvaliarProdutoOpen, setIsDialogAvaliarProdutoOpen] = useState(false);
     const [produto, setProduto] = useState<Produto | null>(null);
+    const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
     const [loading, setLoading] = useState(true);
+    const [avaliacaoLoading, setAvaliacaoLoading] = useState(true);
 
     const params = useParams();
     const id = Number(params.id);
@@ -41,7 +45,29 @@ export default function ProdutoDetalhe() {
         }
 
         fetchProduto();
+        
     }, [id]);
+
+    useEffect(() => {
+        
+
+        async function fetchAvaliacao() {
+            if (!produto) return;
+            try {
+                setAvaliacaoLoading(true); // garantir loading
+                const response = await getListaAvaliacaoPorProduto(produto.id);
+                setAvaliacoes(response.data);
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+                toast.error(error.response?.data?.message || "Erro ao carregar avaliações.");
+            } finally {
+                setAvaliacaoLoading(false);
+            }
+        }
+
+        fetchAvaliacao();
+    }, [produto?.id]);
 
     if (loading) {
         return (
@@ -121,20 +147,28 @@ export default function ProdutoDetalhe() {
                     </Button>
                 </div>
                 <div>
-                    <Carousel className="w-full">
-                        <CarouselContent>
-                            {Array.from({ length: 3 }).map((_, index) => (
-                                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                                    <AvaliacaoCard/>
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="cursor-pointer"/>
-                        <CarouselNext className="cursor-pointer"/>
-                    </Carousel>
+                    {avaliacaoLoading ? (
+                        <div className="flex justify-center items-center h-32">
+                            <LoaderCircle className="animate-spin h-8 w-8" />
+                        </div>
+                    ) : avaliacoes.length === 0 ? (
+                        <p className="text-gray-500">Nenhuma avaliação disponível.</p>
+                    ) : (
+                        <Carousel className="w-full">
+                            <CarouselContent>
+                                {avaliacoes.map((avaliacao) => (
+                                    <CarouselItem key={`${avaliacao.clienteId}-${avaliacao.dataModificacao}`} className="md:basis-1/2 lg:basis-1/3">
+                                        <AvaliacaoCard avaliacao={avaliacao}/>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            <CarouselPrevious className="cursor-pointer"/>
+                            <CarouselNext className="cursor-pointer"/>
+                        </Carousel>
+                    )}
                 </div>
             </div>
-            <AvaliarProduto isOpen={isDialogAvaliarProdutoOpen} onOpenChange={setIsDialogAvaliarProdutoOpen}/>
+            <AvaliarProduto isOpen={isDialogAvaliarProdutoOpen} onOpenChange={setIsDialogAvaliarProdutoOpen} produtoId={produto.id}/>
         </div>
     );
 }

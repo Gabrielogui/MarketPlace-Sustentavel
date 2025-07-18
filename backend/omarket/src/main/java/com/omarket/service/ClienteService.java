@@ -1,5 +1,6 @@
 package com.omarket.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,7 @@ import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
 import com.omarket.event.ClienteCriadoEvent;
+import com.omarket.repository.EnderecoRepository;
 import com.omarket.repository.UsuarioRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ClienteService implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
+    private final EnderecoRepository enderecoRepository;
 
     // |=======| MÉTODOS |=======|
     
@@ -101,39 +104,43 @@ public class ClienteService implements UsuarioService {
     // EDITAR:
     @Override
     @Transactional
-    public UsuarioDTO editar(Long id, UsuarioEditarDTO usuarioEditarDTO){
+    public UsuarioDTO editar(Long id, UsuarioEditarDTO usuarioEditarDTO) {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado!"));
 
-        // VERIFICAR SE O EMAIL JÁ ESTÁ CADASTRADO
-        if(!usuario.getEmail().equals(usuarioEditarDTO.getEmail()) && 
-            usuarioRepository.findByEmail(usuarioEditarDTO.getEmail()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
+        // Lógica de atualização parcial
+        if (usuarioEditarDTO.getNome() != null) {
+            usuario.setNome(usuarioEditarDTO.getNome());
         }
-
-        Cliente cliente = (Cliente) usuario;
-        // ATUALIZANDO O ENDEREÇO SE EXISTIR
-        if (usuarioEditarDTO.getEnderecoDTO() != null) {
-            Endereco endereco = new Endereco();
-            endereco.setCep(usuarioEditarDTO.getEnderecoDTO().getCep());
-            endereco.setComplemento(usuarioEditarDTO.getEnderecoDTO().getComplemento());
-            endereco.setNumero(usuarioEditarDTO.getEnderecoDTO().getNumero());
-            cliente.setEndereco(endereco);
-            usuario = cliente;
+        if (usuarioEditarDTO.getEmail() != null && !usuario.getEmail().equals(usuarioEditarDTO.getEmail())) {
+            if (usuarioRepository.findByEmail(usuarioEditarDTO.getEmail()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já cadastrado!");
+            }
+            usuario.setEmail(usuarioEditarDTO.getEmail());
         }
-
-        // ATUALIZANDO OS DADOS DO USUÁRIO
-        usuario.setNome(usuarioEditarDTO.getNome());
-        usuario.setEmail(usuarioEditarDTO.getEmail());
-        usuario.setTelefone(usuarioEditarDTO.getTelefone());
-
+        if (usuarioEditarDTO.getTelefone() != null) {
+            usuario.setTelefone(usuarioEditarDTO.getTelefone());
+        }
         if (usuarioEditarDTO.getSenha() != null && !usuarioEditarDTO.getSenha().trim().isEmpty()) {
-            // Opcional: verificar se a nova senha é diferente da antiga
-            if (!passwordEncoder.matches(usuarioEditarDTO.getSenha(), usuario.getSenha())) {
-                usuario.setSenha(passwordEncoder.encode(usuarioEditarDTO.getSenha()));
+            usuario.setSenha(passwordEncoder.encode(usuarioEditarDTO.getSenha()));
+        }
+
+        // Lógica para associar/atualizar endereço
+        if (usuario instanceof Cliente && usuarioEditarDTO.getEnderecoDTO() != null) {
+            Cliente cliente = (Cliente) usuario;
+            Long enderecoId = usuarioEditarDTO.getEnderecoDTO().getId();
+            
+            if (enderecoId != null) {
+                // Busca a entidade Endereco para garantir que ela exista e esteja gerenciada pelo JPA
+                Endereco endereco = enderecoRepository.findById(enderecoId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço com ID " + enderecoId + " não encontrado."));
+                
+                // Associa a entidade completa e gerenciada
+                cliente.setEndereco(endereco);
             }
         }
-
+        
+        // O Spring/JPA salvará as alterações na entidade 'usuario' ao final da transação.
         return converterParaDTO(usuario);
     }
 
@@ -158,7 +165,7 @@ public class ClienteService implements UsuarioService {
         usuarioDTO.setDataNascimento(cliente.getDataNascimento());
         usuarioDTO.setTipoUsuario(TipoUsuario.CLIENTE);
 
-        if(cliente.getEndereco() != null){
+        if(cliente.getEndereco() != null) {
             EnderecoDTO enderecoDTO = new EnderecoDTO();
             Endereco endereco = cliente.getEndereco();
             enderecoDTO.setCep(endereco.getCep());

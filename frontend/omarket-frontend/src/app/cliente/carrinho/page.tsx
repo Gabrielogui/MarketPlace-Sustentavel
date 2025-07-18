@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { LoaderCircle, Trash2 } from "lucide-react";
+import { LoaderCircle, Minus, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { getMeuCarrinho } from "@/service/carrinho/carrinhoService";
+import { atualizarQuantidadeItemCarrinho, getMeuCarrinho, removerItemCarrinho } from "@/service/carrinho/carrinhoService";
 import { toast } from "sonner";
 import { getProduto } from "@/service/produto/produtoService";
+import { criarPedido } from "@/service/pedido/pedidoService";
+import { useRouter } from "next/navigation";
 
 // Interface para combinar dados do carrinho e do produto para exibição
 export interface ProdutoNoCarrinho {
@@ -26,6 +28,11 @@ export default function CarrinhoPage() {
     const [itensDetalhados, setItensDetalhados] = useState<ProdutoNoCarrinho[]>([]);
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState<Set<number>>(new Set());
+    const [removendoId, setRemovendoId] = useState<number | null>(null);
+    const [updatingId, setUpdatingId] = useState<number | null>(null);
+
+    const [finalizando, setFinalizando] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchCarrinhoEProdutos = async () => {
@@ -74,6 +81,94 @@ export default function CarrinhoPage() {
         fetchCarrinhoEProdutos();
     }, []);
     
+    const handleFinalizarCompra = async () => {
+        const selecionados = itensDetalhados.filter(item => selected.has(item.id));
+        
+        // Verifica se todos os itens selecionados são do mesmo fornecedor
+        const fornecedores = new Set(selecionados.map(item => item.fornecedor));
+        if (fornecedores.size > 1) {
+            toast.error("Só é possível finalizar a compra com produtos do mesmo fornecedor.");
+            return;
+        }
+
+        const payload = selecionados.map(item => ({
+            produtoId: item.id,
+            quantidade: item.quantidade
+        }));
+
+        try {
+            setFinalizando(true);
+            const { data } = await criarPedido(payload);
+            toast.success(`Pedido #${data.id} criado com sucesso!`);
+            router.push(`/cliente/pagamento/${data.id}`);
+
+            // Remove os itens criados do carrinho
+            setItensDetalhados(prev =>
+                prev.filter(item => !selected.has(item.id))
+            );
+            setSelected(new Set());
+            
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.error("Erro ao criar pedido:", err);
+            toast.error(err.response?.data?.message || "Erro ao criar pedido.");
+        } finally {
+            setFinalizando(false);
+        }
+    };
+
+    const handleRemoverItem = async (produtoId: number) => {
+        if (removendoId !== null) return; // evita duplo clique
+        try {
+            setRemovendoId(produtoId);
+            await removerItemCarrinho(produtoId);
+            toast.success("Item removido do carrinho!");
+            // Filtra o array para retirar o item removido
+            setItensDetalhados(prev =>
+                prev.filter(item => item.id !== produtoId)
+            );
+            // Também atualiza seleção, caso estivesse marcado
+            setSelected(prev => {
+                const next = new Set(prev);
+                next.delete(produtoId);
+                return next;
+            });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.error("Erro ao remover item:", err);
+            toast.error(err.response?.data?.message || "Falha ao remover o item.");
+        } finally {
+            setRemovendoId(null);
+        }
+    };
+
+    const handleAtualizarQuantidade = async (produtoId: number, delta: number) => {
+        const item = itensDetalhados.find(i => i.id === produtoId);
+        if (!item) return;
+        const novaQtd = item.quantidade + delta;
+        if (novaQtd < 0) return;
+        try {
+            setUpdatingId(produtoId);
+            
+            await atualizarQuantidadeItemCarrinho(produtoId, novaQtd);
+            
+            setItensDetalhados(prev =>
+                prev
+                .map(i => i.id === produtoId ? { ...i, quantidade: novaQtd } : i)
+                // se zerou, remove do array
+                .filter(i => i.quantidade > 0)
+        );
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.error("Erro ao atualizar quantidade:", err);
+            toast.error(err.response?.data?.message || "Falha ao atualizar quantidade.");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
+
     // Agrupa os produtos por fornecedor usando 'useMemo' para otimização
     const grouped = useMemo(() => {
         return itensDetalhados.reduce<Record<string, ProdutoNoCarrinho[]>>((acc, p) => {
@@ -126,7 +221,13 @@ export default function CarrinhoPage() {
         <div className="flex flex-col gap-10">
             <div className="flex flex-row justify-between">
                 <h1 className="text-3xl font-bold">Carrinho</h1> 
-                <Button disabled={selected.size === 0}>Finalizar Compra ({selected.size})</Button>
+                <Button disabled={selected.size === 0 || finalizando} onClick={handleFinalizarCompra}>
+                    { finalizando ? (
+                        <LoaderCircle className="animate-spin h-5 w-5" />
+                    ) : (
+                        `Finalizar Compra (${selected.size})`
+                    )}
+                </Button>
             </div>
             <div>
                 <Table>
@@ -160,9 +261,32 @@ export default function CarrinhoPage() {
                                                 </div>  
                                             </TableCell>
                                             <TableCell>R$ {produto.precoUnitario.toFixed(2)}</TableCell>
-                                            <TableCell>{produto.quantidade}</TableCell>
+                                            <TableCell>
+                                                <Button size={"icon"} variant={"ghost"}
+                                                    onClick={() => handleAtualizarQuantidade(produto.id, -1)}
+                                                    disabled={updatingId === produto.id}
+                                                    > {updatingId === produto.id
+                                                        ? <LoaderCircle className="animate-spin h-5 w-5" />
+                                                        : <Minus />}
+                                                </Button>
+                                                {produto.quantidade}
+                                                <Button size={"icon"} variant={"ghost"}
+                                                    onClick={() => handleAtualizarQuantidade(produto.id, +1)}
+                                                    disabled={updatingId === produto.id}
+                                                    > {updatingId === produto.id 
+                                                        ? <LoaderCircle className="animate-spin h-5 w-5" />
+                                                        : <Plus /> 
+                                                    }
+                                                </Button>
+                                            </TableCell>
                                             <TableCell>R$ {(produto.precoUnitario * produto.quantidade).toFixed(2)}</TableCell>
-                                            <TableCell><Button variant="ghost" size={"icon"}><Trash2 className="hover:text-red-500 transition-colors"/></Button></TableCell>
+                                            <TableCell><Button variant="ghost" size={"icon"}
+                                                onClick={() => handleRemoverItem(produto.id)}
+                                                disabled={removendoId === produto.id}>
+                                                {removendoId === produto.id
+                                                ? <LoaderCircle className="animate-spin h-5 w-5"/>
+                                                : <Trash2 className="hover:text-red-500 transition-colors"/>}
+                                            </Button></TableCell>
                                         </TableRow>
                                     ))}
                                 </Fragment>

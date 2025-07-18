@@ -3,9 +3,10 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 export interface InativarProdutoProps{
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
+    onConfirm: () => void;
 }
 
-export default function InativarProduto ({isOpen, onOpenChange}:InativarProdutoProps) {
+export default function InativarProduto ({isOpen, onOpenChange, onConfirm}:InativarProdutoProps) {
     return(
         <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
             <AlertDialogContent>
@@ -19,7 +20,7 @@ export default function InativarProduto ({isOpen, onOpenChange}:InativarProdutoP
                     <AlertDialogCancel>
                         Cancelar
                     </AlertDialogCancel>
-                    <AlertDialogAction>
+                    <AlertDialogAction onClick={onConfirm}>
                         Inativar
                     </AlertDialogAction>
                 </AlertDialogFooter>

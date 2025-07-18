@@ -3,6 +3,7 @@ package com.omarket.service;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.frete.FreteDTO;
 import com.omarket.dto.frete.request.CalculoFreteRequest;
@@ -65,13 +68,23 @@ public class FreteService {
             
             // 5. Se a resposta for bem-sucedida, retorna a lista de opções
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                // Retorna lista de opções de frete
-                return Arrays.asList(response.getBody());
+                return Arrays.stream(response.getBody())
+                             .filter(opcao -> opcao.getPrice() != null)
+                             .collect(Collectors.toList());
             }
 
         } catch (HttpClientErrorException e) {
-            // Em caso de erro (ex: CEP inválido), loga o erro e continua
-            System.err.println("Erro ao chamar API de frete: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
+            // Loga o erro e relança como uma exceção que o Spring pode tratar,
+            // retornando um status HTTP adequado para o front-end.
+            String erroMsg = "Erro ao chamar API de frete: " + e.getResponseBodyAsString();
+            System.err.println(erroMsg); // Mantém o log no console para debug
+            throw new ResponseStatusException(e.getStatusCode(), erroMsg, e);
+
+        } catch (RestClientException e) {
+            // Captura outras exceções genéricas de client (ex: timeout, DNS)
+            String erroMsg = "Erro de comunicação com a API de frete.";
+            System.err.println(erroMsg + " Detalhes: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, erroMsg, e);
         }
         
         // Retorna uma lista vazia se a chamada falhar
