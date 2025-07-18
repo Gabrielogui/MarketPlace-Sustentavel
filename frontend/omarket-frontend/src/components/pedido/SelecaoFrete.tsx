@@ -13,11 +13,11 @@ import { calcularFrete, selecionarFrete } from "@/service/frete/freteService";
 
 interface SelecaoFreteProps {
     pedido: Pedido;
-    cepOrigemMock: string; // Manteremos o CEP de origem mockado por enquanto
+    cepOrigem: string; // Manteremos o CEP de origem mockado por enquanto
     onFreteSelecionado: (frete: OpcaoFreteResponse) => void;
 }
 
-export default function SelecaoFrete({ pedido, cepOrigemMock, onFreteSelecionado }: SelecaoFreteProps) {
+export default function SelecaoFrete({ pedido, cepOrigem, onFreteSelecionado }: SelecaoFreteProps) {
     const [opcoes, setOpcoes] = useState<OpcaoFreteResponse[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedFreteId, setSelectedFreteId] = useState<string | undefined>();
@@ -33,7 +33,7 @@ export default function SelecaoFrete({ pedido, cepOrigemMock, onFreteSelecionado
             setLoading(true);
             try {
                 const { data } = await calcularFrete({
-                    cepOrigem: cepOrigemMock,
+                    cepOrigem: cepOrigem,
                     cepDestino: pedido.endereco.cep,
                 });
                 setOpcoes(data);
@@ -49,7 +49,7 @@ export default function SelecaoFrete({ pedido, cepOrigemMock, onFreteSelecionado
         };
 
         calcular();
-    }, [pedido.endereco?.cep, cepOrigemMock]);
+    }, [pedido.endereco?.cep, cepOrigem]);
 
     // Função para confirmar a seleção do frete
     const handleSelecionarFrete = async () => {

@@ -34,9 +34,9 @@ export default function Endereco({ isOpen, onOpenChange, onSave, profile, isSavi
             // <<< CORREÇÃO PRINCIPAL AQUI >>>
             // Usando a propriedade correta: enderecoDTO
             setFormData({
-                cep: userWithAddress.endereco?.cep || '',
-                numero: userWithAddress.endereco?.numero,
-                complemento: userWithAddress.endereco?.complemento || ''
+                cep: userWithAddress.enderecoDTO?.cep || '',
+                numero: userWithAddress.enderecoDTO?.numero,
+                complemento: userWithAddress.enderecoDTO?.complemento || ''
             });
         }
     }, [profile, isOpen]);

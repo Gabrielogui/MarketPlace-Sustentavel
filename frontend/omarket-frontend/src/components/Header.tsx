@@ -126,7 +126,7 @@ export default function Header() {
         try {
             const addressPayload = { cep: data.cep, numero: Number(data.numero), complemento: data.complemento || '' };
             const userWithAddress = profile as Cliente | Fornecedor;
-            const existingAddressId = userWithAddress?.endereco?.id;
+            const existingAddressId = userWithAddress?.enderecoDTO?.id;
 
             // 1. Salva ou atualiza o endereço primeiro
             const enderecoSalvo = existingAddressId

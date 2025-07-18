@@ -3,10 +3,11 @@
 import SelecaoFrete from "@/components/pedido/SelecaoFrete";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Pedido, Produto } from "@/core"; // Certifique-se que esses tipos existem em seu core
+import { Fornecedor, Pedido, Produto } from "@/core"; // Certifique-se que esses tipos existem em seu core
 import { OpcaoFreteResponse } from "@/core/frete";
 import { getPedido } from "@/service/pedido/pedidoService";
 import { getProduto } from "@/service/produto/produtoService";
+import { getFornecedor } from "@/service/usuario/userService";
 import { BanknoteIcon, BarcodeIcon, CreditCardIcon, LockIcon, PencilIcon, QrCodeIcon } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -31,34 +32,52 @@ export default function Pagamento() {
     const [produtosMap, setProdutosMap] = useState<Record<number, Produto>>({});
     const [valorFrete, setValorFrete] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
-
+    const [fornecedor, setFornecedor] = useState<Fornecedor | null>(null);
     
-
     useEffect(() => {
         if (!id) return;
 
-        const fetchPedidoData = async () => {
+        const fetchAllData = async () => {
             setLoading(true);
             try {
+                // 1. Busca o pedido
                 const { data: pedidoData } = await getPedido(Number(id));
                 setPedido(pedidoData);
-                
+
                 if (pedidoData.frete) {
                     setValorFrete(pedidoData.frete.valor);
                 }
 
-                const produtoIds = Array.from(new Set(pedidoData.itens.map(item => item.produtoId)));
-                const promessas = produtoIds.map(id => getProduto(id).then(res => [id, res.data]));
-                const produtosArray = await Promise.all(promessas);
-                setProdutosMap(Object.fromEntries(produtosArray));
+                if (pedidoData.itens.length === 0) {
+                    toast.error("Este pedido não contém itens.");
+                    setLoading(false);
+                    return;
+                }
+
+                // 2. Busca os detalhes dos produtos
+                const produtoIds = [...new Set(pedidoData.itens.map(item => item.produtoId))];
+                const promessasProdutos = produtoIds.map(id => getProduto(id).then(res => [id, res.data]));
+                const produtosArray = await Promise.all(promessasProdutos);
+                const pMap = Object.fromEntries(produtosArray);
+                setProdutosMap(pMap);
+                
+                // 3. Pega o ID do fornecedor do primeiro produto (todos são do mesmo)
+                const primeiroProduto = pMap[produtoIds[0]];
+                if (!primeiroProduto) throw new Error("Não foi possível carregar os detalhes do produto.");
+
+                // 4. Busca os dados do fornecedor
+                const { data: fornecedorData } = await getFornecedor(primeiroProduto.fornecedorId);
+                setFornecedor(fornecedorData);
+                console.log("Fornecedor carregado:", fornecedorData);
+
             } catch (error: any) {
-                toast.error(error.response?.data?.message || "Erro ao carregar os dados do pedido.");
+                toast.error(error.response?.data?.message || "Erro ao carregar os dados para pagamento.");
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPedidoData();
+        fetchAllData();
     }, [id]);
 
     const handleFreteUpdate = (frete: OpcaoFreteResponse) => {
@@ -138,13 +157,20 @@ export default function Pagamento() {
                                 <div className="flex justify-between pt-3 border-t"><span className="font-bold text-lg">Total:</span><span className="font-bold text-xl text-green-600">R$ {total.toFixed(2)}</span></div>
                             </div>
                         </div>
-
                         {/* ===== COMPONENTE DE FRETE INTEGRADO AQUI ===== */}
-                        <SelecaoFrete 
-                            pedido={pedido} 
-                            cepOrigemMock="41253280" // CEP do vendedor. No futuro, virá do pedido/fornecedor.
-                            onFreteSelecionado={handleFreteUpdate}
-                        />
+                        {fornecedor && fornecedor.enderecoDTO?.cep ? (
+                            <SelecaoFrete 
+                                pedido={pedido} 
+                                cepOrigem={fornecedor.enderecoDTO.cep}
+                                onFreteSelecionado={handleFreteUpdate}
+                            />
+                        ) : (
+                            // Mensagem exibida se, após o loading, o CEP não for encontrado
+                            <div className="text-muted-foreground text-sm p-4 border rounded-lg bg-gray-50">
+                                <p className="font-semibold">Endereço do Fornecedor Indisponível</p>
+                                <p>Não foi possível calcular o frete no momento.</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Coluna da Direita: Entrega e Pagamento */}
@@ -159,9 +185,10 @@ export default function Pagamento() {
                                 </button>
                             </div>
                             <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="font-medium">Universidade do Estado da Bahia</p>
-                                <p>Rua Silveira Martins, 1234</p>
-                                <p>CEP: 12345-123</p>
+                                <p className="font-medium">{pedido.cliente.nome}</p>
+                                <p>CEP: {pedido.endereco?.cep}</p>
+                                <p>Número: {pedido.endereco?.numero}</p>
+                                <p>Complemento: {pedido.endereco?.complemento}</p>
                             </div>
                         </div>
 
