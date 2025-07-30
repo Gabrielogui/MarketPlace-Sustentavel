@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.ProdutoDTO;
+import com.omarket.dto.produto.ProdutoDTO;
 import com.omarket.entity.Categoria;
 import com.omarket.entity.Fornecedor;
 import com.omarket.entity.ImagemProduto;
