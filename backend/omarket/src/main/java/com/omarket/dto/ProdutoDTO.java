@@ -3,6 +3,8 @@ package com.omarket.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.omarket.dto.usuario.fornecedor.FornecedorDTO;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -37,11 +39,11 @@ public class ProdutoDTO {
     
     @NotNull(message = "A categoria é obrigatória!")
     @Valid
-    private Long categoriaId;
+    private CategoriaDTO categoria;
    
-    @NotNull(message = "A categoria é obrigatória!")
+    @NotNull(message = "O fornecedor é obrigatório!")
     @Valid
-    private Long fornecedorId;
+    private FornecedorDTO fornecedorId;
    
     @Valid
     private List<ImagemProdutoDTO> imagens;

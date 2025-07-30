@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.omarket.dto.EnderecoDTO;
-import com.omarket.dto.UsuarioDTO;
-import com.omarket.dto.UsuarioEditarDTO;
+import com.omarket.dto.usuario.UsuarioDTO;
+import com.omarket.dto.usuario.UsuarioEditarDTO;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Endereco;
 import com.omarket.entity.Usuario;

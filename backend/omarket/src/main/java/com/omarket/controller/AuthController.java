@@ -14,7 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.omarket.dto.AuthRequestDTO;
 import com.omarket.dto.AuthResponseDTO;
-import com.omarket.dto.UsuarioDTO;
+import com.omarket.dto.usuario.UsuarioDTO;
 import com.omarket.security.CustomUserDetails;
 import com.omarket.security.TokenService;
 import com.omarket.service.UsuarioService2;

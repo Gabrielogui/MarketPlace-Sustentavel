@@ -8,6 +8,7 @@ import java.util.List;
 import com.omarket.dto.frete.FreteDTO;
 import com.omarket.dto.pagamento.PagamentoDTO;
 import com.omarket.dto.pagamento.PagamentoResponseDTO;
+import com.omarket.dto.usuario.UsuarioDTO;
 import com.omarket.entity.enum_.StatusPedido;
 
 import jakarta.validation.constraints.Digits;

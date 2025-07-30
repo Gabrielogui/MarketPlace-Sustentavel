@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.UsuarioDTO;
-import com.omarket.dto.UsuarioEditarDTO;
+import com.omarket.dto.usuario.UsuarioDTO;
+import com.omarket.dto.usuario.UsuarioEditarDTO;
 import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
