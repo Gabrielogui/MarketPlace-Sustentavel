@@ -3,6 +3,8 @@ package com.omarket.controller;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,5 +35,12 @@ public class FavoritoController {
             .toUri();
 
         return ResponseEntity.created(location).body(favoritoNovo);
+    }
+
+    // |=======| MÉTODO PARA DELETAR O FAVORITO (DESFAVORITAR) |=======|
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletar(@PathVariable Long id){
+        favoritoService.desfavoritar(id);
+        return ResponseEntity.ok("Produto foi desfavoritado!");
     }
 }

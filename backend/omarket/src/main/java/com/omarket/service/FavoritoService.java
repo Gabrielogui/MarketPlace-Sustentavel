@@ -44,6 +44,14 @@ public class FavoritoService {
         return converterParaDTO(favorito);
     }
 
+    // |=======| MÉTODO PARA DESFAVORITAR (DELETAR) |=======|
+    public void desfavoritar(Long id) {
+        Favorito favorito = favoritoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Favorito não encontrado"));
+
+        favoritoRepository.delete(favorito);
+    }
+
     // |=======| MÉTODO PARA CONVERTER PARA DTO |=======|
     public FavoritoDTO converterParaDTO(Favorito favorito){
         FavoritoDTO favoritoDTO = new FavoritoDTO();

@@ -67,6 +67,7 @@ public class SecurityConfig {
                 .requestMatchers("/carrinho/**").hasRole("CLIENTE")
                 .requestMatchers("/pedidos/**").hasRole("CLIENTE")
                 .requestMatchers("/frete/**").hasRole("CLIENTE")
+                .requestMatchers("/favorito/**").hasRole("CLIENTE")
 
                 // =================================================================
                 // 5) Qualquer outra requisição exige autenticação
