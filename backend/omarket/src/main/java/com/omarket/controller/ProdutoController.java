@@ -30,6 +30,7 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
+    // ======= MÉTODO PARA CADASTRAR UM PRODUTO =======
     @PostMapping("/cadastrar")
     public ResponseEntity<ProdutoDTO> cadastrar(@RequestBody @Validated ProdutoDTO produtoDTO){ 
         ProdutoDTO produtoNovo = produtoService.cadastrar(produtoDTO);
@@ -57,42 +58,49 @@ public class ProdutoController {
         return ResponseEntity.ok(produtosDTO);
     }
 
+    // ======= MÉTODO GET PARA LISTAR PRUDUTOS POR FORNECEDOR =======
     @GetMapping("/listar/fornecedor/{fornecedorId}")
     public ResponseEntity<List<ProdutoDTO>> listarPorFornecedor(@PathVariable Long fornecedorId){
         List<ProdutoDTO> produtosDTO = produtoService.listarPorFornecedor(fornecedorId);
         return ResponseEntity.ok(produtosDTO);
     }
 
+    // ======= MÉTODO GET PARA LISTAR PRODUTO POR CATEGORIA =======
     @GetMapping("/listar/categoria/{categoriaId}")
     public ResponseEntity<List<ProdutoDTO>> listarPorCategoria(@PathVariable Long categoriaId){
         List<ProdutoDTO> produtosDTO = produtoService.listarPorCategoria(categoriaId);
         return ResponseEntity.ok(produtosDTO);
     }
 
+    // ======= MÉTODO PARA ATIVAR O PRODUTO =======
     @PatchMapping("/{id}/ativar")
     public ResponseEntity<ProdutoDTO> ativar(@PathVariable Long id){
         ProdutoDTO produtoAtivado = produtoService.ativar(id);
         return ResponseEntity.ok(produtoAtivado);
     }
 
+    // ======= MÉTODO PARA DESATIVAR O PRODUTO =======
     @PatchMapping("/{id}/desativar")
     public ResponseEntity<ProdutoDTO> desativar(@PathVariable Long id){
         ProdutoDTO produtoDesativado = produtoService.desativar(id);
         return ResponseEntity.ok(produtoDesativado);
     }
 
+    // ======= MÉTODO PARA EDITAR UM PRODUTO =======
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoDTO> editar(@PathVariable Long id, @RequestBody @Validated ProdutoDTO produtoDTO){
         ProdutoDTO produtoEditado = produtoService.editar(id, produtoDTO);
         return ResponseEntity.ok(produtoEditado);
     }
 
+    // ======= MÉTODO PARA BUSCAR O PRODUTO POR NOME =======
     @GetMapping("/buscar/{nome}")
     public ResponseEntity<List<ProdutoDTO>> buscarPorNome(@PathVariable String nome) {
         List<ProdutoDTO> produtosDTO = produtoService.buscarPorNome(nome);
         return ResponseEntity.ok(produtosDTO);
     }
 
+    // ======= MÉTODO PARA FILTRAR OS PRODUTOS =======
     @GetMapping("/filtrar")
     public ResponseEntity<List<ProdutoDTO>> filtrar(
         @RequestParam(name = "precoMin", required = false) BigDecimal precoMin,
