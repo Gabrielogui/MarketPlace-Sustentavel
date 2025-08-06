@@ -1,11 +1,15 @@
 package com.omarket.service;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.FavoritoDTO;
+import com.omarket.dto.ProdutoDTO;
+import com.omarket.dto.favorito.FavoritoRequestDTO;
+import com.omarket.dto.favorito.FavoritoResponseDTO;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Favorito;
 import com.omarket.entity.Produto;
@@ -24,9 +28,12 @@ public class FavoritoService {
     private final ClienteRepository clienteRepository;
     private final ProdutoRepository produtoRepository;
 
+    // |=======| ATRIBUTOS DE SERVICE |=======|
+    private final ProdutoService produtoService;
+
     // |=======| MÉTODO PARA FAVORITAR O PRODUTO |=======|
     @Transactional
-    public FavoritoDTO favoritar(FavoritoDTO favoritoDTO) {
+    public FavoritoRequestDTO favoritar(FavoritoRequestDTO favoritoDTO) {
         
         Cliente cliente = clienteRepository.findById(favoritoDTO.getClienteId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
@@ -41,7 +48,7 @@ public class FavoritoService {
 
         favoritoRepository.save(favorito);
 
-        return converterParaDTO(favorito);
+        return converterParaRequestDTO(favorito);
     }
 
     // |=======| MÉTODO PARA DESFAVORITAR (DELETAR) |=======|
@@ -52,15 +59,43 @@ public class FavoritoService {
         favoritoRepository.delete(favorito);
     }
 
-    // |=======| MÉTODO PARA CONVERTER PARA DTO |=======|
-    public FavoritoDTO converterParaDTO(Favorito favorito){
-        FavoritoDTO favoritoDTO = new FavoritoDTO();
+    // |=======| MÉTODO PARA LISTAR OS FAVORITOS DE UM CLIENTE |=======|
+    public List<FavoritoResponseDTO> listarFavoritoPorCliente(Long clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
+
+        List<Favorito> favoritos = favoritoRepository.findByCliente(cliente);
+        if(favoritos.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não favoritou nenhum produto ainda!");
+        }
+
+        List<FavoritoResponseDTO> favoritosResponseDTO = favoritos.stream().map(this::converterParaResponseDTO).toList();
+        return favoritosResponseDTO;
+    }
+
+    // |=======| MÉTODO PARA CONVERTER PARA REQUEST DTO |=======|
+    public FavoritoRequestDTO converterParaRequestDTO(Favorito favorito){
+        FavoritoRequestDTO favoritoDTO = new FavoritoRequestDTO();
 
         favoritoDTO.setId(favorito.getId());
         favoritoDTO.setClienteId(favorito.getCliente().getId());
         favoritoDTO.setProdutoId(favorito.getProduto().getId());
 
         return favoritoDTO;
+    }
+
+    // |=======| MÉTODO PARA CONVERTER PARA RESPONSE DTO |=======|
+    public FavoritoResponseDTO converterParaResponseDTO(Favorito favorito){
+        FavoritoResponseDTO favoritoResponseDTO = new FavoritoResponseDTO();
+
+        favoritoResponseDTO.setId(favorito.getId());
+        favoritoResponseDTO.setClienteId(favorito.getCliente().getId());
+
+        ProdutoDTO produtoDTO = produtoService.converterParaDTO(favorito.getProduto());
+
+        favoritoResponseDTO.setProdutoDTO(produtoDTO);
+
+        return favoritoResponseDTO;
     }
 
 }

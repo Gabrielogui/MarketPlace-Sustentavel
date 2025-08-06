@@ -167,7 +167,7 @@ public class ProdutoService {
                        .toList();
     }
 
-    private ProdutoDTO converterParaDTO(Produto produto) {
+    public ProdutoDTO converterParaDTO(Produto produto) {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setId(produto.getId());
         produtoDTO.setNome(produto.getNome());

@@ -1,16 +1,19 @@
-package com.omarket.dto;
+package com.omarket.dto.favorito;
 
+import com.omarket.dto.ProdutoDTO;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class FavoritoDTO {
+public class FavoritoResponseDTO {
     private Long id;
 
-    @NotBlank(message = "O produto precisa ser passado!")
-    private Long produtoId;
+    @Valid
+    private ProdutoDTO produtoDTO;
 
     @NotBlank(message = "O cliente precisa ser passado!")
     private Long clienteId;
