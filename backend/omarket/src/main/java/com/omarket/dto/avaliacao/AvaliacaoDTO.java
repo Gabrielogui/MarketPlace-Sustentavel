@@ -1,4 +1,4 @@
-package com.omarket.dto;
+package com.omarket.dto.avaliacao;
 
 import java.time.LocalDateTime;
 

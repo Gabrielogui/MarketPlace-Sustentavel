@@ -1,6 +1,6 @@
 package com.omarket.dto.usuario.fornecedor;
 
-import com.omarket.dto.EnderecoDTO;
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
 

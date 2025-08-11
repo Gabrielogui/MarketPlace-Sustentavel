@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.omarket.dto.CategoriaDTO;
+import com.omarket.dto.categoria.CategoriaDTO;
 import com.omarket.service.CategoriaService;
 
 import lombok.RequiredArgsConstructor;

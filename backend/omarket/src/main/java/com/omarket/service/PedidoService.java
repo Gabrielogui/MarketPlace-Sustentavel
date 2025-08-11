@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.EnderecoDTO;
-import com.omarket.dto.ItemCarrinhoDTO;
-import com.omarket.dto.ItemPedidoDTO;
-import com.omarket.dto.PedidoDTO;
+import com.omarket.dto.carrinho.ItemCarrinhoDTO;
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.dto.pagamento.PagamentoDTO;
+import com.omarket.dto.pedido.ItemPedidoDTO;
+import com.omarket.dto.pedido.PedidoDTO;
 import com.omarket.entity.Carrinho;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Endereco;

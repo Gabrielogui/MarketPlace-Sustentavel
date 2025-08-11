@@ -1,4 +1,4 @@
-package com.omarket.dto;
+package com.omarket.dto.usuario.auth;
 
 import com.omarket.entity.enum_.TipoUsuario;
 

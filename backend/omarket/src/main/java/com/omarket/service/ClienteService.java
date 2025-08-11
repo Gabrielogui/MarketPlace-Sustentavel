@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.EnderecoDTO;
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.dto.usuario.UsuarioDTO;
 import com.omarket.dto.usuario.UsuarioEditarDTO;
 import com.omarket.entity.Cliente;

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.omarket.dto.ImagemProdutoDTO;
-import com.omarket.dto.ImagemProdutoInputDTO;
+import com.omarket.dto.produto.imagemProduto.ImagemProdutoDTO;
+import com.omarket.dto.produto.imagemProduto.ImagemProdutoInputDTO;
 import com.omarket.service.ImagemProdutoService;
 
 import lombok.RequiredArgsConstructor;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.CategoriaDTO;
+import com.omarket.dto.categoria.CategoriaDTO;
 import com.omarket.entity.Categoria;
 import com.omarket.repository.CategoriaRepository;
 

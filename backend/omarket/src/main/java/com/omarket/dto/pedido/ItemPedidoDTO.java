@@ -1,4 +1,4 @@
-package com.omarket.dto;
+package com.omarket.dto.pedido;
 
 import java.math.BigDecimal;
 

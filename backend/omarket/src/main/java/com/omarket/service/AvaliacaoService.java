@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.AvaliacaoDTO;
+import com.omarket.dto.avaliacao.AvaliacaoDTO;
 import com.omarket.entity.Avaliacao;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Produto;

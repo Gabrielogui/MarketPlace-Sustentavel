@@ -1,4 +1,4 @@
-package com.omarket.dto;
+package com.omarket.dto.usuario.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

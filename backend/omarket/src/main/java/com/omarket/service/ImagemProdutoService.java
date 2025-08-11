@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.ImagemProdutoDTO;
-import com.omarket.dto.ImagemProdutoInputDTO;
+import com.omarket.dto.produto.imagemProduto.ImagemProdutoDTO;
+import com.omarket.dto.produto.imagemProduto.ImagemProdutoInputDTO;
 import com.omarket.entity.ImagemProduto;
 import com.omarket.entity.Produto;
 import com.omarket.repository.ImagemProdutoRepository;

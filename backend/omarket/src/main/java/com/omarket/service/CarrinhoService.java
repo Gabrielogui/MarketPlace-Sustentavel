@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.AdicionarItemRequestDTO;
-import com.omarket.dto.AtualizarQuantidadeDTO;
-import com.omarket.dto.CarrinhoDTO;
-import com.omarket.dto.ItemCarrinhoDTO;
+import com.omarket.dto.carrinho.AdicionarItemRequestDTO;
+import com.omarket.dto.carrinho.AtualizarQuantidadeDTO;
+import com.omarket.dto.carrinho.CarrinhoDTO;
+import com.omarket.dto.carrinho.ItemCarrinhoDTO;
 import com.omarket.entity.Carrinho;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.ItemCarrinho;

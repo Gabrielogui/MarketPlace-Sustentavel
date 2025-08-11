@@ -1,10 +1,11 @@
-package com.omarket.dto;
+package com.omarket.dto.pedido;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.dto.frete.FreteDTO;
 import com.omarket.dto.pagamento.PagamentoDTO;
 import com.omarket.dto.pagamento.PagamentoResponseDTO;

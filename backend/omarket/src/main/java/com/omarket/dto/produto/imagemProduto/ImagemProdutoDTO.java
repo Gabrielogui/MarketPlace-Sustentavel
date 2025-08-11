@@ -1,6 +1,8 @@
-package com.omarket.dto;
+package com.omarket.dto.produto.imagemProduto;
 
 import java.time.LocalDateTime;
+
+import com.omarket.dto.produto.ProdutoDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -11,8 +13,8 @@ import lombok.Setter;
 public class ImagemProdutoDTO {
     private Long id;
 
-    @NotBlank(message = "O ID do produto é obrigatório!")
-    private Long produtoId;
+    @NotBlank(message = "O produto é obrigatório!")
+    private ProdutoDTO produto;
 
     @NotBlank(message = "O nome do arquivo é obrigatório!")
     private String fileName;

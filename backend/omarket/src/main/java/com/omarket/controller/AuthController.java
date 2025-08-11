@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.omarket.dto.AuthRequestDTO;
-import com.omarket.dto.AuthResponseDTO;
 import com.omarket.dto.usuario.UsuarioDTO;
+import com.omarket.dto.usuario.auth.AuthRequestDTO;
+import com.omarket.dto.usuario.auth.AuthResponseDTO;
 import com.omarket.security.CustomUserDetails;
 import com.omarket.security.TokenService;
 import com.omarket.service.UsuarioService2;

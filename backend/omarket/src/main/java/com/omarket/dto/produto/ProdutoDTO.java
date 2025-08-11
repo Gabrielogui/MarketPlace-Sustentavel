@@ -3,8 +3,8 @@ package com.omarket.dto.produto;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.omarket.dto.CategoriaDTO;
-import com.omarket.dto.ImagemProdutoDTO;
+import com.omarket.dto.categoria.CategoriaDTO;
+import com.omarket.dto.produto.imagemProduto.ImagemProdutoDTO;
 import com.omarket.dto.usuario.fornecedor.FornecedorDTO;
 
 import jakarta.validation.Valid;

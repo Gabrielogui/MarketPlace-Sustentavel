@@ -3,7 +3,7 @@ package com.omarket.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.omarket.dto.EnderecoDTO;
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.entity.Endereco;
 import com.omarket.repository.EnderecoRepository;
 

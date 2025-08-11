@@ -1,4 +1,4 @@
-package com.omarket.dto;
+package com.omarket.dto.produto.imagemProduto;
 
 import org.springframework.web.multipart.MultipartFile;
 
