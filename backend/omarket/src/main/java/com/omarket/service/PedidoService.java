@@ -222,7 +222,7 @@ public class PedidoService {
             Hibernate.initialize(cliente.getEndereco());
         }
 
-        pedidoDTO.setCliente(clienteService.converterParaDTO(cliente));
+        pedidoDTO.setCliente(clienteService.converterParaClienteDTO(cliente));
         pedidoDTO.setDataPedido(pedido.getDataPedido());
         pedidoDTO.setStatus(pedido.getStatus());
         pedidoDTO.setValorTotal(pedido.getValorTotal());
