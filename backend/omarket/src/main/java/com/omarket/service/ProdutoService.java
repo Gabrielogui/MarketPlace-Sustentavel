@@ -3,6 +3,7 @@ package com.omarket.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,9 @@ public class ProdutoService {
     private final ProdutoRepository produtoRepository;
     private final CategoriaRepository categoriaRepository;
     private final FornecedorRepository fornecedorRepository;
+    private final CategoriaService categoriaService;
+    private final FornecedorService fornecedorService;
+    private final ImagemProdutoService imagemProdutoService;
 
     @Transactional
     public ProdutoDTO cadastrar(ProdutoDTO produtoDTO) {
@@ -37,11 +41,11 @@ public class ProdutoService {
         produto.setPreco(produtoDTO.getPreco());
         produto.setEstoque(produtoDTO.getEstoque());
         produto.setStatus("INATIVO");
-        Categoria categoria = categoriaRepository.findById(produtoDTO.getCategoriaId())
-            .orElseThrow(() -> new RuntimeException("Categoria não encontrada com o ID: " + produtoDTO.getCategoriaId()));
+        Categoria categoria = categoriaRepository.findById(produtoDTO.getCategoria().getId())
+            .orElseThrow(() -> new RuntimeException("Categoria não encontrada com o ID: " + produtoDTO.getCategoria().getId()));
         produto.setCategoria(categoria);
-        Fornecedor fornecedor = fornecedorRepository.findById(produtoDTO.getFornecedorId())
-            .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com o ID: " + produtoDTO.getFornecedorId()));
+        Fornecedor fornecedor = fornecedorRepository.findById(produtoDTO.getFornecedor().getId())
+            .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com o ID: " + produtoDTO.getFornecedor().getId()));
         produto.setFornecedor(fornecedor);
         produto.setImagens(new ArrayList<ImagemProduto>());
         
@@ -128,12 +132,12 @@ public class ProdutoService {
         produto.setEstoque(produtoDTO.getEstoque());
         
         // Atualiza a categoria e o fornecedor
-        Categoria categoria = categoriaRepository.findById(produtoDTO.getCategoriaId())
-            .orElseThrow(() -> new RuntimeException("Categoria não encontrada com o ID: " + produtoDTO.getCategoriaId()));
+        Categoria categoria = categoriaRepository.findById(produtoDTO.getCategoria().getId())
+            .orElseThrow(() -> new RuntimeException("Categoria não encontrada com o ID: " + produtoDTO.getCategoria().getId()));
         produto.setCategoria(categoria);
         
-        Fornecedor fornecedor = fornecedorRepository.findById(produtoDTO.getFornecedorId())
-            .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com o ID: " + produtoDTO.getFornecedorId()));
+        Fornecedor fornecedor = fornecedorRepository.findById(produtoDTO.getFornecedor().getId())
+            .orElseThrow(() -> new RuntimeException("Fornecedor não encontrado com o ID: " + produtoDTO.getFornecedor().getId()));
         produto.setFornecedor(fornecedor);
 
         return converterParaDTO(produto);
@@ -167,7 +171,7 @@ public class ProdutoService {
                        .toList();
     }
 
-    private ProdutoDTO converterParaDTO(Produto produto) {
+    public ProdutoDTO converterParaDTO(Produto produto) {
         ProdutoDTO produtoDTO = new ProdutoDTO();
         produtoDTO.setId(produto.getId());
         produtoDTO.setNome(produto.getNome());
@@ -175,14 +179,13 @@ public class ProdutoService {
         produtoDTO.setPreco(produto.getPreco());
         produtoDTO.setEstoque(produto.getEstoque());
         produtoDTO.setStatus(produto.getStatus());
-        produtoDTO.setCategoriaId(produto.getCategoria().getId());
-        produtoDTO.setFornecedorId(produto.getFornecedor().getId());
+        produtoDTO.setCategoria(categoriaService.converterParaDTO(produto.getCategoria()));
+        produtoDTO.setFornecedor(fornecedorService.converterParaFornecedorDTO(produto.getFornecedor()));
         
         // Converte as imagens, se necessário
         if (produto.getImagens() != null && !produto.getImagens().isEmpty()) {
             produtoDTO.setImagens(produto.getImagens().stream()
-                .map(ImagemProdutoService::converterParaDTO) // Usa o método de conversão aqui
-                // .map(imagem -> converterImagemParaDTO(imagem)) // Alternativa se não usar method reference
+                .map(ImagemProdutoService::converterParaDTO)
                 .toList());
         } else {
             produtoDTO.setImagens(new ArrayList<>()); // Define uma lista vazia se não houver imagens

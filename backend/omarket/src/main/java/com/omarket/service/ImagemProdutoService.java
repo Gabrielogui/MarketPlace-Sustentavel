@@ -114,7 +114,7 @@ public class ImagemProdutoService {
         }
         ImagemProdutoDTO dto = new ImagemProdutoDTO();
         dto.setId(img.getId());
-        dto.setProdutoId(img.getProduto().getId()); // só o ID, não o objeto
+        dto.setProdutoId(img.getProduto().getId());
         dto.setFileName(img.getFileName());
         dto.setFilePath(img.getFilePath());
         dto.setUploadedAt(img.getUploadedAt());

@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.dto.usuario.UsuarioDTO;
 import com.omarket.dto.usuario.UsuarioEditarDTO;
+import com.omarket.dto.usuario.fornecedor.FornecedorDTO;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Endereco;
 import com.omarket.entity.Fornecedor;
@@ -179,5 +180,28 @@ public class FornecedorService implements UsuarioService {
         }
 
         return usuarioDTO;
+    }
+
+    public FornecedorDTO converterParaFornecedorDTO(Fornecedor fornecedor) {
+        FornecedorDTO fornecedorDTO = new FornecedorDTO();
+        fornecedorDTO.setId(fornecedor.getId());
+        fornecedorDTO.setNome(fornecedor.getNome());
+        fornecedorDTO.setEmail(fornecedor.getEmail());
+        fornecedorDTO.setTelefone(fornecedor.getTelefone());
+        fornecedorDTO.setStatus(fornecedor.getStatus());
+        fornecedorDTO.setCnpj(fornecedor.getCnpj());
+        fornecedorDTO.setTipoUsuario(TipoUsuario.FORNECEDOR);
+
+        if (fornecedor.getEndereco() != null) {
+            EnderecoDTO enderecoDTO = new EnderecoDTO();
+            Endereco endereco = fornecedor.getEndereco();
+            enderecoDTO.setId(endereco.getId());
+            enderecoDTO.setCep(endereco.getCep());
+            enderecoDTO.setComplemento(endereco.getComplemento());
+            enderecoDTO.setNumero(endereco.getNumero());
+            fornecedorDTO.setEnderecoDTO(enderecoDTO);
+        }
+
+        return fornecedorDTO;
     }
 }

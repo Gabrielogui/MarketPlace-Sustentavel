@@ -34,9 +34,10 @@ public class AvaliacaoController {
     public ResponseEntity<AvaliacaoDTO> adicionar(@RequestBody @Validated AvaliacaoDTO avaliacaoDTO){
         AvaliacaoDTO avaliacaoNova = avaliacaoService.adicionar(avaliacaoDTO);
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+        URI location = ServletUriComponentsBuilder
+            .fromCurrentRequest()
             .path("/{clienteId}/{produtoId}")
-            .buildAndExpand(avaliacaoNova.getClienteId(), avaliacaoNova.getProdutoId())
+            .buildAndExpand(avaliacaoNova.getCliente().getId(), avaliacaoNova.getProduto().getId())
             .toUri();
 
         return ResponseEntity.created(location).body(avaliacaoNova);

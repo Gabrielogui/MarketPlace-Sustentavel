@@ -11,8 +11,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.dto.usuario.UsuarioDTO;
 import com.omarket.dto.usuario.UsuarioEditarDTO;
+import com.omarket.dto.usuario.cliente.ClienteDTO;
+import com.omarket.dto.usuario.fornecedor.FornecedorDTO;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Endereco;
+import com.omarket.entity.Fornecedor;
 import com.omarket.entity.Usuario;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
@@ -176,5 +179,29 @@ public class ClienteService implements UsuarioService {
         } 
 
         return usuarioDTO;
+    }
+
+    public ClienteDTO converterParaClienteDTO(Cliente cliente) {
+        ClienteDTO ClienteDTO = new ClienteDTO();
+        ClienteDTO.setId(cliente.getId());
+        ClienteDTO.setNome(cliente.getNome());
+        ClienteDTO.setEmail(cliente.getEmail());
+        ClienteDTO.setTelefone(cliente.getTelefone());
+        ClienteDTO.setStatus(cliente.getStatus());
+        ClienteDTO.setCpf(cliente.getCpf());
+        ClienteDTO.setTipoUsuario(TipoUsuario.CLIENTE);
+        ClienteDTO.setDataNascimento(cliente.getDataNascimento());
+
+        if (cliente.getEndereco() != null) {
+            EnderecoDTO enderecoDTO = new EnderecoDTO();
+            Endereco endereco = cliente.getEndereco();
+            enderecoDTO.setId(endereco.getId());
+            enderecoDTO.setCep(endereco.getCep());
+            enderecoDTO.setComplemento(endereco.getComplemento());
+            enderecoDTO.setNumero(endereco.getNumero());
+            ClienteDTO.setEnderecoDTO(enderecoDTO);
+        }
+
+        return ClienteDTO;
     }
 }
