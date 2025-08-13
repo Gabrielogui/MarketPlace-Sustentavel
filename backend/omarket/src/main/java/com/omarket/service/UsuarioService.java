@@ -1,7 +1,7 @@
 package com.omarket.service;
 
-import com.omarket.dto.UsuarioDTO;
-import com.omarket.dto.UsuarioEditarDTO;
+import com.omarket.dto.usuario.UsuarioDTO;
+import com.omarket.dto.usuario.UsuarioEditarDTO;
 import com.omarket.entity.Usuario;
 
 public interface UsuarioService {

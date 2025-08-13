@@ -1,13 +1,16 @@
-package com.omarket.dto;
+package com.omarket.dto.pedido;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.dto.frete.FreteDTO;
 import com.omarket.dto.pagamento.PagamentoDTO;
 import com.omarket.dto.pagamento.PagamentoResponseDTO;
+import com.omarket.dto.usuario.UsuarioDTO;
+import com.omarket.dto.usuario.cliente.ClienteDTO;
 import com.omarket.entity.enum_.StatusPedido;
 
 import jakarta.validation.constraints.Digits;
@@ -48,5 +51,5 @@ public class PedidoDTO {
     private EnderecoDTO endereco;
 
     @NotNull(message = "O cliente do pedido é obrigatório!")
-    private UsuarioDTO cliente;
+    private ClienteDTO cliente;
 }

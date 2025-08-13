@@ -1,7 +1,11 @@
-package com.omarket.dto;
+package com.omarket.dto.produto;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import com.omarket.dto.categoria.CategoriaDTO;
+import com.omarket.dto.produto.imagemProduto.ImagemProdutoDTO;
+import com.omarket.dto.usuario.fornecedor.FornecedorDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Digits;
@@ -14,7 +18,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProdutoDTO {
+public class ProdutoCriarDTO {
     private Long id;
     
     @NotBlank(message = "O nome do produto é obrigatório!")
@@ -37,11 +41,11 @@ public class ProdutoDTO {
     
     @NotNull(message = "A categoria é obrigatória!")
     @Valid
-    private Long categoriaId;
+    private CategoriaDTO categoria;
    
-    @NotNull(message = "A categoria é obrigatória!")
+    @NotNull(message = "O fornecedor é obrigatório!")
     @Valid
-    private Long fornecedorId;
+    private FornecedorDTO fornecedor;
    
     @Valid
     private List<ImagemProdutoDTO> imagens;

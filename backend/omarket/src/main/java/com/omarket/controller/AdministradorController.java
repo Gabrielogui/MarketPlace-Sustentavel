@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.omarket.dto.UsuarioDTO;
-import com.omarket.dto.UsuarioEditarDTO;
+import com.omarket.dto.usuario.UsuarioDTO;
+import com.omarket.dto.usuario.UsuarioEditarDTO;
 import com.omarket.entity.enum_.TipoUsuario;
 import com.omarket.service.UsuarioService;
 import com.omarket.service.UsuarioServiceFactory;

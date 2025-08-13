@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.AvaliacaoDTO;
+import com.omarket.dto.avaliacao.AvaliacaoDTO;
 import com.omarket.entity.Avaliacao;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Produto;
@@ -26,15 +26,17 @@ public class AvaliacaoService {
     private final AvaliacaoRepository avaliacaoRepository;
     private final ClienteRepository clienteRepository;
     private final ProdutoRepository produtoRepository;
+    private final ClienteService clienteService; 
+    private final ProdutoService produtoService;
 
     // |=======| MÉTODOS |=======|
     @Transactional
     public AvaliacaoDTO adicionar(AvaliacaoDTO avaliacaoDTO){
 
-        Cliente cliente = clienteRepository.findById(avaliacaoDTO.getClienteId())
+        Cliente cliente = clienteRepository.findById(avaliacaoDTO.getCliente().getId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
 
-        Produto produto = produtoRepository.findById(avaliacaoDTO.getProdutoId())
+        Produto produto = produtoRepository.findById(avaliacaoDTO.getProduto().getId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
 
         Avaliacao avaliacao = new Avaliacao();
@@ -95,39 +97,56 @@ public class AvaliacaoService {
         return converterParaDTO(avaliacao);
     }
 
-    // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR CLIENTE
+    // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR CLIENTE (REFATORADO)
     @Transactional(readOnly = true)
-    public List<AvaliacaoDTO> listarPorCliente(Long clienteId){
-        
-         Cliente cliente = clienteRepository.findById(clienteId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
+    public List<AvaliacaoDTO> listarPorCliente(Long clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
 
         List<Avaliacao> avaliacoes = avaliacaoRepository.findByIdCliente(cliente);
-        List<AvaliacaoDTO> avaliacoesDTO = avaliacoes.stream().map((avaliacao) -> new AvaliacaoDTO(avaliacao)).toList();
-        return avaliacoesDTO;
+
+        // Substituímos a criação direta do DTO pela chamada ao nosso novo método conversor
+        return avaliacoes.stream()
+                        .map(this::converterParaDTO)
+                        .toList();
     }
 
-    // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR PRODUTO
+    // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR PRODUTO (REFATORADO)
     @Transactional(readOnly = true)
-    public List<AvaliacaoDTO> listarPorProduto(Long produtoId){
+    public List<AvaliacaoDTO> listarPorProduto(Long produtoId) {
         Produto produto = produtoRepository.findById(produtoId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
 
         List<Avaliacao> avaliacoes = avaliacaoRepository.findByIdProduto(produto);
-        List<AvaliacaoDTO> avaliacoesDTO = avaliacoes.stream().map((avaliacao) -> new AvaliacaoDTO(avaliacao)).toList();
-        return avaliacoesDTO;
+
+        // Usamos a mesma abordagem aqui
+        return avaliacoes.stream()
+                        .map(this::converterParaDTO)
+                        .toList();
     }
 
     // MÉTODO DE CONVERTER PARA DTO
-    public AvaliacaoDTO converterParaDTO(Avaliacao avaliacao){
-        AvaliacaoDTO avaliacaoDTO = new AvaliacaoDTO();
-
-        avaliacaoDTO.setClienteId(avaliacao.getCliente().getId());
-        avaliacaoDTO.setProdutoId(avaliacao.getProduto().getId());
-        avaliacaoDTO.setComentario(avaliacao.getComentario());
-        avaliacaoDTO.setNota(avaliacao.getNota());
-        avaliacaoDTO.setDataModificacao(avaliacao.getDataModificacao());
-
-        return avaliacaoDTO;
+    private AvaliacaoDTO converterParaDTO(Avaliacao avaliacao) {
+    if (avaliacao == null) {
+        return null;
     }
+
+    AvaliacaoDTO dto = new AvaliacaoDTO();
+    dto.setComentario(avaliacao.getComentario());
+    dto.setNota(avaliacao.getNota());
+    dto.setDataModificacao(avaliacao.getDataModificacao());
+
+    // Usamos os serviços injetados para converter as entidades relacionadas
+    if (avaliacao.getCliente() != null) {
+        // Supondo que ClienteService tenha um método converterParaDTO
+        dto.setCliente(clienteService.converterParaClienteDTO(avaliacao.getCliente()));
+    }
+    
+    if (avaliacao.getProduto() != null) {
+        // Usamos o converterParaDTO que já existe no ProdutoService
+        dto.setProduto(produtoService.converterParaDTO(avaliacao.getProduto()));
+    }
+
+    return dto;
+}
 }

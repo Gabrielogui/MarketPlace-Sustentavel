@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.omarket.dto.EnderecoDTO;
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.service.EnderecoService;
 
 import lombok.RequiredArgsConstructor;

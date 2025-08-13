@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.omarket.dto.ItemCarrinhoDTO;
-import com.omarket.dto.PedidoDTO;
+import com.omarket.dto.carrinho.ItemCarrinhoDTO;
 import com.omarket.dto.pagamento.PagamentoDTO;
 import com.omarket.dto.pagamento.PagamentoResponseDTO;
+import com.omarket.dto.pedido.PedidoDTO;
 import com.omarket.entity.Pedido;
 import com.omarket.entity.Usuario;
 import com.omarket.security.CustomUserDetails;

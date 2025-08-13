@@ -2,12 +2,17 @@ package com.omarket.service;
 
 import java.util.List;
 
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.CategoriaDTO;
+import com.omarket.dto.categoria.CategoriaDTO;
 import com.omarket.entity.Categoria;
 import com.omarket.repository.CategoriaRepository;
 
@@ -20,6 +25,7 @@ public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
 
     // |=======| MÉTODOS |=======|
+    @CacheEvict(value = "categorias-lista", allEntries = true)
     @Transactional
     public CategoriaDTO cadastrar(CategoriaDTO categoriaDTO){
         Categoria categoria = new Categoria();
@@ -34,6 +40,7 @@ public class CategoriaService {
     }
 
     // LISTAR TODAS AS CATEGORIAS:
+    @Cacheable("categorias-lista")
     @Transactional(readOnly = true)
     public List<CategoriaDTO> listar(){
         List<Categoria> categorias = categoriaRepository.findAll();
@@ -42,6 +49,10 @@ public class CategoriaService {
     }
 
     // DELETAR UMA CATEGORIA:
+    @Caching(evict = {
+        @CacheEvict(value = "categorias", key = "#id"),
+        @CacheEvict(value = "categorias-lista", allEntries = true)
+    })
     @Transactional
     public void deletar(Long id){
         Categoria categoria = categoriaRepository.findById(id)
@@ -50,6 +61,7 @@ public class CategoriaService {
     }
 
     // BUSCAR UMA CATEGORIA:
+    @Cacheable(value = "categorias", key = "#id")
     @Transactional
     public CategoriaDTO buscar(Long id){
         Categoria categoria = categoriaRepository.findById(id)
@@ -59,6 +71,10 @@ public class CategoriaService {
     }
 
     // MÉTODO EDITAR
+    @Caching(
+        put = { @CachePut(value = "categorias", key = "#id") },
+        evict = { @CacheEvict(value = "categorias-lista", allEntries = true) }
+    )
     @Transactional
     public CategoriaDTO editar(Long id, CategoriaDTO categoriaDTO){
         Categoria categoria = categoriaRepository.findById(id)

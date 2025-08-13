@@ -1,4 +1,4 @@
-package com.omarket.dto;
+package com.omarket.dto.carrinho;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

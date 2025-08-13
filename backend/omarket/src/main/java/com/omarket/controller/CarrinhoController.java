@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
-import com.omarket.dto.AdicionarItemRequestDTO;
-import com.omarket.dto.AtualizarQuantidadeDTO;
-import com.omarket.dto.CarrinhoDTO;
-import com.omarket.dto.ItemCarrinhoDTO;
+import com.omarket.dto.carrinho.AdicionarItemRequestDTO;
+import com.omarket.dto.carrinho.AtualizarQuantidadeDTO;
+import com.omarket.dto.carrinho.CarrinhoDTO;
+import com.omarket.dto.carrinho.ItemCarrinhoDTO;
 import com.omarket.entity.Cliente;
 import com.omarket.security.CustomUserDetails;
 import com.omarket.service.CarrinhoService;

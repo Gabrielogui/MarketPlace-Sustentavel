@@ -1,4 +1,4 @@
-package com.omarket;
+package com.omarket.config;
 
 import java.util.Arrays;
 
@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -46,6 +45,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/categoria/**").permitAll()    // Regra específica para ver uma ou mais categoria
                 .requestMatchers(HttpMethod.POST, "/categoria/**").permitAll()    // Regra específica para cadastrar categoria
                 .requestMatchers(HttpMethod.GET, "/avaliacao/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/fornecedor/**").permitAll()
+                .requestMatchers("/fornecedor/cadastrar").permitAll() // Permite cadastro de fornecedor
+                .requestMatchers("/cliente/cadastrar").permitAll()
                 .requestMatchers("/error").permitAll()
                 
                 // =================================================================

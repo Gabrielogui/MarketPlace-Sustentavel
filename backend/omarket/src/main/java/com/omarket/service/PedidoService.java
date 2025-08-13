@@ -5,16 +5,17 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.EnderecoDTO;
-import com.omarket.dto.ItemCarrinhoDTO;
-import com.omarket.dto.ItemPedidoDTO;
-import com.omarket.dto.PedidoDTO;
+import com.omarket.dto.carrinho.ItemCarrinhoDTO;
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.dto.pagamento.PagamentoDTO;
+import com.omarket.dto.pedido.ItemPedidoDTO;
+import com.omarket.dto.pedido.PedidoDTO;
 import com.omarket.entity.Carrinho;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Endereco;
@@ -26,6 +27,7 @@ import com.omarket.entity.enum_.StatusPedido;
 import com.omarket.repository.CarrinhoRepository;
 import com.omarket.repository.PedidoRepository;
 import com.omarket.repository.ProdutoRepository;
+import com.omarket.repository.UsuarioRepository;
 import com.omarket.service.CarrinhoService;
 
 import lombok.RequiredArgsConstructor;
@@ -41,14 +43,14 @@ public class PedidoService {
     private final ProdutoRepository produtoRepository;
     private final CarrinhoService carrinhoService;
     private final ClienteService clienteService;
+    private final UsuarioRepository usuarioRepository;
 
     @Transactional
-    public PedidoDTO criarPedidoAPartirDoCarrinho(Usuario cliente, List<ItemCarrinhoDTO> itensCarrinhoDTO) {
+    public PedidoDTO criarPedidoAPartirDoCarrinho(Usuario usuario, List<ItemCarrinhoDTO> itensCarrinhoDTO) {
 
-        if (!(cliente instanceof Cliente)) {
-            throw new RuntimeException("Usuário não é um cliente válido.");
-        }
-        // 1. Busca o carrinho do cliente
+        Cliente cliente = (Cliente) usuarioRepository.findById(usuario.getId())
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
         Carrinho carrinho = carrinhoRepository.findById(cliente.getId())
             .orElseThrow(() -> new RuntimeException("Carrinho não encontrado"));
 
@@ -61,6 +63,7 @@ public class PedidoService {
         novoPedido.setCliente((Cliente)cliente);
         novoPedido.setDataPedido(LocalDateTime.now());
         novoPedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO); // <-- NOVO STATUS INICIAL
+        novoPedido.setEndereco(cliente.getEndereco());
 
         // Lógica para converter ItemCarrinho em ItemPedido e associar ao novoPedido
         converterItemCarrinhoParaItemPedido(itensCarrinhoDTO, novoPedido);
@@ -208,10 +211,18 @@ public class PedidoService {
         }
     }
 
+    @Transactional
     private PedidoDTO converterPedidoParaDto(Pedido pedido) {
         PedidoDTO pedidoDTO = new PedidoDTO();
         pedidoDTO.setId(pedido.getId());
-        pedidoDTO.setCliente(clienteService.converterParaDTO(pedido.getCliente()));
+
+        // Garantir que os dados LAZY sejam carregados
+        Cliente cliente = pedido.getCliente();
+        if (cliente != null && cliente.getEndereco() != null) {
+            Hibernate.initialize(cliente.getEndereco());
+        }
+
+        pedidoDTO.setCliente(clienteService.converterParaClienteDTO(cliente));
         pedidoDTO.setDataPedido(pedido.getDataPedido());
         pedidoDTO.setStatus(pedido.getStatus());
         pedidoDTO.setValorTotal(pedido.getValorTotal());

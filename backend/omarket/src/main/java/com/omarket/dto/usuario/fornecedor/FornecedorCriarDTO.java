@@ -1,7 +1,6 @@
-package com.omarket.dto;
+package com.omarket.dto.usuario.fornecedor;
 
-import java.time.LocalDate;
-
+import com.omarket.dto.endereco.EnderecoDTO;
 import com.omarket.entity.enum_.StatusUsuario;
 import com.omarket.entity.enum_.TipoUsuario;
 
@@ -15,7 +14,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UsuarioDTO {
+public class FornecedorCriarDTO {
     private Long id;
     
     @NotBlank(message = "Nome é obrigatório!")
@@ -41,15 +40,8 @@ public class UsuarioDTO {
     @Valid
     private EnderecoDTO enderecoDTO;
 
-    // ======= CAMPOS ESPECÍFICOS PARA CLIENTE    =======
-    @org.hibernate.validator.constraints.br.CPF(message = "CPF inválido!")
-    private String cpf;
-    private LocalDate dataNascimento;
-
     // ======= CAMPOS ESPECÍFICOS PARA FORNECEDOR =======
-    //@org.hibernate.validator.constraints.br.CNPJ(message = "CNPJ inválido!")
+    @org.hibernate.validator.constraints.br.CNPJ(message = "CNPJ inválido!")
     private String cnpj;
-
-    // ======= CAMPOS ESPECÍFICOS PARA ADM        =======
 
 }

@@ -57,7 +57,7 @@ public class Pedido {
     @OneToMany(mappedBy = "id.pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedido> itens = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.PERSIST)    // só persiste um clone novo
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
