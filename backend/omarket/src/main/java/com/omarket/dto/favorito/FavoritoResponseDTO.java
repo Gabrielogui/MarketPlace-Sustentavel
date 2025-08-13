@@ -1,6 +1,7 @@
 package com.omarket.dto.favorito;
 
-import com.omarket.dto.ProdutoDTO;
+
+import com.omarket.dto.produto.ProdutoDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

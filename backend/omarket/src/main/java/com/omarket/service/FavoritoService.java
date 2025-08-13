@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.ProdutoDTO;
 import com.omarket.dto.favorito.FavoritoRequestDTO;
 import com.omarket.dto.favorito.FavoritoResponseDTO;
+import com.omarket.dto.produto.ProdutoDTO;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Favorito;
 import com.omarket.entity.Produto;
