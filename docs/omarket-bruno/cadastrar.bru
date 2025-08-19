@@ -1,0 +1,27 @@
+meta {
+  name: cadastrar
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/auth/cadastrar
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nome": "redis teste",
+    "email": "redis@email.com",
+    "senha": "senha123",
+    "telefone": "2222222",
+    "tipoUsuario": "CLIENTE",
+    "cpf": "32558473034",
+    "dataNascimento": "2003-01-21"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
