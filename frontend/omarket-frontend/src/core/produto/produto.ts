@@ -1,3 +1,6 @@
+import { Categoria } from "../categoria";
+import { Fornecedor } from "../usuario";
+
 export interface Produto {
     id: number;
     nome: string;
@@ -5,7 +8,7 @@ export interface Produto {
     estoque: number;
     status: 'ATIVO' | 'INATIVO';
     preco: number;
-    categoriaId: number;
-    fornecedorId: number;
+    categoriaId: Categoria;
+    fornecedorId: Fornecedor;
     //imagens: string;
 }
