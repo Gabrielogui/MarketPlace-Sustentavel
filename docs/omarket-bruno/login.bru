@@ -1,0 +1,22 @@
+meta {
+  name: login
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/auth/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "redis@email.com",
+    "senha": "senha123"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
