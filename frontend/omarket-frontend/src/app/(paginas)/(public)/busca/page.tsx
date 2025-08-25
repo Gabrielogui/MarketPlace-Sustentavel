@@ -73,8 +73,8 @@ export default function Busca () {
             {/* FILTROS */}
             <div className="flex flex-row justify-between">
                 <div className="flex flex-col gap-1">
-                    <div className="flex flex-row justify-between">
-                        <p>Faixa de Preço</p>
+                    <div className="flex flex-row justify-between text-sm">
+                        <p>Faixa de Preço </p>
                         <p>R${precoRange[0]}-{precoRange[1]}</p> {/* DECIDIR QUAL VAI SER A FAIXA DE PREÇO */}
                     </div>
                     <Slider

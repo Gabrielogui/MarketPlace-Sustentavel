@@ -8,7 +8,7 @@ export interface Produto {
     estoque: number;
     status: 'ATIVO' | 'INATIVO';
     preco: number;
-    categoriaId: Categoria;
-    fornecedorId: Fornecedor;
+    categoria: Categoria;
+    fornecedor: Fornecedor;
     //imagens: string;
 }

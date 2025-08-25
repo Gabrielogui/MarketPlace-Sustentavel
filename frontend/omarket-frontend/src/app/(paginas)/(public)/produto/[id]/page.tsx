@@ -118,8 +118,8 @@ export default function ProdutoDetalhe() {
                     </div>
                     <div className="flex flex-col gap-4 justify-center">
                         <h1 className="text-4xl font-bold">{produto.nome}</h1>
-                        <p className="text-xl text-gray-600 font-semibold">Fornecedor ID: </p>
-                        <p className="text-xl text-gray-600 font-semibold">Categoria ID: </p>
+                        <p className="text-xl text-gray-600 font-semibold">Fornecedor: {produto.fornecedor.nome}</p>
+                        <p className="text-xl text-gray-600 font-semibold">Categoria: {produto.categoria.nome}</p>
                         <p className="text-lg text-gray-500">{produto.descricao}</p>
                         <div className="flex flex-row justify-between items-center mt-4">
                             <p className="text-3xl font-extrabold text-green-700">R$ {produto.preco.toFixed(2)}</p>
