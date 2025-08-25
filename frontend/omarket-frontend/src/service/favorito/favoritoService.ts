@@ -1,4 +1,7 @@
-// |=======| GET DA LISTA DE FAVORITOS |=======|
-export async function getListaFavoritos() {
-    return api.get<Favorito[]>('/produto/listar');
+import { Favorito } from "@/core";
+import api from "../api";
+
+// |=======| GET DA LISTA DE FAVORITOS POR CLIENTE |=======|
+export async function getListaFavoritos(clienteId: number) {
+    return api.get<Favorito[]>(`/favorito/${clienteId}`);
 }

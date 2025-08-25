@@ -10,5 +10,6 @@ import { Administrador } from './usuario/administrador';
 import { Fornecedor } from './usuario/fornecedor';
 import { Cliente } from './usuario/cliente';
 import { FavoritoAdd } from './favorito';
+import { Favorito } from './favorito';
 
-export type { Cliente, Fornecedor, Administrador, Produto, ItemCarrinho, Carrinho, Categoria, Avaliacao, Pedido, ItemPedido, FiltroProduto, FavoritoAdd }
+export type { Cliente, Fornecedor, Administrador, Produto, ItemCarrinho, Carrinho, Categoria, Avaliacao, Pedido, ItemPedido, FiltroProduto, FavoritoAdd, Favorito }
