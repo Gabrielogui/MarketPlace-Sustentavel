@@ -1,3 +1,3 @@
-import { Favorito } from "./favorito"
+import { FavoritoAdd } from "./favoritoAdd"
 
-export type { Favorito }
+export type { FavoritoAdd }
