@@ -5,12 +5,20 @@ import { Produto } from "@/core/produto";
 import Link from "next/link";
 import { toast } from "sonner";
 import { adicionarItemAoCarrinho } from "@/service/carrinho/carrinhoService"; // Verifique se o caminho está correto
+import { FavoritoAdd } from "@/core";
+import { favoritar } from "@/service/favorito/favoritoService";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface ProdutoCardProps {
     produto: Produto;
 }
 
 export default function ProdutoCard({ produto }: ProdutoCardProps) {
+
+    const { user } = useContext(AuthContext);
+    const router = useRouter();
 
     const handleAdicionarAoCarrinho = async () => {
         try {
@@ -27,8 +35,31 @@ export default function ProdutoCard({ produto }: ProdutoCardProps) {
         }
     };
 
-    const handleFavoritar = () => {
-        toast.info(`Produto ${produto.nome} adicionado aos favoritos! (funcionalidade a ser implementada)`);
+    const handleFavoritar = async () => {
+        console.log("Favoritar!")
+        try {
+
+            if(!user) {
+                toast.warning("Você precisa está logado para favoritar!");
+                router.push("/login");
+                return;
+            }
+
+
+            console.log("Id do usuário: ", user.id);
+            console.log("Id do produto: ", produto.fornecedor.id);
+
+            const favoritoPayload:FavoritoAdd = {
+                clienteId: user?.id,
+                produtoId: produto.id
+            } 
+
+            const resposta = await favoritar(favoritoPayload);
+            toast.success(`O produto ${produto.nome} foi favoritado!`);
+        } catch (error: any) {
+            console.error("Erro ao adicionar item:", error);
+            toast.error(error.response?.data?.message || "Não foi possível adicionar o produto.");
+        }
     };
 
     return (
@@ -47,7 +78,7 @@ export default function ProdutoCard({ produto }: ProdutoCardProps) {
                     />
                     <div className="flex flex-col gap-1.5">
                         <h3 className="text-xl font-semibold truncate">{produto.nome}</h3>
-                        <p className="text-gray-500 font-semibold">Categoria: {"Categoria"}</p>
+                        <p className="text-gray-500 font-semibold">Categoria: {produto.categoria.nome}</p>
                         <p className="text-lg font-bold text-green-700">R$ {produto.preco.toFixed(2)}</p>
                     </div>
                 </div>
