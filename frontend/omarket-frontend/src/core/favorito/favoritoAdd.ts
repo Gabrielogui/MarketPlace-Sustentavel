@@ -1,4 +1,4 @@
 export interface FavoritoAdd{
-    clienteId   :number
-    fornecedorId:number
+    clienteId: number
+    produtoId: number
 }
