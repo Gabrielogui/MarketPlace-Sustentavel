@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.omarket.dto.avaliacao.AvaliacaoDTO;
+import com.omarket.dto.avaliacao.AvaliacaoRequestDTO;
+import com.omarket.dto.avaliacao.AvaliacaoResponseDTO;
 import com.omarket.entity.Avaliacao;
 import com.omarket.entity.Cliente;
 import com.omarket.entity.Produto;
@@ -31,12 +32,12 @@ public class AvaliacaoService {
 
     // |=======| MÉTODOS |=======|
     @Transactional
-    public AvaliacaoDTO adicionar(AvaliacaoDTO avaliacaoDTO){
+    public AvaliacaoResponseDTO adicionar(AvaliacaoRequestDTO avaliacaoDTO){
 
-        Cliente cliente = clienteRepository.findById(avaliacaoDTO.getCliente().getId())
+        Cliente cliente = clienteRepository.findById(avaliacaoDTO.getClienteId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
 
-        Produto produto = produtoRepository.findById(avaliacaoDTO.getProduto().getId())
+        Produto produto = produtoRepository.findById(avaliacaoDTO.getProdutoId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
 
         Avaliacao avaliacao = new Avaliacao();
@@ -72,7 +73,7 @@ public class AvaliacaoService {
 
     // MÉTODO DE EDITAR UMA AVALIAÇÃO
     @Transactional
-    public AvaliacaoDTO editar(Long clienteId, Long produtoId, AvaliacaoDTO avaliacaoDTO){
+    public AvaliacaoResponseDTO editar(Long clienteId, Long produtoId, AvaliacaoResponseDTO avaliacaoDTO){
         
         AvaliacaoId id = new AvaliacaoId();
 
@@ -99,7 +100,7 @@ public class AvaliacaoService {
 
     // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR CLIENTE (REFATORADO)
     @Transactional(readOnly = true)
-    public List<AvaliacaoDTO> listarPorCliente(Long clienteId) {
+    public List<AvaliacaoResponseDTO> listarPorCliente(Long clienteId) {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
 
@@ -113,7 +114,7 @@ public class AvaliacaoService {
 
     // MÉTODO DE LISTAR TODAS AS AVALIAÇÕES POR PRODUTO (REFATORADO)
     @Transactional(readOnly = true)
-    public List<AvaliacaoDTO> listarPorProduto(Long produtoId) {
+    public List<AvaliacaoResponseDTO> listarPorProduto(Long produtoId) {
         Produto produto = produtoRepository.findById(produtoId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
 
@@ -126,12 +127,12 @@ public class AvaliacaoService {
     }
 
     // MÉTODO DE CONVERTER PARA DTO
-    private AvaliacaoDTO converterParaDTO(Avaliacao avaliacao) {
+    private AvaliacaoResponseDTO converterParaDTO(Avaliacao avaliacao) {
     if (avaliacao == null) {
         return null;
     }
 
-    AvaliacaoDTO dto = new AvaliacaoDTO();
+    AvaliacaoResponseDTO dto = new AvaliacaoResponseDTO();
     dto.setComentario(avaliacao.getComentario());
     dto.setNota(avaliacao.getNota());
     dto.setDataModificacao(avaliacao.getDataModificacao());
