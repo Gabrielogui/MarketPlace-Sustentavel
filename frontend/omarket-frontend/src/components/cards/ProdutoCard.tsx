@@ -36,7 +36,6 @@ export default function ProdutoCard({ produto }: ProdutoCardProps) {
     };
 
     const handleFavoritar = async () => {
-        console.log("Favoritar!")
         try {
 
             if(!user) {
@@ -44,10 +43,6 @@ export default function ProdutoCard({ produto }: ProdutoCardProps) {
                 router.push("/login");
                 return;
             }
-
-
-            console.log("Id do usuário: ", user.id);
-            console.log("Id do produto: ", produto.fornecedor.id);
 
             const favoritoPayload:FavoritoAdd = {
                 clienteId: user?.id,

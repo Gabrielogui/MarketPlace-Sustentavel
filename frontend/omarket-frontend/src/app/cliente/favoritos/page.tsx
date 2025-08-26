@@ -1,8 +1,40 @@
+'use client'
+
 import ProdutoCard from "@/components/cards/ProdutoCard";
 import Navigation from "@/components/Navigation";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AuthContext } from "@/context/AuthContext";
+import { Favorito, Produto } from "@/core";
+import { getListaFavoritos } from "@/service/favorito/favoritoService";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Favoritos () {
+
+    // |=======| ROUTER |=======|
+    const { user } = useContext(AuthContext);
+
+    // |=======| USESTATES DE FAVORITOS + PRODUTO |=======|
+    const [favoritos, setFavoritos] = useState<Favorito[]>([]);
+    const [produtos, setProdutos] = useState<Produto[]>([]);
+
+    // |=======| USEEFFECT COM FECTH DOS FAVORITOS |=======|
+    useEffect(() => {
+        async function fetchFavoritos () {
+
+            if(!user) return;
+
+            try{
+                const response = await getListaFavoritos(user.id);
+                setFavoritos(response.data);
+            } catch(error: any) {
+                toast.error(error.response?.data?.message || "Não foi possível carregar os produtos favoritados!");
+            }
+        }
+
+        fetchFavoritos();
+    })
+
     return(
         <div>
             {/* TÍTULO */}
@@ -25,16 +57,9 @@ export default function Favoritos () {
             </div>
             {/* PRODUTOS FAVORITOS */}
             <div className="grid grid-cols-1 md:grid-cols-2 pt-10 justify-items-center gap-7">
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
-                <ProdutoCard/>
+                {favoritos.map((favorito) => (
+                    <ProdutoCard key={favorito.id} produto={favorito.produtoDTO}/>
+                ))}
             </div>
             <div>
                 <Navigation currentPage={1} totalPages={5}/>
