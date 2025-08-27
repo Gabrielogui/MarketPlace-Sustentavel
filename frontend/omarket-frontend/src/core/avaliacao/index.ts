@@ -1,3 +1,4 @@
-import { Avaliacao } from './avaliacao';
+import { AvaliacaoRequest } from './avaliacaoRequest';
+import { AvaliacaoResponse } from './avaliacaoResponse';
 
-export type { Avaliacao }
+export type { AvaliacaoRequest, AvaliacaoResponse }
