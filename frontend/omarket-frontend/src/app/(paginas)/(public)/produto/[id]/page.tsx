@@ -5,7 +5,7 @@ import ProdutoRelacionadoCard from "@/components/cards/ProdutoRelacionadoCard";
 import AvaliarProduto from "@/components/produto/AvaliarProduto";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Avaliacao } from "@/core";
+import { AvaliacaoRequest } from "@/core";
 import { Produto } from "@/core/produto";
 import { getListaAvaliacaoPorProduto } from "@/service/avaliacao/avaliacaoService";
 import { adicionarItemAoCarrinho } from "@/service/carrinho/carrinhoService";
@@ -19,7 +19,7 @@ import { toast } from "sonner";
 export default function ProdutoDetalhe() {
     const [isDialogAvaliarProdutoOpen, setIsDialogAvaliarProdutoOpen] = useState(false);
     const [produto, setProduto] = useState<Produto | null>(null);
-    const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
+    const [avaliacoes, setAvaliacoes] = useState<AvaliacaoRequest[]>([]);
     const [loading, setLoading] = useState(true);
     const [avaliacaoLoading, setAvaliacaoLoading] = useState(true);
 
@@ -157,7 +157,7 @@ export default function ProdutoDetalhe() {
                         <Carousel className="w-full">
                             <CarouselContent>
                                 {avaliacoes.map((avaliacao) => (
-                                    <CarouselItem key={`${avaliacao.clienteId}-${avaliacao.dataModificacao}`} className="md:basis-1/2 lg:basis-1/3">
+                                    <CarouselItem key={`${avaliacao.cliente.id}-${avaliacao.dataModificacao}`} className="md:basis-1/2 lg:basis-1/3">
                                         <AvaliacaoCard avaliacao={avaliacao}/>
                                     </CarouselItem>
                                 ))}

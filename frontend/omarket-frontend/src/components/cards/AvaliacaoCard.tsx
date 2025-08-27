@@ -1,8 +1,8 @@
-import { Avaliacao } from "@/core";
+import { AvaliacaoRequest } from "@/core";
 import { Star } from "lucide-react";
 
 interface AvaliacaoCardProps {
-    avaliacao: Avaliacao;
+    avaliacao: AvaliacaoRequest;
 }
 
 export default function AvaliacaoCard ({ avaliacao }: AvaliacaoCardProps) {
@@ -28,7 +28,7 @@ export default function AvaliacaoCard ({ avaliacao }: AvaliacaoCardProps) {
                 <p className="text-gray-500">{avaliacao.comentario}</p>
             </div>
             <div className="flex flex-col">
-                <p className="text-gray-500">Id do Cliente: {avaliacao.clienteId}</p>
+                <p className="text-gray-500">Usuário: {avaliacao.cliente.nome}</p>
                 <p className="text-gray-500">{formatarData(avaliacao.dataModificacao)}</p>
             </div>
         </div>
