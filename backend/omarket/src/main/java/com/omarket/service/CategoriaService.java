@@ -1,8 +1,8 @@
 package com.omarket.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.hibernate.annotations.Cache;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,7 +25,7 @@ public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
 
     // |=======| MÉTODOS |=======|
-    @CacheEvict(value = "categorias-lista", allEntries = true)
+    @CacheEvict(value = "categorias-listar", allEntries = true)
     @Transactional
     public CategoriaDTO cadastrar(CategoriaDTO categoriaDTO){
         Categoria categoria = new Categoria();
@@ -40,18 +40,18 @@ public class CategoriaService {
     }
 
     // LISTAR TODAS AS CATEGORIAS:
-    @Cacheable("categorias-lista")
+    @Cacheable("categorias-listar")
     @Transactional(readOnly = true)
     public List<CategoriaDTO> listar(){
         List<Categoria> categorias = categoriaRepository.findAll();
-        List<CategoriaDTO> categoriasDTO = categorias.stream().map((categoria) -> new CategoriaDTO(categoria)).toList();
+        List<CategoriaDTO> categoriasDTO = categorias.stream().map((categoria) -> new CategoriaDTO(categoria)).collect(Collectors.toList());
         return categoriasDTO;
     }
 
     // DELETAR UMA CATEGORIA:
     @Caching(evict = {
         @CacheEvict(value = "categorias", key = "#id"),
-        @CacheEvict(value = "categorias-lista", allEntries = true)
+        @CacheEvict(value = "categorias-listar", allEntries = true)
     })
     @Transactional
     public void deletar(Long id){
@@ -73,7 +73,7 @@ public class CategoriaService {
     // MÉTODO EDITAR
     @Caching(
         put = { @CachePut(value = "categorias", key = "#id") },
-        evict = { @CacheEvict(value = "categorias-lista", allEntries = true) }
+        evict = { @CacheEvict(value = "categorias-listar", allEntries = true) }
     )
     @Transactional
     public CategoriaDTO editar(Long id, CategoriaDTO categoriaDTO){
