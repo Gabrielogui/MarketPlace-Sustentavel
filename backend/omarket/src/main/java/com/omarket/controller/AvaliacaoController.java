@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.omarket.dto.avaliacao.AvaliacaoDTO;
+import com.omarket.dto.avaliacao.AvaliacaoRequestDTO;
+import com.omarket.dto.avaliacao.AvaliacaoResponseDTO;
 import com.omarket.service.AvaliacaoService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,8 @@ public class AvaliacaoController {
 
     // ======= MÉTODO POST DE ADICIONAR UMA AVALIACAO =======
     @PostMapping("/adicionar")
-    public ResponseEntity<AvaliacaoDTO> adicionar(@RequestBody @Validated AvaliacaoDTO avaliacaoDTO){
-        AvaliacaoDTO avaliacaoNova = avaliacaoService.adicionar(avaliacaoDTO);
+    public ResponseEntity<AvaliacaoResponseDTO> adicionar(@RequestBody @Validated AvaliacaoRequestDTO avaliacaoDTO){
+        AvaliacaoResponseDTO avaliacaoNova = avaliacaoService.adicionar(avaliacaoDTO);
 
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest()
@@ -52,22 +53,22 @@ public class AvaliacaoController {
 
     // ======= MÉTODO PARA EDITAR AVALIAÇÃO =======
     @PutMapping("/{clienteId}/{produtoId}")
-    public ResponseEntity<AvaliacaoDTO> editar(@PathVariable Long clienteId, @PathVariable Long produtoId ,@RequestBody AvaliacaoDTO avaliacaoDTO){
-        AvaliacaoDTO avaliacaoEditada = avaliacaoService.editar(clienteId, produtoId, avaliacaoDTO);
+    public ResponseEntity<AvaliacaoResponseDTO> editar(@PathVariable Long clienteId, @PathVariable Long produtoId ,@RequestBody AvaliacaoResponseDTO avaliacaoDTO){
+        AvaliacaoResponseDTO avaliacaoEditada = avaliacaoService.editar(clienteId, produtoId, avaliacaoDTO);
         return ResponseEntity.ok(avaliacaoEditada);
     }
 
     // ======= MÉTODO PARA LISTAR POR CLIENTE =======
     @GetMapping("/listar/cliente/{clienteId}")
-    public ResponseEntity<List<AvaliacaoDTO>> listarPorCliente(@PathVariable Long clienteId){
-        List<AvaliacaoDTO> avaliacoes = avaliacaoService.listarPorCliente(clienteId);
+    public ResponseEntity<List<AvaliacaoResponseDTO>> listarPorCliente(@PathVariable Long clienteId){
+        List<AvaliacaoResponseDTO> avaliacoes = avaliacaoService.listarPorCliente(clienteId);
         return ResponseEntity.ok(avaliacoes);
     }
  
     // ======= MÉTPDP PARA LISTAR POR PRODUTO =======
     @GetMapping("/listar/produto/{produtoId}")
-    public ResponseEntity<List<AvaliacaoDTO>> listarPorProduto(@PathVariable Long produtoId){
-        List<AvaliacaoDTO> avaliacoes = avaliacaoService.listarPorProduto(produtoId);
+    public ResponseEntity<List<AvaliacaoResponseDTO>> listarPorProduto(@PathVariable Long produtoId){
+        List<AvaliacaoResponseDTO> avaliacoes = avaliacaoService.listarPorProduto(produtoId);
         return ResponseEntity.ok(avaliacoes);
     }
 

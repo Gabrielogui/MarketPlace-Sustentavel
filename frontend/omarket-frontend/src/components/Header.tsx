@@ -229,7 +229,9 @@ export default function Header() {
               
              { (role === "CLIENTE" || !token) &&
              <div className="flex flex-row gap-12">
-                <Heart className="cursor-pointer hover:scale-110 transition-all" />
+                <Link href={"/cliente/favoritos"}>
+                    <Heart className="cursor-pointer hover:scale-110 transition-all" />
+                </Link>
                 <Link href={"/cliente/carrinho"}>
                     <ShoppingCart className="cursor-pointer hover:scale-110 transition-all" />
                 </Link>

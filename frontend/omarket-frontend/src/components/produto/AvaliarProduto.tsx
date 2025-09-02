@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Textarea } from "../ui/textarea";
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "sonner";
-import { Avaliacao } from "@/core";
+import { AvaliacaoResponse } from "@/core";
 import { adicionarAvaliacao } from "@/service/avaliacao/avaliacaoService";
 
 export interface AvaliarProdutoProps{
@@ -36,7 +36,7 @@ export default function AvaliarProduto ({isOpen, onOpenChange, produtoId}:Avalia
             return;
         }
 
-        const payload: Avaliacao = {
+        const payload: AvaliacaoResponse = {
             clienteId: user.id,
             produtoId: produtoId,
             comentario: comentario,
