@@ -52,3 +52,13 @@ Dentro de  /backend/omarket/src/main/java/com/omarket/ :
 
 > [!NOTE]
 > Componentes organizados por pastas referentes à sua reuzabilidade
+
+## COLABORADORES
+
+- Gabriel Rodrigues:
+    - Github: https://github.com/Gabrielogui
+    - Linkedin: https://www.linkedin.com/in/gabriel-rodrigues-a551012a2
+
+- Luiz Vinícius:
+    - Github: https://github.com/luizvn
+    - Linkedin: https://www.linkedin.com/in/luizvn
