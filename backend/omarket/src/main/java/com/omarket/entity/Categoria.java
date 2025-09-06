@@ -19,6 +19,7 @@ public class Categoria {
 
     private String nome;
     private String descricao;
+    private String imagemUrl;
 
     // FAZER RELAÇÃO COM ELA MESMA
 }

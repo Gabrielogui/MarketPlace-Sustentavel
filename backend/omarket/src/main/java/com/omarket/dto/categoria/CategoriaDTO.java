@@ -17,6 +17,9 @@ public class CategoriaDTO {
     @NotBlank(message = "A descrição deve ser preenchida!")
     private String descricao;
 
+    @NotBlank(message = "A imagem deve ser preenchida!")
+    private String imagemUrl;
+
     // CONSTRUTOR VAZIO
     public CategoriaDTO(){ }
 
@@ -25,5 +28,6 @@ public class CategoriaDTO {
         this.id        = categoria.getId();
         this.nome      = categoria.getNome();
         this.descricao = categoria.getDescricao();
+        this.imagemUrl = categoria.getImagemUrl();
     }
 }

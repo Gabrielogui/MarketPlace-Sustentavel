@@ -32,6 +32,7 @@ public class CategoriaService {
 
         categoria.setNome(categoriaDTO.getNome());
         categoria.setDescricao(categoriaDTO.getDescricao());
+        categoria.setImagemUrl(categoriaDTO.getImagemUrl());
 
         categoriaRepository.save(categoria);
 
@@ -82,6 +83,7 @@ public class CategoriaService {
 
         categoria.setNome(categoriaDTO.getNome());
         categoria.setDescricao(categoriaDTO.getDescricao());
+        categoria.setImagemUrl(categoriaDTO.getImagemUrl());
 
         return converterParaDTO(categoria);
     }
@@ -92,6 +94,7 @@ public class CategoriaService {
         categoriaDTO.setId(categoria.getId());
         categoriaDTO.setNome(categoria.getNome());
         categoriaDTO.setDescricao(categoria.getDescricao());
+        categoriaDTO.setImagemUrl(categoria.getImagemUrl());
 
         return categoriaDTO;
     }
