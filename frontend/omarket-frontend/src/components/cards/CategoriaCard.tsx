@@ -10,7 +10,7 @@ export default function CategoriaCard ({ categoria }: CategoriaCardProps) {
         <div className="hover:cursor-pointer hover:shadow-md rounded-md transition-all">
             {/* IMAGEM */}
             <div>
-                <Image src={"https://picsum.photos/320/250"} alt="Categoria" height={250} width={320} 
+                <Image src={categoria.imagemUrl || "https://picsum.photos/320/250"} alt="Categoria" height={250} width={320} 
                     className="rounded-md">
                 </Image>
             </div>
