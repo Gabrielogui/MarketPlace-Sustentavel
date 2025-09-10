@@ -1,0 +1,22 @@
+
+services:
+  postgres-omarket:
+    image: postgres:13
+    container_name: omarket_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: omarket_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - omarket-network
+
+volumes:
+  postgres-data:
+
+networks:
+  omarket-network:
+    driver: bridge
