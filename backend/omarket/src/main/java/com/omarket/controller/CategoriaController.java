@@ -44,6 +44,9 @@ public class CategoriaController {
     @GetMapping("/listar")
     public ResponseEntity<List<CategoriaDTO>> listat(){
         List<CategoriaDTO> categorias = categoriaService.listar();
+        
+        if (categorias.isEmpty()) return ResponseEntity.noContent().build();
+        
         return ResponseEntity.ok(categorias);
     }
 
